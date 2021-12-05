@@ -11,4 +11,3 @@
 - Install latest released file.
 - Install latest python & set up.
 - Run: Windows-Spoofer.py
-```
