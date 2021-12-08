@@ -1,7 +1,6 @@
 # Windows-Spoofer
-[![Python 3.10](https://img.shields.io/badge/Python-3.10-green.svg)](https://www.python.org/downloads/)
-[![Build Passing](https://img.shields.io/badge/Build-Passing-green.svg)](https://github.com/Anonymoushacker4926/Official-Pornhub-App)
-[![Release v3.3](https://img.shields.io/badge/Release-v3.3-blue.svg)](https://github.com/Anonymoushacker4926/Official-Pornhub-App/releases/tag/v3.3)
+[![Build Passing](https://img.shields.io/badge/Build-Passing-green.svg)](https://github.com/Anonymoushacker4926/Windows-Spoofer)
+[![Release v4.0](https://img.shields.io/badge/Release-v3.3-blue.svg)](https://github.com/Anonymoushacker4926/Windows-Spoofer/releases/tag/v4.0)
 
 
 
