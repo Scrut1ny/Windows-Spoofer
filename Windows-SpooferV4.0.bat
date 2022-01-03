@@ -1,17 +1,20 @@
-rem Created by 0x00 / Anonymoushacker4926
-rem Advanced Windows Spoofer
-rem V4.0
+::--------------------------------------
+:: By: 0x00 / Anonymoushacker4926
+:: Windows Spoofer
+:: V4.0
+::--------------------------------------
 
 @echo off
 setlocal EnableDelayedExpansion
-powershell Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
 
-echo. & >nul 2>&1 NET SESSION && (echo  [+] Administrator Privileges Detected.) || (echo   [-] No Administrator Privileges Detected. & echo. & pause & exit)
+:: Privilege Escalation - Credit: https://stackoverflow.com/a/62668457 -----------------------------------
 
-goto:MENU
+>nul 2>&1 net sess||(powershell saps '%0'-Verb RunAs&exit /b)
+
+::--------------------------------------------------------------------------------------------------------
+
 :MENU
-cls
-color 4
+cls & color 4
 :::
 :::            ===================
 :::            - WINDOWS SPOOFER -
@@ -92,21 +95,7 @@ taskkill /f /im explorer.exe >nul 2>&1
 explorer.exe >nul 2>&1
 echo. & echo  [+] Spoofing MAC Address... & echo.
 
-REM ALL VARIABLES ################################################################################
-
-rem GENERATING UUID/GUID
-for /f "usebackq" %%B in (`powershell.exe -command [guid]::NewGuid(^).ToString(^)`) do (set "GUID={%%B}")
-
-rem GENERATING MACAddress
-
-for /f "usebackq" %%C in (`powershell -command [BitConverter]::ToString([BitConverter]::GetBytes((Get-Random -Maximum 0xFFFFFFFFFFFF^)^)^, 0^, 6^).Replace(^'-^'^, ^':^'^)`) do set "MAC=%%C"
-
-rem RETRIEVING UUID/GUID
-for /f %%D in ('wmic csproduct get UUID ^| find "-"') do (set "GUID1={%%D}")
-
-REM ##############################################################################################
-
-rem SPOOFING MACAddress
+:: SPOOFING MACAddress
 
 for /f "skip=5" %%F in ('getmac') do set "MAC=%%F"
 echo  [+] CURRENT MAC: !MAC! & echo.
@@ -117,11 +106,11 @@ for /f "skip=2 tokens=3*" %%i in ('netsh interface show interface') do (netsh in
 taskkill /f /im explorer.exe >nul 2>&1
 explorer.exe >nul 2>&1
 
-rem SPOOFING REG
+:: SPOOFING REG
 
 echo  [+] Spoofing BIOS... & echo.
 
-rem SPOOFING REG BIOS
+:: SPOOFING REG BIOS - HKLM\HARDWARE\DESCRIPTION\System\BIOS
 
 REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardManufacturer" /t REG_SZ /d SPOOFED-%random% /f >nul 2>&1
 REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardProduct" /t REG_SZ /d SPOOFED-%random% /f >nul 2>&1
@@ -135,18 +124,18 @@ REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemProductName" /t REG_SZ
 REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemSKU" /t REG_SZ /d SPOOFED-%random% /f >nul 2>&1
 REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemVersion" /t REG_SZ /d SPOOFED-%random% /f >nul 2>&1
 
-rem SPOOFING HwProfileGuid
+:: SPOOFING HwProfileGuid - HKLM\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001
 
-REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d %GUID% /f >nul 2>&1
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d !GUID! /f >nul 2>&1
 
-rem SPOOFING UUID/GUID
+:: SPOOFING UUID/GUID - HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\
 
 REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" /v "OriginalNetworkAddress" /f >nul 2>&1 rem Microsoft Kernel Debug Network Adapter
 REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0001" /v "OriginalNetworkAddress" /f >nul 2>&1 rem Actual NIC
 REG DELETE "HKLM\SYSTEM\HardwareConfig\!GUID1!" /f >nul 2>&1
 REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID!" /f >nul 2>&1
 
-rem SPOOFING REG HardwareConfigs
+:: SPOOFING REG HardwareConfigs - HKLM\SYSTEM\HardwareConfig\
 
 REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BaseBoardManufacturer" /t REG_SZ /d SPOOFED-%random% /f >nul 2>&1
 REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BaseBoardProduct" /t REG_SZ /d SPOOFED-%random% /f >nul 2>&1
@@ -162,67 +151,58 @@ REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemVersion" /t REG_SZ /d SPO
 
 REG DELETE "HKLM\SYSTEM\HardwareConfig" /v "LastConfig" /f  >nul 2>&1
 
-rem DELETING WINDOWS LOGS
+
+
+
+
+
+
+
+
+
+
+
+
+
+:: DELETING WINDOWS LOGS
 
 echo  [+] Cleaning all traces...
 
-del /f/s/q "%TEMP%\*.*" >nul 2>&1
+del /f/s/q/a "%appdata%\Zoom\logs\*" >nul 2>&1
+del /f/s/q/a "%appdata%\Zoom\reports\*" >nul 2>&1
+del /f/s/q/a "%appdata%\Zoom\installer.txt" >nul 2>&1
+del /f/s/q/a "%appdata%\Zoom\appsafecheck.txt" >nul 2>&1
 
-del /f/s/q "%appdata%\Zoom\logs\*.*" >nul 2>&1
-del /f/s/q "%appdata%\Zoom\reports\*.*" >nul 2>&1
-del /f/s/q "%appdata%\Zoom\installer.txt" >nul 2>&1
-del /f/s/q "%appdata%\Zoom\appsafecheck.txt" >nul 2>&1
+del /f/s/q/a "%appdata%\discord\Cache\*" >nul 2>&1
+del /f/s/q/a "%appdata%\discord\GPUCache\*" >nul 2>&1
+del /f/s/q/a "%appdata%\discord\Code Cache\*" >nul 2>&1
 
-del /f/s/q "%appdata%\discord\Cache\*.*" >nul 2>&1
-del /f/s/q "%appdata%\discord\GPUCache\*.*" >nul 2>&1
-del /f/s/q "%appdata%\discord\Code Cache\*.*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\UserviceProfiles\NetworkService\NTSER.dat" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\UserviceProfiles\LocalService\AppData\Local\Microsoft\Windows\qwavecache.dat" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\SchCache\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\memory.dmp" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\win.ini" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\debug" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\Logs" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\CbsTemp\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\ModemLogs\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\Prefetch\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\rescache\_merged\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Windows\SchCache\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\PerfLogs\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\desktop.ini" >nul 2>&1
+del /f/s/q/a "%systemdrive%\MSOCache\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Users\Public\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Recovery\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Amd\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Intel\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\Users\Public\*" >nul 2>&1
 
-del /f/s/q "%systemdrive%\Windows\System32\LogFiles\WMI\Wifi.etl" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\System32\LogFiles\WMI\RadioMgr.etl" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\System32\LogFiles\WMI\NtfsLog.etl" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\System32\LogFiles\WMI\NetCore.etl" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\System32\LogFiles\WMI\Microsoft-Windows-Rdp-Graphics-RdpIdd-Trace.etl" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\System32\LogFiles\WMI\LwtNetLog.etl" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\UserviceProfiles\NetworkService\NTSER.DAT" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\UserviceProfiles\LocalService\AppData\Local\Microsoft\Windows\qwavecache.dat" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\Logs\DISM\dism.log" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\WindowsUpdate.log" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\setupact.log" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\setuperr.log" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\DirectX.log" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\PFRO.log" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\SchCache\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\memory.dmp" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\win.ini" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\Temp\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\debug" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\Logs" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\CbsTemp\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\ModemLogs\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\msdownld.tmp\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\Prefetch\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\rescache\_merged\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Windows\SchCache\*.*" >nul 2>&1
-
-del /f/s/q "%systemdrive%\PerfLogs\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Temp\*.*" >nul 2>&1
-del /f/s/q "%windir%\prefetch\*.*" >nul 2>&1
-
-del /f/s/q "%systemdrive%\desktop.ini" >nul 2>&1
-
-del /f/s/q "%systemdrive%\System Volume Information\tracking.log" >nul 2>&1
-del /f/s/q "%systemdrive%\System Volume Information\tracking.log" >nul 2>&1
-
-del /f/s/q "%systemdrive%\MSOCache\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Users\Public\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Recovery\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Amd\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Intel\*.*" >nul 2>&1
-del /f/s/q "%systemdrive%\Users\Public\*.*" >nul 2>&1
+del /f/s/q/a "%windir%\SoftwareDistribution\Download\*" >nul 2>&1
 
 echo. & echo  [+] Configuring NIC Settings... & echo.
 
-rem ########################################################
+:: ########################################################
 
 netsh winsock reset >nul 2>&1
 netsh winsock reset catalog >nul 2>&1
@@ -239,14 +219,10 @@ ipconfig/flushdns >nul 2>&1
 certutil -URLCache * delete >nul 2>&1
 
 netsh dhcpclient trace disable >nul 2>&1
-
 netsh http flush logbuffer >nul 2>&1
 netsh http delete cache >nul 2>&1
-
 netsh trace stop >nul 2>&1
-
 netsh rpc reset >nul 2>&1
-
 netsh branchcache reset >nul 2>&1
 
 netsh interface ipv4 reset catalog >nul 2>&1
@@ -266,43 +242,40 @@ netsh interface ipv6 reset >nul 2>&1
 netsh advfirewall reset >nul 2>&1
 netsh advfirewall firewall set rule group="Network Discovery" new enable=No >nul 2>&1
 
-for /f "skip=2 tokens=3*" %%E in ('netsh interface show interface') do (
-netsh dnsclient set dnsservers name="%%E" source=dhcp >nul 2>&1
-netsh interface ipv4 set dns "%%E" dhcp >nul 2>&1
-netsh interface ipv4 set address "%%E" dhcp >nul 2>&1
-netsh interface ipv4 set winsservers "%%E" source=dhcp >nul 2>&1
-netsh interface ipv6 set dns "%%E" dhcp >nul 2>&1
-netsh interface set interface name="%%E" admin=disabled >nul 2>&1
-netsh interface set interface name="%%E" admin=enabled >nul 2>&1)
-
-rem #########################################################
-
-echo. & echo  [+] Disabling NIC...
+for /f "skip=2 tokens=3*" %%a in ('netsh interface show interface') do (
+netsh dnsclient set dnsservers name="%%a" source=dhcp >nul 2>&1
+netsh interface ipv4 set dns "%%a" dhcp >nul 2>&1
+netsh interface ipv4 set address "%%a" dhcp >nul 2>&1
+netsh interface ipv4 set winsservers "%%a" source=dhcp >nul 2>&1
+netsh interface ipv6 set dns "%%a" dhcp >nul 2>&1
+netsh interface set interface name="%%a" admin=disabled >nul 2>&1
+netsh interface set interface name="%%a" admin=enabled >nul 2>&1)
 
 ipconfig /release >nul 2>&1
 
-echo. & echo  [+] Enabling NIC...
-
 ipconfig /renew >nul 2>&1
-
-echo. & echo  [+] Done! & echo.
 
 echo  [+] Emptying Recycle Bins... & echo.
 
-rd /q /s A:\$Recycle.Bin >nul 2>&1 && rd /q /s B:\$Recycle.Bin >nul 2>&1
-rd /q /s C:\$Recycle.Bin >nul 2>&1 && rd /q /s D:\$Recycle.Bin >nul 2>&1
-rd /q /s E:\$Recycle.Bin >nul 2>&1 && rd /q /s F:\$Recycle.Bin >nul 2>&1
-rd /q /s G:\$Recycle.Bin >nul 2>&1 && rd /q /s H:\$Recycle.Bin >nul 2>&1
-rd /q /s I:\$Recycle.Bin >nul 2>&1 && rd /q /s J:\$Recycle.Bin >nul 2>&1
-rd /q /s K:\$Recycle.Bin >nul 2>&1 && rd /q /s L:\$Recycle.Bin >nul 2>&1
-rd /q /s M:\$Recycle.Bin >nul 2>&1 && rd /q /s N:\$Recycle.Bin >nul 2>&1
-rd /q /s O:\$Recycle.Bin >nul 2>&1 && rd /q /s P:\$Recycle.Bin >nul 2>&1
-rd /q /s Q:\$Recycle.Bin >nul 2>&1 && rd /q /s R:\$Recycle.Bin >nul 2>&1
-rd /q /s S:\$Recycle.Bin >nul 2>&1 && rd /q /s T:\$Recycle.Bin >nul 2>&1
-rd /q /s U:\$Recycle.Bin >nul 2>&1 && rd /q /s V:\$Recycle.Bin >nul 2>&1
-rd /q /s W:\$Recycle.Bin >nul 2>&1 && rd /q /s X:\$Recycle.Bin >nul 2>&1
-rd /q /s Y:\$Recycle.Bin >nul 2>&1 && rd /q /s Z:\$Recycle.Bin >nul 2>&1
+del /f/s/q/a "%temp%\*" >nul 2>&1
+del /f/s/q/a "%systemdrive%\*.log" >nul 2>&1
+del /f/s/q/a "%systemdrive%\*.etl" >nul 2>&1
+del /f/s/q/a "%systemdrive%\*.tmp" >nul 2>&1
 
+powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+
+:: ALL VARIABLES -------------------------------------------------------------------------------------
+
+:: GENERATING UUID/GUID
+for /f "usebackq" %%a in (`powershell -command '{'+[guid]::NewGuid(^).ToString(^)+'}'`) do set GUID=%%a
+
+:: GENERATING MACAddress
+for /f "usebackq" %%a in (`powershell -command [BitConverter]::ToString([BitConverter]::GetBytes((Get-Random -Maximum 0xFFFFFFFFFFFF^)^)^, 0^, 6^).Replace(^':^'^, ^'-^'^)`) do set MAC=%%a
+
+:: RETRIEVING UUID/GUID
+for /f %%a in ('wmic csproduct get UUID ^| find "-"') do (set "GUID1={%%a}")
+
+:AGAIN
 echo. & echo. & cls & title Main Menu
 wmic nicconfig where (IPEnabled=True) GET Description,SettingID,MACAddress
 echo. & echo    RESTART PC NOW!
@@ -317,9 +290,12 @@ if '%Choice%'=='1' goto :choice1
 if '%Choice%'=='1' goto :choice1
 if '%Choice%'=='2' goto :choice2
 if '%Choice%'=='3' goto :choice3
+echo Choice "%choice%" isn't a valid option. Please try again.
+goto :AGAIN
 :choice1
 goto:SPOOF
 :choice2
 shutdown /r /t 0
 :choice3
 shutdown /s /t 0
+
