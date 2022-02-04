@@ -170,6 +170,10 @@ REG ADD "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" /v "ChipsetMatch
 
 :: Cryptography - MachineGuid - Clear Cryptographic Services Traces
 >nul 2>&1(
+	net stop bits
+	net stop wuauserv
+	net stop cryptSvc
+	net stop msiserver
 	call :RGUID
 	REG ADD "HKLM\SOFTWARE\Microsoft\Cryptography" /v "MachineGuid" /t REG_SZ /d "!RGUID!" /f
 	del /f /q %SystemRoot%\System32\catroot2\dberr.txt
@@ -177,6 +181,10 @@ REG ADD "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" /v "ChipsetMatch
 	del /f /q %SystemRoot%\System32\catroot2.jrs
 	del /f /q %SystemRoot%\System32\catroot2.edb
 	del /f /q %SystemRoot%\System32\catroot2.chk
+	net start wuauserv
+	net start cryptSvc
+	net start bits
+	net start msiserver
 )
 
 :: SQMClient - MachineId
