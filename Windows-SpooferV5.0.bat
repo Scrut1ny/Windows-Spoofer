@@ -104,7 +104,7 @@ echo   [+] Spoofing Registry&echo.
 :: HwProfileGuid
 >nul 2>&1(
 	REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
-	:: >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
+	rem >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
 )
 
 :: UUID/GUID
