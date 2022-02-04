@@ -81,11 +81,11 @@ exit
 cls
 title SPOOFING IN PROGRESS...
 echo. & echo  [+] Terminating Processes...
->nul 2>&1 taskkill /f /im (
-	explorer.exe
-	
+>nul 2>&1(
+	ipconfig/release
+	taskkill /f /im explorer.exe
 )
->nul 2>&1 explorer.exe
+
 echo. & echo  [+] Spoofing MAC Address... & echo.
 
 :: SPOOFING MACAddress
