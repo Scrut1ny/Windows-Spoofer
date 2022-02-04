@@ -30,8 +30,7 @@ if '%Choice%'=='1' goto :choice1
 if '%Choice%'=='2' goto :choice2
 if '%Choice%'=='3' goto :choice3
 if '%Choice%'=='4' goto :choice4
-cls
-echo Choice "%Choice%" isn't a valid option. Please try again. 
+cls&echo Choice "%Choice%" isn't a valid option. Please try again. 
 goto :MENU
 
 :choice1
@@ -39,76 +38,67 @@ cls
 goto :SPOOF
 
 :choice2
-cls
-color 2
-echo.
-echo  MAIN COMPONENTS
-echo.
-echo CPU(s): & echo. & wmic cpu get name,serialnumber
-echo GPU(s): & echo. & wmic path win32_VideoController get name,PNPDeviceID
-echo RAM Stick(s): & echo. & wmic memorychip get name,serialnumber
-echo Motherboard: & echo. & wmic baseboard get product,serialnumber
-echo SSD/HDD(s) & echo. & wmic diskdrive get Model,serialnumber
+cls&color 2
+echo.&echo  MAIN COMPONENTS&echo.
+echo CPU(s):&echo.&wmic cpu get name,serialnumber
+echo GPU(s):&echo.&wmic path win32_VideoController get name,PNPDeviceID
+echo RAM Stick(s): & echo.&wmic memorychip get name,serialnumber
+echo Motherboard:&echo.&wmic baseboard get product,serialnumber
+echo SSD/HDD(s)&echo.&wmic diskdrive get Model,serialnumber
 echo.
 echo VIRTUAL ID's
 echo.
-echo SMBios: & echo. & wmic bios get serialnumber
-echo MAC Address(s): & echo. & wmic nicconfig where (IPEnabled=True) GET Description,SettingID,MACAddress
-echo.
-pause
+echo SMBios:&echo.&wmic bios get serialnumber
+echo MAC Address(s):&echo.&wmic nicconfig where (IPEnabled=True) GET Description,SettingID,MACAddress
+echo.&pause
 goto :MENU
 
 :choice3
-cls
-color 3
-title CHECKING NETWORK/IP...
-for /f %%A in ('curl api.ipify.org') do set PublicIP=%%A
-echo.&echo  External IP: !PublicIP!
-echo.&echo  PINGING...
-ping  8.8.8.8
-echo.
-pause
+cls&color 3&title CHECKING NETWORK/IP...
+for /f %%a in ('curl api.ipify.org') do (
+	set PIP=%%a
+	echo.&echo  ISP ^> IP: !PIP!
+	echo.&echo  PINGING...
+	ping 8.8.8.8
+	echo.&pause
+)
 goto :MENU
 
 :choice4
-cls
-color 5
-title QUITTING...
-echo Kinda sus...
-exit
+cls&exit
 
 :SPOOF
-cls
-title SPOOFING IN PROGRESS...
-echo. & echo  [+] Terminating Processes...
+cls&title SPOOFING IN PROGRESS...
+echo.&echo   [+] Terminating Processes...
 >nul 2>&1(
 	ipconfig/release
-	taskkill /f /im explorer.exe
 )
 
-echo. & echo  [+] Spoofing MAC Address... & echo.
+echo.&echo   [+] Spoofing MAC Address&echo.
 
-:: SPOOFING MACAddress
-
-
+:: MAC Address
+>nul 2>&1(
+	:: REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" /v "OriginalNetworkAddress" /f rem Microsoft Kernel Debug Network Adapter
+	:: REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0001" /v "OriginalNetworkAddress" /f rem Actual NIC
+)
 
 :: SPOOFING REG
 
-echo  [+] Spoofing BIOS... & echo.
+echo   [+] Spoofing Registry&echo.
 
 :: BIOS
 >nul 2>&1(
-	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardVersion" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BIOSReleaseDate" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BIOSVendor" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BIOSVersion" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemFamily" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemManufacturer" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemProductName" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemSKU" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemVersion" /t REG_SZ /d "SPOOFED-%random%" /f
+	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BIOSReleaseDate" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BIOSVendor" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BIOSVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemFamily" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemProductName" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemSKU" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 )
 
 :: HwProfileGuid
@@ -119,8 +109,6 @@ echo  [+] Spoofing BIOS... & echo.
 
 :: UUID/GUID
 >nul 2>&1(
-	REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" /v "OriginalNetworkAddress" /f rem Microsoft Kernel Debug Network Adapter
-	REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0001" /v "OriginalNetworkAddress" /f rem Actual NIC
 	call :GUID1
 	REG DELETE "HKLM\SYSTEM\HardwareConfig\!GUID1!" /f
 	call :RGUID
@@ -130,17 +118,17 @@ echo  [+] Spoofing BIOS... & echo.
 :: HardwareConfig
 >nul 2>&1(
 	call :GUID1
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BIOSReleaseDate" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BIOSVendor" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BIOSVersion" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemBiosVersion" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemFamily" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemManufacturer" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemProductName" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemSKU" /t REG_SZ /d "SPOOFED-%random%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemVersion" /t REG_SZ /d "SPOOFED-%random%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BIOSReleaseDate" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BIOSVendor" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BIOSVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemBiosVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemFamily" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemProductName" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemSKU" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 	REG DELETE "HKLM\SYSTEM\HardwareConfig" /v "LastConfig" /f
 	REG DELETE "HKLM\SYSTEM\HardwareConfig" /v "LastId" /f
 )
@@ -354,6 +342,8 @@ echo  [+] Emptying Recycle Bins... & echo.
 	del /f/s/q/a %temp%\*
 	del /f/s/q/a %systemdrive%\*.log,*.etl,*.tmp,*.hta
 	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+	taskkill /f /im explorer.exe
+	explorer.exe
 )
 
 :AGAIN
