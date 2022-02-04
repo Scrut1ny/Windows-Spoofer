@@ -11,7 +11,6 @@ setlocal EnableDelayedExpansion
 
 :MENU
 cls & color 4
-:::
 :::            ===================
 :::            - WINDOWS SPOOFER -
 :::   =====================================
@@ -19,12 +18,10 @@ cls & color 4
 :::   -  of unique indentifiers in your   -
 :::   -  system used to track you down.   -
 :::   =====================================
-:::
 :::   [ 1 ] Spoof Windows
 :::   [ 2 ] Check Serials
 :::   [ 3 ] Check IP
 :::   [ 4 ] Exit
-:::
 
 for /f "delims=: tokens=*" %%a in ('findstr /b ::: "%~f0"') do echo %%a
 
