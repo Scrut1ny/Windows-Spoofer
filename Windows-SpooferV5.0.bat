@@ -117,10 +117,13 @@ echo  [+] Spoofing BIOS... & echo.
 :: UUID/GUID
 >nul 2>&1 REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" /v "OriginalNetworkAddress" /f rem Microsoft Kernel Debug Network Adapter
 >nul 2>&1 REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0001" /v "OriginalNetworkAddress" /f rem Actual NIC
+call :GUID1
 >nul 2>&1 REG DELETE "HKLM\SYSTEM\HardwareConfig\!GUID1!" /f
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID!" /f
 
 :: HardwareConfig
+call :GUID1
 >nul 2>&1 REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random%" /f
 >nul 2>&1 REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random%" /f
 >nul 2>&1 REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BIOSReleaseDate" /t REG_SZ /d "SPOOFED-%random%" /f
@@ -133,49 +136,86 @@ echo  [+] Spoofing BIOS... & echo.
 >nul 2>&1 REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemSKU" /t REG_SZ /d "SPOOFED-%random%" /f
 >nul 2>&1 REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemVersion" /t REG_SZ /d "SPOOFED-%random%" /f
 >nul 2>&1 REG DELETE "HKLM\SYSTEM\HardwareConfig" /v "LastConfig" /f
+>nul 2>&1 REG DELETE "HKLM\SYSTEM\HardwareConfig" /v "LastId" /f
 
 :: Cryptography MachineGuid
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SOFTWARE\Microsoft\Cryptography" /v "MachineGuid" /t REG_SZ /d "!RGUID!" /f
 
 :: CurrentVersion
->nul 2>&1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "BuildGUID" /t REG_SZ /d %Hex8%-%Hex1%-%Hex0%-%Hex1%-%Hex10% /f
->nul 2>&1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "BuildLab" /t REG_SZ /d %bi1%.rs1_release.17%bi2%-2100 /f
->nul 2>&1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "BuildLabEx" /t REG_SZ /d %bi1%.1944.amd64fre.rs1_release.17%bi2%-2100 /f
->nul 2>&1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "CurrentBuild" /t REG_SZ /d %bi1% /f
->nul 2>&1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "CurrentBuildNumber" /t REG_SZ /d %bi1% /f
->nul 2>&1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t REG_SZ /d %bi1% /f
+call :RGUID
+>nul 2>&1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "BuildGUID" /t REG_SZ /d "!RGUID!" /f
+>nul 2>&1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t REG_SZ /d %random%-%random%-%random%-%random% /f
+>nul 2>&1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "RegisteredOwner" /t REG_SZ /d %random% /f
 
 :: Events
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\Connected" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\Disconnected" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\EmailImage" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\FaxImage" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\PrintImage" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\ScanButton" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\STIproxyEvent" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 
 :: Variables
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e965-e325-11ce-bfc1-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 4d36e965
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e967-e325-11ce-bfc1-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem --------
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\DeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f    rem 4d36e968
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\Driver" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f        rem --------
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\DriverRank" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f    rem --------
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\Service" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f       rem --------
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\Driver" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f        rem --------
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\Driver" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f        rem --------
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e96a-e325-11ce-bfc1-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 4d36e96a
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e96c-e325-11ce-bfc1-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 4d36e96c
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e96c-e325-11ce-bfc1-08002be10318}\Configuration\Variables\EnumName" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f      rem --------
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e96c-e325-11ce-bfc1-08002be10318}\Configuration\Variables\FriendlyNameProperty" /v "Value" /t REG_SZ /d "{!RGUID!}" /f rem --------
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e980-e325-11ce-bfc1-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 4d36e980
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{5989fce8-9cd0-467d-8a6a-5419e31529d4}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 5989fce8
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{5c4c3332-344d-483c-8739-259e934c9cc8}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 5c4c3332
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{62f9c741-b25a-46ce-b54c-9bccce08b6f2}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 62f9c741
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{6bdd1fc6-810f-11d0-bec7-08002be2092f}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 6bdd1fc6
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{6bdd1fc6-810f-11d0-bec7-08002be2092f}\Configuration\Variables\EnumName" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f      rem -------- 
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{6bdd1fc6-810f-11d0-bec7-08002be2092f}\Configuration\Variables\FriendlyNameProperty" /v "Value" /t REG_SZ /d "{!RGUID!}" /f rem --------
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{6d807884-7d21-11cf-801c-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 6d807884
+call :RGUID
 >nul 2>&1 REG ADD "HKLM\SYSTEM\ControlSet001\Control\Class\{88bae032-5a81-49f0-bc3d-a4ff138216d6}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 88bae032
+
+:: CKCL GUID
+call :RGUID
+REG ADD "HKLM\SYSTEM\ControlSet001\Control\Diagnostics\Performance\BootCKCLSettings" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+REG ADD "HKLM\SYSTEM\ControlSet001\Control\Diagnostics\Performance\SecondaryLogonCKCLSettings" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+REG ADD "HKLM\SYSTEM\ControlSet001\Control\Diagnostics\Performance\ShutdownCKCLSettings" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+
+:: VolumeID
+>nul 2>&1 Volumeid64.exe %SystemDrive% %random:~-4%-%random:~-4%
 
 :: DELETING WIN LOGS/TRACES
 echo  [+] Cleaning all traces...
@@ -305,7 +345,7 @@ shutdown /s /t 0
 
 :: GENERATING UUID/GUID
 for /f "usebackq" %%a in (`powershell -c [guid]::NewGuid(^).ToString(^)`) do (
-	set RGUID=%%a
+	set "RGUID=%%a"
 	exit /b
 )
 
@@ -321,9 +361,6 @@ for /f %%a in ('wmic csproduct get UUID ^| find "-"') do (
 	exit /b
 )
 
-
-
-rem Hostname/username change
 
 wmic useraccount where caption='%USERNAME%' rename %user%
 REG ADD "HKLM\SYSTEM\CurrentControlSet\services\Tcpip\Parameters" /v "NV Hostname" /t REG_SZ /d %hostname% /f
@@ -348,12 +385,6 @@ rem Install date change
 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v InstallDate /t REG_DWORD /d 150%d2%%d1% /f
 REG ADD "HKLM\SOFTWARE\Microsoft\Internet Explorer\Migration" /v "IE Installed Date" /t REG_BINARY /d 150%d2%%d1% /f
 
-:: CKCL GUID
-
-REG ADD "HKLM\SYSTEM\ControlSet001\Control\Diagnostics\Performance\BootCKCLSettings" /v GUID /t REG_SZ /d {%Hex8%-%Hex1%-%Hex0%-%Hex1%-3e%Hex10%} /f
-REG ADD "HKLM\SYSTEM\ControlSet001\Control\Diagnostics\Performance\SecondaryLogonCKCLSettings" /v GUID /t REG_SZ /d {%Hex8%-%Hex1%-%Hex0%-%Hex1%-3e%Hex10%} /f
-REG ADD "HKLM\SYSTEM\ControlSet001\Control\Diagnostics\Performance\ShutdownCKCLSettings" /v GUID /t REG_SZ /d {%Hex8%-%Hex1%-%Hex0%-%Hex1%-3e%Hex10%} /f
-
 rem Windows WMI Guid (individual for each system)
 rem REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\AppModel" /v GUID /t REG_SZ /d {A922A8BE-%Hex1%-%Hex0%-%Hex1%-92%Hex10%} /f
 
@@ -367,12 +398,9 @@ REG ADD "HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Wi
 
 rem WSUS change
 net stop wuauserv
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v SusClientId /t REG_SZ /d %Hex8%-%Hex1%-%Hex0%-%Hex1%-c9%Hex10% /f  
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v SusClientIDValidation /t REG_BINARY /d A40000000%i3%00003030%i4%312D3836382D30303%Hex10%D383535353700AA0000005831352D333%i5%3000000000000000C3AABF%Hex0%BA18B8878E89D%Hex0%000000000000396CC459B%i5%D0300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000%Hex1%6736 /f 
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientId" /t REG_SZ /d "{!RGUID!}" /f  
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientIDValidation" /t REG_BINARY /d A40000000%i3%00003030%i4%312D3836382D30303%Hex10%D383535353700AA0000005831352D333%i5%3000000000000000C3AABF%Hex0%BA18B8878E89D%Hex0%000000000000396CC459B%i5%D0300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000%Hex1%6736 /f 
 net start wuauserv 
 
 rem SID\Network Adapter GUID\DTC\DHCPv6 (CHANGE PATH TO SOFTWARE SIDCHG http:\\www.stratesave.com\html\sidchg.html)
 C:\sidchg64\sidchg64.exe /F /R /KEY
-
-rem VolumeID change
-C:\antiOS\Volumeid64.exe C: !_RndAlphaNum!0-!_RndAlphaNum2!
