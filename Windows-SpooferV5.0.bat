@@ -76,7 +76,7 @@ cls&exit
 :SPOOF
 cls&title SPOOFING...
 echo.&color 6&echo   [+] WARNING: DON'T TURN OFF SYSTEM
-timeout /t 3
+>nul 2>&1 timeout /t 5
 echo.&color 4&echo   [+] Terminating Processes
 >nul 2>&1(
 	ipconfig/release
@@ -330,6 +330,8 @@ echo   [+] Cleaning all traces...
 	del /f/s/q/a "%appdata%\discord\GPUCache\*"
 	del /f/s/q/a "%appdata%\discord\Code Cache\*"
 
+	del /f/s/q/a "%LOCALAPPDATA%\Mozilla\Firefox\Profiles\3j6dg8kl.default\cache2\entries\*" rem Firefox cache
+	del /f/s/q/a "%LOCALAPPDATA%\Mozilla\Firefox\Profiles\em5zfttk.default-release\cache2\entries\*"
 	del /f/s/q/a "%LOCALAPPDATA%\Microsoft\CLR_v4.0\UsageTraces\*" rem Common Language Runtime Logs
 	del /f/s/q/a "%LOCALAPPDATA%\Microsoft\CLR_v4.0_32\UsageTraces\*"
 	del /f/s/q/a "%LOCALAPPDATA%\Microsoft\Windows\WebCache\*" rem Clear user web cache database
