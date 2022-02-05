@@ -93,6 +93,8 @@ echo.&echo   [+] Spoofing MAC Address&echo.
 
 echo   [+] Spoofing Registry&echo.
 
+:: SID
+Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\S-1-5-21-2960056097-2531251268-3110031662-1001
 
 :: Monitor Serials
 >nul 2>&1(
@@ -284,8 +286,18 @@ REG ADD "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" /v "ChipsetMatch
 
 :: VolumeID
 >nul 2>&1(
-	Volumeid64.exe %SystemDrive% %random:~-4%-%random:~-4%
-	powershell Reset-PhysicalDisk * rem Resets the status of a physical disk.
+	Volumeid64.exe %SystemDrive% %random:~-4%-%random:~-4% rem Spoofs VolumeID xxxx-xxxx
+	powershell Reset-PhysicalDisk *                        rem Resets the status of a physical disk.
+	vssadmin delete shadows /ALL /quiet                    rem Deletes a all volume's shadow copies.
+	fsutil usn deletejournal /D C:                         rem anti-cheat's are using the USN journal ID as a HWID mechanism.
+	fsutil usn deletejournal /D D:
+	fsutil usn deletejournal /D E:
+	fsutil usn deletejournal /D F:
+)
+
+:: MachineGuid
+>nul 2>&1(
+	del /f/s/q/a "%SystemRoot%\System32\restore\MachineGuid.txt" rem Contains a UUID which is used by anti-cheats.
 )
 
 :: DELETING WIN LOGS/TRACES
@@ -300,29 +312,29 @@ echo   [+] Cleaning all traces...
 	del /f/s/q/a "%appdata%\discord\GPUCache\*"
 	del /f/s/q/a "%appdata%\discord\Code Cache\*"
 
-	del /f/s/q/a "%LocalAppData%\Microsoft\CLR_v4.0\UsageTraces\*" rem Common Language Runtime Logs
-	del /f/s/q/a "%LocalAppData%\Microsoft\CLR_v4.0_32\UsageTraces\*"
-	del /f/s/q/a "%localappdata%\Microsoft\Windows\WebCache\*" rem Clear user web cache database
+	del /f/s/q/a "%LOCALAPPDATA%\Microsoft\CLR_v4.0\UsageTraces\*" rem Common Language Runtime Logs
+	del /f/s/q/a "%LOCALAPPDATA%\Microsoft\CLR_v4.0_32\UsageTraces\*"
+	del /f/s/q/a "%LOCALAPPDATA%\Microsoft\Windows\WebCache\*" rem Clear user web cache database
 	
-	del /f/s/q/a "%systemdrive%\Windows\UserviceProfiles\NetworkService\NTSER.dat"
-	del /f/s/q/a "%systemdrive%\Windows\UserviceProfiles\LocalService\AppData\Local\Microsoft\Windows\qwavecache.dat"
-	del /f/s/q/a "%systemdrive%\Windows\SchCache\*"
-	del /f/s/q/a "%systemdrive%\Windows\memory.dmp"
-	del /f/s/q/a "%systemdrive%\Windows\win.ini"
-	del /f/s/q/a "%systemdrive%\Windows\debug"
-	del /f/s/q/a "%systemdrive%\Windows\Logs"
-	del /f/s/q/a "%systemdrive%\Windows\CbsTemp\*"
-	del /f/s/q/a "%systemdrive%\Windows\ModemLogs\*"
-	del /f/s/q/a "%systemdrive%\Windows\Prefetch\*"
-	del /f/s/q/a "%systemdrive%\Windows\rescache\_merged\*"
-	del /f/s/q/a "%systemdrive%\Windows\SchCache\*"
+	del /f/s/q/a "%SystemRoot%\UserviceProfiles\NetworkService\NTSER.dat"
+	del /f/s/q/a "%SystemRoot%\UserviceProfiles\LocalService\AppData\Local\Microsoft\Windows\qwavecache.dat"
+	del /f/s/q/a "%SystemRoot%\SchCache\*"
+	del /f/s/q/a "%SystemRoot%\memory.dmp"
+	del /f/s/q/a "%SystemRoot%\win.ini"
+	del /f/s/q/a "%SystemRoot%\debug"
+	del /f/s/q/a "%SystemRoot%\Logs"
+	del /f/s/q/a "%SystemRoot%\CbsTemp\*"
+	del /f/s/q/a "%SystemRoot%\ModemLogs\*"
+	del /f/s/q/a "%SystemRoot%\Prefetch\*"
+	del /f/s/q/a "%SystemRoot%\rescache\_merged\*"
+	del /f/s/q/a "%SystemRoot%\SchCache\*"
 	del /f/s/q/a "%systemdrive%\PerfLogs\*"
 	del /f/s/q/a "%systemdrive%\desktop.ini"
 	del /f/s/q/a "%systemdrive%\MSOCache\*"
 	del /f/s/q/a "%systemdrive%\Users\Public\*"
 	del /f/s/q/a "%systemdrive%\Recovery\*"
-	del /f/s/q/a "%systemdrive%\Amd\*"
-	del /f/s/q/a "%systemdrive%\Intel\*"
+	del /f/s/q/a "%systemdrive%\AMD"
+	del /f/s/q/a "%systemdrive%\Intel"
 	del /f/s/q/a "%systemdrive%\Users\Public\*"
 	
 	del /f/s/q/a "%SystemRoot%\Performance\WinSAT\winsat.log" rem Clear Windows System Assessment Tool logs
