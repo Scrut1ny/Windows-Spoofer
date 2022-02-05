@@ -82,8 +82,6 @@ echo.&color 4&echo   [+] Terminating Processes
 	ipconfig/release
 )
 
-echo.&echo   [+] Spoofing MAC Address&echo.
-
 :: MAC Address
 >nul 2>&1(
 	rem REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" /v "OriginalNetworkAddress" /f rem Microsoft Kernel Debug Network Adapter
@@ -157,24 +155,32 @@ echo   [+] Spoofing Registry&echo.
 	REG DELETE "HKLM\SYSTEM" /v "HardwareConfig" /f
 	taskkill /f /im explorer.exe
 	explorer.exe
-	call :RGUID
+	call :RGUID&call :GUID1
 	REG ADD "HKLM\SYSTEM\HardwareConfig" /v "LastConfig" /t REG_SZ /d "{!RGUID!}" /f
+	REG DELETE "HKLM\SYSTEM\HardwareConfig\!GUID1!" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!\ComputerIds" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!\ProductIds" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\Current" /f
 )
 
 :: HardwareConfig
 >nul 2>&1(
-	call :GUID1
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BIOSReleaseDate" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BIOSVendor" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "BIOSVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemBiosVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemFamily" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemProductName" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemSKU" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	REG ADD "HKLM\SYSTEM\HardwareConfig\!GUID1!" /v "SystemVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BIOSReleaseDate" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BIOSVendor" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BIOSVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BootDriverFlags" /t REG_DWORD /d "0" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "EnclosureType" /t REG_DWORD /d "3" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "Id" /t REG_DWORD /d "0" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "LastUse" /t REG_BINARY /d "%random:~-2%ACBEC%random:~-2%E1AD%random:~-3%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemBiosVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemFamily" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemProductName" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemSKU" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 )
 
 :: Cryptography - MachineGuid - Clear Cryptographic Services Traces
@@ -298,6 +304,7 @@ echo   [+] Spoofing Registry&echo.
 
 :: Internet Explorer PID
 >nul 2>&1(
+	call :RGUID
 	REG ADD "HKLM\SOFTWARE\Microsoft\Internet Explorer" /v "svcKBNumber" /t REG_SZ /d "KB%random:~-5%%random:~-3%" /f
 	REG ADD "HKLM\SOFTWARE\Microsoft\Internet Explorer\Registration" /v "ProductId" /t REG_SZ /d "!RGUID!" /f
 )
