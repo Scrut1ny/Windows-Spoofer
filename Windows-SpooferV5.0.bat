@@ -382,8 +382,8 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\Diagtrack-Listener" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 	call :RGUID
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\EventLog-Application" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\EventLog-Security" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+	rem call :RGUID
+	rem REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\EventLog-Security" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f ACCESS DENIED
 	call :RGUID
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\EventLog-System" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 	call :RGUID
@@ -400,14 +400,14 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\Microsoft-Windows-Setup" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 	call :RGUID
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\NBSMBLOGGER" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\NetCore" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+	rem call :RGUID
+	rem REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\NetCore" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f ACCESS DENIED
 	call :RGUID
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\NtfsLog" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 	call :RGUID
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\PEAuthLog" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\RadioMgr" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+	rem call :RGUID
+	rem REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\RadioMgr" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f ACCESS DENIED
 	call :RGUID
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\RdrLog" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 	call :RGUID
@@ -426,8 +426,7 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\TileStore" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 	call :RGUID
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\Tpm" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\UBPM" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+	rem REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\UBPM" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f - NEVER CHANGE THIS VALUE OR START MENU + SEARCH BAR WILL BREAK!!!
 	call :RGUID
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\WdiContextLog" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 	call :RGUID
@@ -438,8 +437,6 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\WiFiDriverIHVSessionRepro" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 	call :RGUID
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\WiFiSession" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	REG ADD "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 )
 
 :: MachineGuid
