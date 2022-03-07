@@ -608,7 +608,7 @@ for /f "skip=1" %%a in ('wmic baseboard get serialnumber') do (
 )
 :: ------------------------------------------------------------
 
-:: RETRIEVING UUID/GUID ---------------------------------------
+:: UUID -------------------------------------------------------
 :UUID
 for /f %%a in ('wmic csproduct get UUID ^| find "-"') do (
 	set UUID=%%a
