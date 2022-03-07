@@ -10,7 +10,7 @@ setlocal EnableDelayedExpansion
 >nul chcp 65001
 
 fltmc >nul 2>&1 || (
-    echo.&echo   [33m• Administrator privileges are required.&echo.[0m
+    echo(&echo   [33m• Administrator privileges are required.&echo([0m
     PowerShell Start -Verb RunAs '%0' 2> nul || (
         echo   [33m• Right-click on the script and select "Run as administrator".[0m
         >nul pause&exit 1
@@ -20,7 +20,7 @@ fltmc >nul 2>&1 || (
 
 :MENU
 cls&title https://github.com/Scrut1ny/Windows-Spoofer ^| v5.5
-echo.
+echo(
 echo   ╔═════════════════════════════╗
 echo   ║   [31mWindows Spoofer[0m »» [32mv5.5[0m   ║
 echo   ║─────────────────────────────║
@@ -30,12 +30,12 @@ echo   ║ 3 » Check IP                ║
 echo   ║─────────────────────────────║
 echo   ║ [34mhttps://github.com/Scrut1ny[0m ║
 echo   ╚═════════════════════════════╝
-echo.
+echo(
 set /p "c=.  • "
 if '%c%'=='1' goto :choice1
 if '%c%'=='2' goto :choice2
 if '%c%'=='3' goto :choice3
-cls&echo.&echo   [31m• "%c%" isn't a valid option, please try again.[0m& >nul timeout /t 3
+cls&echo(&echo   [31m• "%c%" isn't a valid option, please try again.[0m& >nul timeout /t 3
 goto :MENU
 exit /b
 
@@ -48,7 +48,7 @@ exit /b
 goto :CheckSerials
 exit /b
 
-echo.&>nul pause
+echo(&>nul pause
 goto :MENU
 exit /b
 
@@ -59,7 +59,7 @@ for /f %%a in ('curl -fs api.ipify.org') do set PIP4=%%a
 for /f %%a in ('curl -fs api64.ipify.org') do set PIP6=%%a
 for /f "delims=, tokens=1,2,3,4,5,6,7,8,9" %%a in ('curl -fs http://ip-api.com/csv/!PIP4!?fields=66846719') do set IPInfo=%%a
 if %errorlevel%==0 (
-	echo.
+	echo(
 	echo   ╔═══════════════════════════════════════════════════════╗
 	echo   ║                       • ISP •                         ║  
 	echo   ╟───────────────────────────────────────────────────────╜
@@ -78,17 +78,20 @@ if %errorlevel%==0 (
 	echo   ╚═• [32m# Advanced Info[0m
 	>nul pause
 ) else (
-	echo.&echo [31m  • Unable to contact ISP.[0m&>nul timeout /t 3
+	echo(&echo [31m  • Unable to contact ISP.[0m&>nul timeout /t 3
 )
 goto :MENU
 exit /b
 
 :SPOOF
 cls&title Spoofing Windows...
-echo.&echo   • [31mWARNING:[0m [33mDon't turn off system[0m
+echo(&echo   • [31mWARNING:[0m [33mDon't turn off system[0m
 >nul timeout/t 5
-echo.&echo   • [35mTerminating Processes[0m&echo.
->nul 2>&1 ipconfig/release
+echo(&echo   • [35mTerminating Inflicting Processes[0m&echo(
+>nul 2>&1(
+	ipconfig/release
+	net stop msiserver rem https://www.minitool.com/news/windows-installer-service.html
+)
 
 :: MAC Address
 >nul 2>&1(
@@ -97,13 +100,15 @@ echo.&echo   • [35mTerminating Processes[0m&echo.
 )
 
 :: SPOOFING REG
-echo   • [35mSpoofing Registry[0m&echo.
+echo   • [35mSpoofing Registry (HWID • GUID • UUID)[0m&echo(
 
 :: SID
 >nul 2>&1(
 	for /f "tokens=7 delims=\" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList" ^| find "S-1-5-21"') do (
 		set SID=%%a
 	)
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\S-1-5-18" /v "Sid" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-4%" /f
+call :SID
 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!SID!" /v "Sid" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%1DF6EB044D4DF962E515FB9E90%random:~-5%" /f
 )
 
@@ -154,8 +159,8 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 :: HwProfileGuid
 >nul 2>&1(
 	call :RGUID
-	REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
 	REG ADD "HKLM\SYSTEM\ControlSet001\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
+	REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
 )
 
 :: HardwareConfig
@@ -190,20 +195,14 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 :: Cryptography
 >nul 2>&1(
 	call :RGUID
-	net stop bits
-	net stop wuauserv
-	net stop cryptSvc
-	net stop msiserver
+	net stop cryptsvc
 	REG ADD "HKLM\SOFTWARE\Microsoft\Cryptography" /v "MachineGuid" /t REG_SZ /d "!RGUID!" /f
+	net start cryptsvc
 	del /f/s/q/a "%SystemRoot%\System32\catroot2\dberr.txt"
 	del /f/s/q/a "%SystemRoot%\System32\catroot2.log"
 	del /f/s/q/a "%SystemRoot%\System32\catroot2.jrs"
 	del /f/s/q/a "%SystemRoot%\System32\catroot2.edb"
 	del /f/s/q/a "%SystemRoot%\System32\catroot2.chk"
-	net start bits
-	net start wuauserv
-	net start cryptSvc
-	net start msiserver
 )
 
 :: Physical Drives
@@ -345,6 +344,7 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 :: VolumeID
 >nul 2>&1(
 	Volumeid64.exe %SystemDrive% %random:~-4%-%random:~-4% rem Spoofs VolumeID xxxx-xxxx
+	Volumeid64.exe D: %random:~-4%-%random:~-4%
 	powershell Reset-PhysicalDisk *                        rem Resets the status of a physical disk.
 	wmic shadowcopy delete /nointeractive                  rem Deletes all volume shadow copies.
 	vssadmin delete shadows /ALL /quiet                    
@@ -494,7 +494,7 @@ echo   • [35mCleaning File Traces[0m
 	del /f/s/q/a "%windir%\SoftwareDistribution\Download\*"
 )
 
-echo.&echo   • [35mConfiguring NIC[0m&echo.
+echo(&echo   • [35mConfiguring NIC • Network[0m&echo(
 
 :: Reset Data Usage
 >nul 2>&1(
@@ -514,15 +514,17 @@ echo.&echo   • [35mConfiguring NIC[0m&echo.
 
 :: Other
 >nul 2>&1(
-	netsh interface ip delete arpcache
-	netsh interface ip delete destinationcache
-	netsh interface ip delete neighbors
-	netsh interface ip reset catalog
-	netsh interface ip reset
-	netsh interface httpstunnel reset
-	netsh interface portproxy reset
-	netsh interface udp reset
-	netsh interface tcp reset
+	netsh int ip delete arpcache
+	netsh int ip delete destinationcache
+	netsh int ip delete neighbors
+	netsh int ip reset catalog
+	netsh int ip reset
+	netsh int ipv4 reset
+	netsh int ipv6 reset
+	netsh int httpstunnel reset
+	netsh int portproxy reset
+	netsh int udp reset
+	netsh int tcp reset
 	netsh winsock set autotuning off
 	netsh winhttp reset autoproxy
 	netsh winsock reset catalog
@@ -551,7 +553,7 @@ echo.&echo   • [35mConfiguring NIC[0m&echo.
 	)
 )
 
-echo   • [35mEmptying Recycle Bins[0m&echo.
+echo   • [35mEmptying Recycle Bins[0m&echo(
 
 >nul 2>&1(
 	del /f/s/q/a %temp%\*
@@ -559,16 +561,19 @@ echo   • [35mEmptying Recycle Bins[0m&echo.
 	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
 	taskkill /f /im explorer.exe
 	explorer.exe
-	ipconfig/renew
 )
 
+>nul 2>&1(
+	ipconfig/renew
+	net start msiserver
+)
+
+goto :AGAIN
+
 :CheckSerials
-cls&echo.
-
-echo   • VolumeID • %systemdrive% • !VolID!
-
+cls&echo(
+echo   • VolumeID: %systemdrive% !VolID!
 >nul pause&goto :MENU
-exit /b
 
 :: NVIDIA -----------------------------------------------------
 for /f "skip=2 tokens=2*" %%a in ('reg query "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager"') do (
@@ -609,15 +614,16 @@ rem wmic memorychip get name,serialnumber
 rem wmic diskdrive get Model,serialnumber
 rem wmic nicconfig where (IPEnabled=True) GET Description,SettingID,MACAddress
 :: ------------------------------------------------------------
+exit /b
 
 :AGAIN
-echo.&echo.&cls&title Main Menu
-echo.&echo    RESTART PC NOW!&echo.
+echo(&echo(&cls&title Main Menu
+echo(&echo    RESTART PC NOW!&echo(
 echo  [1] Run again
 echo  [2] Check Serials
 echo  [3] Restart
 echo  [4] Shutdown
-echo.
+echo(
 set /p c=".  • "
 if %c%==1 goto :c1
 if %c%==2 goto :c2
