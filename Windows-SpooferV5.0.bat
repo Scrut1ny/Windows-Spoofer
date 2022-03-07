@@ -165,14 +165,12 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 
 :: HardwareConfig
 >nul 2>&1(
-	REG DELETE "HKLM\SYSTEM" /v "HardwareConfig" /f
+	REG DELETE "HKLM\SYSTEM" /v "HardwareConfig" /va /f
 	call :RGUID&call :UUID
 	REG ADD "HKLM\SYSTEM\HardwareConfig" /v "LastConfig" /t REG_SZ /d "{!RGUID!}" /f
 	REG DELETE "HKLM\SYSTEM\HardwareConfig\{!UUID!}" /f
+	call :RGUID
 	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /f
-	REG DELETE "HKLM\SYSTEM\HardwareConfig\!RGUID!\ComputerIds" /f
-	REG DELETE "HKLM\SYSTEM\HardwareConfig\!RGUID!\ProductIds" /f
-	REG DELETE "HKLM\SYSTEM\HardwareConfig\Current" /f
 	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BIOSReleaseDate" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
