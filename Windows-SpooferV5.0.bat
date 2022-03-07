@@ -85,9 +85,9 @@ exit /b
 
 :SPOOF
 cls&title Spoofing Windows...
-echo(&echo   • [31mWARNING:[0m [33mDon't turn off system[0m
+echo(&echo   • [31mWARNING:[0m [33mDon't turn off system.[0m
 >nul timeout/t 5
-echo(&echo   • [35mTerminating Inflicting Processes[0m&echo(
+echo(&echo   • [35mTerminating Conflicting Processes[0m&echo(
 >nul 2>&1(
 	ipconfig/release
 	net stop msiserver rem https://www.minitool.com/news/windows-installer-service.html
@@ -100,7 +100,7 @@ echo(&echo   • [35mTerminating Inflicting Processes[0m&echo(
 )
 
 :: SPOOFING REG
-echo   • [35mSpoofing Registry (HWID • GUID • UUID)[0m&echo(
+echo   • [35mSpoofing Registry (HWID • SID • GUID/UUID • Time/Dates...)[0m&echo(
 
 :: SID
 >nul 2>&1(
@@ -166,11 +166,9 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 :: HardwareConfig
 >nul 2>&1(
 	REG DELETE "HKLM\SYSTEM" /v "HardwareConfig" /f
-	taskkill /f /im explorer.exe
-	explorer.exe
-	call :RGUID&call :GUID1
+	call :RGUID&call :UUID
 	REG ADD "HKLM\SYSTEM\HardwareConfig" /v "LastConfig" /t REG_SZ /d "{!RGUID!}" /f
-	REG DELETE "HKLM\SYSTEM\HardwareConfig\!GUID1!" /f
+	REG DELETE "HKLM\SYSTEM\HardwareConfig\{!UUID!}" /f
 	REG ADD "HKLM\SYSTEM\HardwareConfig\!RGUID!" /f
 	REG DELETE "HKLM\SYSTEM\HardwareConfig\!RGUID!\ComputerIds" /f
 	REG DELETE "HKLM\SYSTEM\HardwareConfig\!RGUID!\ProductIds" /f
@@ -556,7 +554,7 @@ echo(&echo   • [35mConfiguring NIC • Network[0m&echo(
 echo   • [35mEmptying Recycle Bins[0m&echo(
 
 >nul 2>&1(
-	del /f/s/q/a %temp%\*
+	del /f/s/q/a %tmp%\*
 	del /f/s/q/a %systemdrive%\*.log,*.LOG,*.etl,*.tmp,*.hta
 	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
 	taskkill /f /im explorer.exe
@@ -609,6 +607,14 @@ for /f "skip=1" %%a in ('wmic baseboard get serialnumber') do (
 	exit /b
 )
 :: ------------------------------------------------------------
+
+:: RETRIEVING UUID/GUID ---------------------------------------
+:UUID
+for /f %%a in ('wmic csproduct get UUID ^| find "-"') do (
+	set UUID=%%a
+	exit /b
+)
+:: ------------------------------------------------------------
 rem wmic path win32_VideoController get name,PNPDeviceID
 rem wmic memorychip get name,serialnumber
 rem wmic diskdrive get Model,serialnumber
@@ -647,16 +653,9 @@ for /f "usebackq" %%a in (`powershell [guid]::NewGuid(^).ToString(^)`) do (
 	exit /b
 )
 
-:: GENERATING MACAddress
+:: GENERATING MAC Address
 :RMAC
 for /f "usebackq" %%a in (`powershell ('{0:x}' -f (Get-Random 0xFFFFFFFFFFFF^)^).padleft(12^,^"0^"^)`) do (
 	set RMAC=%%a
-	exit /b
-)
-
-:: RETRIEVING UUID/GUID
-:GUID1
-for /f %%a in ('wmic csproduct get UUID ^| find "-"') do (
-	set GUID1={%%a}
 	exit /b
 )
