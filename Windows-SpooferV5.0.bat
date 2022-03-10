@@ -229,11 +229,24 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	rem REG ADD "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 5\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "SerialNumber" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-5%" /f
 )
 
+:: DiskPeripheral Identifier
+>nul 2>&1(
+	reg add "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral\0" /v "Identifier" /t REG_SZ /d "%random:~-5%%random:~-3%-%random:~-5%%random:~-3%-A" /f
+	reg add "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral\1" /v "Identifier" /t REG_SZ /d "%random:~-5%%random:~-3%-%random:~-5%%random:~-3%-A" /f
+)
+
 :: SQMClient
 >nul 2>&1(
 	call :RGUID
 	REG ADD "HKCU\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
 	REG ADD "HKLM\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
+)
+
+:: SystemInformation
+>nul 2>&1(
+	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "BIOSReleaseDate" /t REG_SZ /d "0%random:~-1%/1%random:~-1%/%random:~-4%" /f
+	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareId" /t REG_SZ /d "{!RGUID!}" /f
+	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareIds" /t REG_MULTI_SZ /d "{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}" /f
 )
 
 :: CurrentVersion
@@ -488,6 +501,12 @@ echo   • [35mCleaning File Traces[0m
 	del /f/s/q/a "%homepath%\AppData\Local\Microsoft\Windows\Explorer\thumbcache_*.db"
 
 	del /f/s/q/a "%windir%\SoftwareDistribution\Download\*"
+	
+	if exist "%SystemDrive%\Windows.old" (
+		takeown /f "%SystemDrive%\Windows.old" /a /r /d y
+		icacls "%SystemDrive%\Windows.old" /grant administrators:F /t
+		rd /s /q "%SystemDrive%\Windows.old"
+	)
 )
 
 echo(&echo   • [35mConfiguring NIC • Network[0m&echo(
