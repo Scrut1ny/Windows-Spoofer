@@ -1,28 +1,27 @@
-::--------------------------------------
-:: By: 0x00 / Anonymoushacker4926
-:: Windows Spoofer
-:: V5.0
-:: Link: https://github.com/Scrut1ny/Windows-Spoofer
-::--------------------------------------
+:: ==============================
+::     Windows Spoofer v6.0
+:: ==============================
+:: Dev  - Scut1ny
+:: Link - https://github.com/Scrut1ny/Windows-Spoofer
+:: ==============================
 
 @echo off
 setlocal EnableDelayedExpansion
->nul chcp 65001
 
 fltmc >nul 2>&1 || (
-    echo(&echo   [33m• Administrator privileges are required.&echo([0m
+    echo(&echo   [33m# Administrator privileges are required.&echo([0m
     PowerShell Start -Verb RunAs '%0' 2> nul || (
-        echo   [33m• Right-click on the script and select "Run as administrator".[0m
+        echo   [33m# Right-click on the script and select "Run as administrator".[0m
         >nul pause&exit 1
     )
     exit 0
 )
 
 :MENU
-cls&title https://github.com/Scrut1ny/Windows-Spoofer ^| v5.5
+cls&title https://github.com/Scrut1ny/Windows-Spoofer ^| v6.0
 echo(
-echo   ╔═════════════════════════════╗
-echo   ║   [31mWindows Spoofer[0m »» [32mv5.5[0m   ║
+echo   ===============================
+echo      [31mWindows Spoofer[0m »» [32mv5.5[0m   ║
 echo   ║─────────────────────────────║
 echo   ║ 1 » Spoof Windows           ║
 echo   ║ 2 » Check Serials           ║
@@ -31,11 +30,11 @@ echo   ║───────────────────────�
 echo   ║ [34mhttps://github.com/Scrut1ny[0m ║
 echo   ╚═════════════════════════════╝
 echo(
-set /p "c=.  • "
+set /p "c=.  # "
 if '%c%'=='1' goto :choice1
 if '%c%'=='2' goto :choice2
 if '%c%'=='3' goto :choice3
-cls&echo(&echo   [31m• "%c%" isn't a valid option, please try again.[0m& >nul timeout /t 3
+cls&echo(&echo   [31m# "%c%" isn't a valid option, please try again.[0m& >nul timeout /t 3
 goto :MENU
 exit /b
 
@@ -58,51 +57,65 @@ for /f "delims=[] tokens=2" %%a in ('ping -4 %ComputerName% ^| findstr="["') do 
 for /f %%a in ('curl -fs api.ipify.org') do set PIP4=%%a
 for /f %%a in ('curl -fs api64.ipify.org') do set PIP6=%%a
 for /f "delims=, tokens=1,2,3,4,5,6,7,8,9" %%a in ('curl -fs http://ip-api.com/csv/!PIP4!?fields=66846719') do set IPInfo=%%a
-if %errorlevel%==0 (
+if !ERRORLEVEL!==0 (
 	echo(
 	echo   ╔═══════════════════════════════════════════════════════╗
-	echo   ║                       • ISP •                         ║  
+	echo   ║                       # ISP #                         ║  
 	echo   ╟───────────────────────────────────────────────────────╜
 	echo   ║
-	echo   ╠═══╦═══• [32m# Local[0m
-	echo   ║   ╚• IPv4 • %LIP%
+	echo   ╠═══╦═══# [32m# Local[0m
+	echo   ║   ╚# IPv4 # %LIP%
 	echo   ║                   
-	echo   ╠═══╦═══• [32m# Public[0m
-	echo   ║   ╠• IPv4 • !PIP4!                           
+	echo   ╠═══╦═══# [32m# Public[0m
+	echo   ║   ╠# IPv4 # !PIP4!                           
 	if not !IPv4!==!IPv6! (
-        echo   ║   ╚• IPv6 • !PIP6!            
+        echo   ║   ╚# IPv6 # !PIP6!            
     ) else (
-        echo   ║   ╚• IPv6 • [31mnull[0m   
+        echo   ║   ╚# IPv6 # [31mnull[0m   
     )
 	echo   ║
-	echo   ╚═• [32m# Advanced Info[0m
+	echo   ╚═# [32m# Advanced Info[0m
 	>nul pause
 ) else (
-	echo(&echo [31m  • Unable to contact ISP.[0m&>nul timeout /t 3
+	echo(&echo [31m  # Unable to contact ISP.[0m&>nul timeout /t 3
 )
 goto :MENU
 exit /b
 
 :SPOOF
 cls&title Spoofing Windows...
-echo(&echo   • [31mWARNING:[0m [33mDon't turn off system.[0m
+echo(&echo   # [31mWARNING:[0m [33mDon't turn off system.[0m
 >nul timeout/t 5
-echo(&echo   • [35mTerminating Conflicting Processes[0m&echo(
+echo(&echo   # [35mTerminating Conflicting Processes[0m&echo(
 >nul 2>&1(
 	ipconfig/release
 	net stop msiserver rem https://www.minitool.com/news/windows-installer-service.html
 )
 
+:: ====================================================================================================
 :: MAC Address
+:: ====================================================================================================
+
 >nul 2>&1(
 	rem REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" /v "OriginalNetworkAddress" /f rem Microsoft Kernel Debug Network Adapter
 	rem REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0001" /v "OriginalNetworkAddress" /f rem Actual NIC
 )
 
-:: SPOOFING REG
-echo   • [35mSpoofing Registry (HWID • SID • GUID/UUID • Time/Dates...)[0m&echo(
+:: ====================================================================================================
 
+
+
+
+:: SPOOFING REG
+
+echo   # [35mSpoofing Registry (HWID # SID # GUID/UUID # Time/Dates...)[0m&echo(
+
+
+
+
+:: ====================================================================================================
 :: SID
+:: ====================================================================================================
 >nul 2>&1(
 	for /f "tokens=7 delims=\" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList" ^| find "S-1-5-21"') do (
 		set SID=%%a
@@ -112,7 +125,15 @@ call :SID
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!SID!" /v "Sid" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%1DF6EB044D4DF962E515FB9E90%random:~-5%" /f
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: Monitor
+:: ====================================================================================================
+
 >nul 2>&1(
 	set counter=-1
 	for /f "skip=1 tokens=7 delims=\" %%a in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor"') do (
@@ -125,7 +146,14 @@ call :RGUID
 reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!" /v "ClassGUID" /t REG_SZ /d "{!RGUID!}" /f
 )
 
+:: ====================================================================================================
+
+
+
+:: ====================================================================================================
 :: MSSMBIOS
+:: ====================================================================================================
+
 >nul 2>&1(
 	net stop winmgmt /Y
 	reg add "HKLM\SYSTEM\CurrentControlSet\Services\mssmbios\Data" /v "AcpiData" /t REG_BINARY /d "4D%random:~-5%73C00000001F4414C41534B4141204D2049000000092007014D534654130001000000000000000000000000F0000000000000007F0000000046414350140100000680414C41534B4141204D204920000009200701414D4920130001000000CCBC00905CBB00010900B2000000A0A1000000080000000000000408000000000000415049435E0100000315414C41534B4141204D204920000009200701414D4920130001000000E0FE010000000008000001000000000802020100000000080404010000000008060849565253D000000002D8414D44202000416D645461626C6501000000414D44200000000041302000000000000000000010B04800020040000000B8FE00000000000000006E8F0480485045543800000001BD414C41534B4141204D204900000009200701414D49200500000001822210004000000000D0FE0000000000EE3700465044544400000001EC414C41534B4141204D204920000009200701414D492013000001000010010000000000B051BB000000000100100100000000009057BB0000000053534454988C0000021A414D44000000416D645461626C65020000004D5346540000000453534454988C0000021A414D44000000416D645461626C65020000004D5346540000000453534454988C0000021A414D44000000416D645461626C65020000004D53465400000004464944549C00000001C1414C41534B4141204D204900000009200701414D49201300010024464944047800314154584830310000B0D2A30ACD9BE99A9ADB36CD0819803B3035003153534454988C0000021A414D44000000416D645461626C65020000004D5346540000000453534454988C0000021A414D44000000416D645461626C65020000004D5346540000000443524154D00B000001FA414D44000000416D645461626C6501000000414D442001000000300000000100000000000000002800000500000000000000000000000C00000000000000434449542900000001E7414D44000000416D645461626C6501000000414D442001000000010000000A53534454988C0000021A414D44000000416D645461626C65020000004D5346540000000453534454988C0000021A414D44000000416D645461626C65020000004D5346540000000457534D54280000000165414C41534B4141204D204920000009200701414D4920130001000700000053534454988C0000021A414D44000000416D645461626C65020000004D53465400000004" /f
@@ -135,7 +163,15 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	net start winmgmt /Y
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: NVIDIA
+:: ====================================================================================================
+
 >nul 2>&1(
 	call :RGUID
 	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global" /v "ClientUUID" /t REG_SZ /d "{!RGUID!}" /f
@@ -162,7 +198,15 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	schtasks /change /TN NvTmRepOnLogon_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: BIOS
+:: ====================================================================================================
+
 >nul 2>&1(
 	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
@@ -177,14 +221,42 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: HwProfileGuid
+:: ====================================================================================================
+
 >nul 2>&1(
 	call :RGUID
 	reg add "HKLM\SYSTEM\ControlSet001\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
+:: MachineGuid
+:: ====================================================================================================
+
+rem Contains a UUID which is used by Anti-Cheats.
+del /F /Q "%SystemRoot%\System32\restore\MachineGuid.txt"
+
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: HardwareConfig
+:: ====================================================================================================
+
 >nul 2>&1(
 	REG DELETE "HKLM\SYSTEM" /v "HardwareConfig" /va /f
 	call :RGUID&call :UUID
@@ -209,7 +281,15 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: Cryptography
+:: ====================================================================================================
+
 >nul 2>&1(
 	call :RGUID
 	net stop cryptsvc
@@ -222,55 +302,77 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	net start cryptsvc
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: Physical Drives
+:: ====================================================================================================
+
 >nul 2>&1(
-	rem Scsi Port 0
-	reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 0\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "DeviceIdentifierPage" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 0\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "InquiryData" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 0\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "SerialNumber" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-5%" /f
-	rem Scsi Port 1
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 1\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "DeviceIdentifierPage" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 1\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "InquiryData" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 1\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "SerialNumber" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-5%" /f
-	rem Scsi Port 2
-	reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 2\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "DeviceIdentifierPage" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 2\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "InquiryData" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 2\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "SerialNumber" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-5%" /f
-	rem Scsi Port 3
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 3\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "DeviceIdentifierPage" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 3\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "InquiryData" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 3\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "SerialNumber" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-5%" /f
-	rem Scsi Port 4
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 4\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "DeviceIdentifierPage" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 4\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "InquiryData" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 4\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "SerialNumber" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-5%" /f
-	rem Scsi Port 5
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 5\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "DeviceIdentifierPage" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 5\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "InquiryData" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
-	rem reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port 5\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "SerialNumber" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-5%" /f
+    for /f "tokens=5 delims=\" %%A in ('reg query "HKLM\HARDWARE\DEVICEMAP\Scsi"') do (
+        reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\%%A\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "DeviceIdentifierPage" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
+        reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\%%A\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "InquiryData" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
+        reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\%%A\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "SerialNumber" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-5%" /f
+    )
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: DiskPeripheral Identifier
->nul 2>&1(
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral\0" /v "Identifier" /t REG_SZ /d "%random:~-5%%random:~-3%-%random:~-5%%random:~-3%-A" /f
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral\1" /v "Identifier" /t REG_SZ /d "%random:~-5%%random:~-3%-%random:~-5%%random:~-3%-A" /f
+:: ====================================================================================================
+
+>nul 2>&1 (
+    for /f "tokens=10 delims=\" %%A in ('2^>nul reg query "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral"') do (
+        reg add "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral\%%A" /v "Identifier" /t REG_SZ /d "%random:~-5%%random:~-3%-%random:~-5%%random:~-3%-A" /f
+    )
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: SQMClient
+:: ====================================================================================================
+
 >nul 2>&1(
 	call :RGUID
 	reg add "HKCU\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
 	reg add "HKLM\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: SystemInformation
+:: ====================================================================================================
+
 >nul 2>&1(
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "BIOSReleaseDate" /t REG_SZ /d "0%random:~-1%/1%random:~-1%/%random:~-4%" /f
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareId" /t REG_SZ /d "{!RGUID!}" /f
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareIds" /t REG_MULTI_SZ /d "{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}" /f
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: CurrentVersion
+:: ====================================================================================================
+
 >nul 2>&1(
 	call :RGUID
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "BuildGUID" /t REG_SZ /d "!RGUID!" /f
@@ -292,7 +394,15 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer" /v "svcKBNumber" /t REG_SZ /d "KB%random:~-5%%random:~-3%" /f
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: Events
+:: ====================================================================================================
+
 >nul 2>&1(
 	call :RGUID
 	reg add "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\Connected" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
@@ -310,7 +420,15 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	reg add "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\STIproxyEvent" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: Variables
+:: ====================================================================================================
+
 >nul 2>&1(
 	call :RGUID
 	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e965-e325-11ce-bfc1-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 4d36e965
@@ -356,7 +474,15 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{88bae032-5a81-49f0-bc3d-a4ff138216d6}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 88bae032
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: CKCL
+:: ====================================================================================================
+
 >nul 2>&1(
 	call :RGUID
 	reg add "HKLM\SYSTEM\ControlSet001\Control\Diagnostics\Performance\BootCKCLSettings" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
@@ -364,27 +490,58 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	reg add "HKLM\SYSTEM\ControlSet001\Control\Diagnostics\Performance\ShutdownCKCLSettings" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 )
 
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: Internet Explorer
+:: ====================================================================================================
+
 >nul 2>&1(
 	call :RGUID
 	reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer" /v "svcKBNumber" /t REG_SZ /d "KB%random:~-5%%random:~-3%" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Registration" /v "ProductId" /t REG_SZ /d "!RGUID!" /f
 )
 
-:: VolumeID
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
+:: VolumeID - Shadow Copies - USN Journal ID
+:: ====================================================================================================
+
 >nul 2>&1(
-	Volumeid64.exe %SystemDrive% %random:~-4%-%random:~-4% -nobanner rem Spoofs VolumeID xxxx-xxxx
+	rem Spoofs VolumeID xxxx-xxxx
+	Volumeid64.exe %SystemDrive% %random:~-4%-%random:~-4% -nobanner
 	Volumeid64.exe D: %random:~-4%-%random:~-4% -nobanner
-	powershell Reset-PhysicalDisk *                        rem Resets the status of a physical disk.
-	wmic shadowcopy delete /nointeractive                  rem Deletes all volume shadow copies.
-	vssadmin delete shadows /ALL /quiet                    
-	fsutil usn deletejournal /D C:                         rem anti-cheat's are using the USN journal ID as a HWID mechanism.
+	
+	rem Resets all status's of the physical disk(s).
+	powershell Reset-PhysicalDisk *
+	
+	rem Deletes all volume shadow copies.
+	wmic shadowcopy delete /nointeractive
+	vssadmin delete shadows /ALL /quiet
+	
+	rem Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism, so we delete them.
+	fsutil usn deletejournal /D C:
 	fsutil usn deletejournal /D D:
 	fsutil usn deletejournal /D E:
 	fsutil usn deletejournal /D F:
 )
 
-:: Random
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
+:: Misc
+:: ====================================================================================================
+
 >nul 2>&1(
 	call :RGUID
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareId" /t REG_SZ /d "{!RGUID!}" /f
@@ -469,87 +626,80 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\WiFiSession" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
 )
 
-:: MachineGuid
-rem del /f/s/q/a "%SystemRoot%\System32\restore\MachineGuid.txt" rem Contains a UUID which is used by anti-cheats.
+:: ====================================================================================================
 
-:: Deleting Windows Logs and Traces etc
-echo   • [35mCleaning File Traces[0m
+
+
+
+:: ====================================================================================================
+:: Windows Logs, Traces, Networking, etc
+:: ====================================================================================================
+
+echo   # [35mCleaning Traces[0m
+
+:: Files
+
 >nul 2>&1(
-	del /f/s/q/a "%appdata%\Zoom\logs\*"
-	del /f/s/q/a "%appdata%\Zoom\reports\*"
-	del /f/s/q/a "%appdata%\Zoom\installer.txt"
-	del /f/s/q/a "%appdata%\Zoom\appsafecheck.txt"
-
-	del /f/s/q/a "%appdata%\discord\Cache\*"
-	del /f/s/q/a "%appdata%\discord\GPUCache\*"
-	del /f/s/q/a "%appdata%\discord\Code Cache\*"
-
-	del /f/s/q/a "%LOCALAPPDATA%\Mozilla\Firefox\Profiles\3j6dg8kl.default\cache2\entries\*" rem Firefox cache
-	del /f/s/q/a "%LOCALAPPDATA%\Mozilla\Firefox\Profiles\em5zfttk.default-release\cache2\entries\*"
-	del /f/s/q/a "%LOCALAPPDATA%\Microsoft\CLR_v4.0\UsageTraces\*" rem Common Language Runtime Logs
-	del /f/s/q/a "%LOCALAPPDATA%\Microsoft\CLR_v4.0_32\UsageTraces\*"
-	del /f/s/q/a "%LOCALAPPDATA%\Microsoft\Windows\WebCache\*" rem Clear user web cache database
-	
-	del /f/s/q/a "%SystemRoot%\UserviceProfiles\NetworkService\NTSER.dat"
-	del /f/s/q/a "%SystemRoot%\UserviceProfiles\LocalService\AppData\Local\Microsoft\Windows\qwavecache.dat"
-	del /f/s/q/a "%SystemRoot%\SchCache\*"
-	del /f/s/q/a "%SystemRoot%\memory.dmp"
-	del /f/s/q/a "%SystemRoot%\win.ini"
-	del /f/s/q/a "%SystemRoot%\debug"
-	del /f/s/q/a "%SystemRoot%\Logs"
-	del /f/s/q/a "%SystemRoot%\CbsTemp\*"
-	del /f/s/q/a "%SystemRoot%\ModemLogs\*"
-	del /f/s/q/a "%SystemRoot%\Prefetch\*"
-	del /f/s/q/a "%SystemRoot%\rescache\_merged\*"
-	del /f/s/q/a "%SystemRoot%\SchCache\*"
-	del /f/s/q/a "%systemdrive%\PerfLogs\*"
-	del /f/s/q/a "%systemdrive%\desktop.ini"
-	del /f/s/q/a "%systemdrive%\MSOCache\*"
-	del /f/s/q/a "%systemdrive%\Users\Public\*"
-	del /f/s/q/a "%systemdrive%\Recovery\*"
-	del /f/s/q/a "%systemdrive%\AMD"
-	del /f/s/q/a "%systemdrive%\Intel"
-	del /f/s/q/a "%systemdrive%\Users\Public\*"
-	
-	del /f/s/q/a "%SystemRoot%\Performance\WinSAT\winsat.log" rem Clear Windows System Assessment Tool logs
-	del /f/s/q/a "%SystemRoot%\debug\PASSWD.LOG" rem Clear Password change events
-	del /f/s/q/a "%SystemRoot%\Logs\SIH\*" rem Windows Update Events Logs
-	del /f/s/q/a "%SystemRoot%\Traces\WindowsUpdate\*" rem Windows Update Logs
-	del /f/s/q/a "%SystemRoot%\System32\LogFiles\setupcln\*" rem Disk Cleanup tool Cleanmgr.exe Logs
-	del /f/s/q/a "%SystemRoot%\Logs\NetSetup\*" rem Network Setup Service Events Logs
-	
-	del /f/s/q/a "%homepath%\AppData\Local\Microsoft\Windows\Explorer\iconcache*"
-	del /f/s/q/a "%homepath%\AppData\Local\Microsoft\Windows\Explorer\thumbcache_*.db"
-
-	del /f/s/q/a "%windir%\SoftwareDistribution\Download\*"
+	del /F /Q "%LOCALAPPDATA%\Microsoft\CLR_v4.0\UsageTraces\*"
+	del /F /Q "%LOCALAPPDATA%\Microsoft\CLR_v4.0_32\UsageTraces\*"
+	del /F /Q "%LOCALAPPDATA%\Microsoft\Windows\WebCache\*"
+	del /F /Q "%SystemRoot%\UserviceProfiles\NetworkService\NTSER.dat"
+	del /F /Q "%SystemRoot%\UserviceProfiles\LocalService\AppData\Local\Microsoft\Windows\qwavecache.dat"
+	del /F /Q "%SystemRoot%\memory.dmp"
+	del /F /Q "%SystemRoot%\win.ini"
+	del /F /Q "%SystemRoot%\debug"
+	del /F /Q "%SystemRoot%\Logs"
+	del /F /Q "%SystemRoot%\CbsTemp\*"
+	del /F /Q "%SystemRoot%\ModemLogs\*"
+	del /F /Q "%SystemRoot%\Prefetch\*"
+	del /F /Q "%SystemRoot%\rescache\_merged\*"
+	del /F /Q "%SystemRoot%\SchCache\*"
+	del /F /Q "%systemdrive%\PerfLogs\*"
+	del /F /Q "%systemdrive%\desktop.ini"
+	del /F /Q "%systemdrive%\MSOCache\*"
+	del /F /Q "%systemdrive%\Recovery\*"
+	del /F /Q "%systemdrive%\AMD"
+	del /F /Q "%systemdrive%\Intel"
+	del /F /Q "%systemdrive%\Users\Public\*"
+	del /F /Q "%SystemRoot%\Performance\WinSAT\winsat.log"
+	del /F /Q "%SystemRoot%\debug\PASSWD.LOG"
+	del /F /Q "%SystemRoot%\Logs\SIH\*"
+	del /F /Q "%SystemRoot%\Traces\WindowsUpdate\*"
+	del /F /Q "%SystemRoot%\System32\LogFiles\setupcln\*"
+	del /F /Q "%SystemRoot%\Logs\NetSetup\*"
+	del /F /Q "%homepath%\AppData\Local\Microsoft\Windows\Explorer\iconcache*"
+	del /F /Q "%homepath%\AppData\Local\Microsoft\Windows\Explorer\thumbcache_*.db"
+	del /F /Q "%windir%\SoftwareDistribution\Download\*"
 	
 	if exist "%SystemDrive%\Windows.old" (
 		takeown /f "%SystemDrive%\Windows.old" /a /r /d y
 		icacls "%SystemDrive%\Windows.old" /grant administrators:F /t
 		rd /s /q "%SystemDrive%\Windows.old"
 	)
+	
+	del /F /Q %tmp%\*
+	del /F /Q %systemdrive%\*.log *.etl *.tmp *.hta
+	
+	rem Emptying Recycle Bins & Resetting explorer.exe
+	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+	taskkill /F /IM explorer.exe&explorer.exe
 )
 
-echo(&echo   • [35mConfiguring NIC • Network[0m&echo(
+:: Networking
 
-:: Reset Data Usage
 >nul 2>&1(
-	net stop dps
-	del /f/s/q/a "%windir%\System32\sru\*"
-	net start dps
-)
-
-:: Clear SSL State
->nul 2>&1(
+	rem Delete all Network Data Usage & Disable it.
+	sc stop "DPS" & sc config "DPS" start= disabled
+	del /F /Q "%windir%\System32\sru\*"
+	
+	rem Clear SSL State
 	certutil -URLCache * delete
 	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 2 rem Clear Cookies
 	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8 rem Clear Temporary Internet Files
 	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 16 rem Clear Form Data
 	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 32 rem Clear Saved Passwords
-)
-
-:: Other
->nul 2>&1(
+	
+	:: Misc
 	netsh int ip delete arpcache
 	netsh int ip delete destinationcache
 	netsh int ip delete neighbors
@@ -580,35 +730,35 @@ echo(&echo   • [35mConfiguring NIC • Network[0m&echo(
 	nbtstat -RR
 	bcdedit -set TESTSIGNING OFF
 	ipconfig/flushdns
-
+	
+	rem Switching to DHCP.
 	for /f "tokens=3*" %%a in ('netsh interface show interface ^| findstr Ethernet') do (
 		netsh dnsclient set dnsservers name="%%a" source=dhcp
 		netsh interface ip set winsservers name="%%a" source=dhcp
 		netsh interface ip set address name="%%a" dhcp
 		netsh interface ip set dns name="%%a" dhcp
 	)
-)
-
-echo   • [35mEmptying Recycle Bins[0m&echo(
-
->nul 2>&1(
-	del /f/s/q/a "%tmp%\"
-	del /f/s/q/a %systemdrive%\*.log,*.etl,*.tmp,*.hta
-	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-	taskkill /f /im explorer.exe
-	explorer.exe
-)
-
->nul 2>&1(
+	
+	rem Resetting connections
 	ipconfig/renew
 	net start msiserver
 )
 
 goto :AGAIN
+exit /b 0
+
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
+:: Obtaining Serials
+:: ====================================================================================================
 
 :CheckSerials
 cls&echo(
-echo   • VolumeID: %systemdrive% !VolID!
+echo   # VolumeID: %systemdrive% !VolID!
 >nul pause&goto :MENU
 
 :: NVIDIA -----------------------------------------------------
@@ -668,7 +818,7 @@ echo  [2] Check Serials
 echo  [3] Restart
 echo  [4] Shutdown
 echo(
-set /p c=".  • "
+set /p c=".  # "
 if %c%==1 goto :c1
 if %c%==2 goto :c2
 if %c%==3 goto :c3
@@ -684,16 +834,28 @@ shutdown /r /t 0
 :c4
 shutdown /s /t 0
 
+
+
+
+:: ====================================================================================================
+:: Generation
+:: ====================================================================================================
+
 :: GENERATING UUID/GUID
 :RGUID
 for /f "usebackq" %%a in (`powershell [guid]::NewGuid(^).ToString(^)`) do (
 	set RGUID=%%a
-	exit /b
 )
 
 :: GENERATING MAC Address
 :RMAC
 for /f "usebackq" %%a in (`powershell ('{0:x}' -f (Get-Random 0xFFFFFFFFFFFF^)^).padleft(12^,^"0^"^)`) do (
 	set RMAC=%%a
-	exit /b
 )
+
+:: ====================================================================================================
+
+
+
+
+exit /b 0
