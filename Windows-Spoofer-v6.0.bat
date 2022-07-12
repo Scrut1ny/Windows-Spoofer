@@ -21,14 +21,14 @@ fltmc >nul 2>&1 || (
 cls&title https://github.com/Scrut1ny/Windows-Spoofer ^| v6.0
 echo(
 echo   ===============================
-echo      [31mWindows Spoofer[0m »» [32mv5.5[0m   ║
-echo   ║─────────────────────────────║
-echo   ║ 1 » Spoof Windows           ║
-echo   ║ 2 » Check Serials           ║
-echo   ║ 3 » Check IP                ║
-echo   ║─────────────────────────────║
-echo   ║ [34mhttps://github.com/Scrut1ny[0m ║
-echo   ╚═════════════════════════════╝
+echo       [31mWindows Spoofer[0m ^>^> [32mv5.5[0m
+echo   ===============================
+echo    1 ^> Spoof Windows
+echo    2 ^> Check Serials
+echo    3 ^> Check IP
+echo   ===============================
+echo     [34mhttps://github.com/Scrut1ny[0m
+echo   ===============================
 echo(
 set /p "c=.  # "
 if '%c%'=='1' goto :choice1
@@ -53,52 +53,42 @@ exit /b
 
 :choice3
 cls&title Contacting ISP
+
 for /f "delims=[] tokens=2" %%a in ('ping -4 %ComputerName% ^| findstr="["') do set LIP=%%a
 for /f %%a in ('curl -fs api.ipify.org') do set PIP4=%%a
 for /f %%a in ('curl -fs api64.ipify.org') do set PIP6=%%a
 for /f "delims=, tokens=1,2,3,4,5,6,7,8,9" %%a in ('curl -fs http://ip-api.com/csv/!PIP4!?fields=66846719') do set IPInfo=%%a
+
 if !ERRORLEVEL!==0 (
 	echo(
-	echo   ╔═══════════════════════════════════════════════════════╗
-	echo   ║                       # ISP #                         ║  
-	echo   ╟───────────────────────────────────────────────────────╜
-	echo   ║
-	echo   ╠═══╦═══# [32m# Local[0m
-	echo   ║   ╚# IPv4 # %LIP%
-	echo   ║                   
-	echo   ╠═══╦═══# [32m# Public[0m
-	echo   ║   ╠# IPv4 # !PIP4!                           
-	if not !IPv4!==!IPv6! (
-        echo   ║   ╚# IPv6 # !PIP6!            
-    ) else (
-        echo   ║   ╚# IPv6 # [31mnull[0m   
-    )
-	echo   ║
-	echo   ╚═# [32m# Advanced Info[0m
-	>nul pause
-) else (
-	echo(&echo [31m  # Unable to contact ISP.[0m&>nul timeout /t 3
-)
+	echo 
+	echo(
+	
 goto :MENU
 exit /b
 
 :SPOOF
 cls&title Spoofing Windows...
+
 echo(&echo   # [31mWARNING:[0m [33mDon't turn off system.[0m
->nul timeout/t 5
-echo(&echo   # [35mTerminating Conflicting Processes[0m&echo(
+
+>nul timeout/t 5&echo(&echo   # [35mTerminating Conflicting Processes[0m&echo(
+
 >nul 2>&1(
 	ipconfig/release
 	net stop msiserver rem https://www.minitool.com/news/windows-installer-service.html
 )
+
+
+
 
 :: ====================================================================================================
 :: MAC Address
 :: ====================================================================================================
 
 >nul 2>&1(
-	rem REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" /v "OriginalNetworkAddress" /f rem Microsoft Kernel Debug Network Adapter
-	rem REG DELETE "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0001" /v "OriginalNetworkAddress" /f rem Actual NIC
+	rem REG delete "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" /v "OriginalNetworkAddress" /f rem Microsoft Kernel Debug Network Adapter
+	rem REG delete "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0001" /v "OriginalNetworkAddress" /f rem Actual NIC
 )
 
 :: ====================================================================================================
@@ -116,6 +106,7 @@ echo   # [35mSpoofing Registry (HWID # SID # GUID/UUID # Time/Dates...)[0m&ech
 :: ====================================================================================================
 :: SID
 :: ====================================================================================================
+
 >nul 2>&1(
 	for /f "tokens=7 delims=\" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList" ^| find "S-1-5-21"') do (
 		set SID=%%a
@@ -178,14 +169,14 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" /v "ChipsetMatchID" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-3%B%random:~-2%" /f
 	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" /v "DriverInstallationDate" /t REG_SZ /d "%random:~-2%-%random:~-2%%random:~-4%" /f rem Anti-Cheats Check for installation dates too.
 	rem Uninstall NVIDIA telemetry tasks
-	if exist "%ProgramFiles%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL" (
+	IF EXIST "%ProgramFiles%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL" (
 		rundll32 "%PROGRAMFILES%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL",UninstallPackage NvTelemetryContainer
 		rundll32 "%PROGRAMFILES%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL",UninstallPackage NvTelemetry
 	)
-	rem Delete NVIDIA residual telemetry files
-	del /s %SystemRoot%\System32\DriverStore\FileRepository\NvTelemetry*.dll
-	rmdir /s /q "%ProgramFiles(x86)%\NVIDIA Corporation\NvTelemetry"
-	rmdir /s /q "%ProgramFiles%\NVIDIA Corporation\NvTelemetry"
+	rem delete NVIDIA residual telemetry files
+	DEL /s %HOMEDRIVE%\System32\DriverStore\FileRepository\NvTelemetry*.dll
+	RD /S /Q "%ProgramFiles(x86)%\NVIDIA Corporation\NvTelemetry"
+	RD /S /Q "%ProgramFiles%\NVIDIA Corporation\NvTelemetry"
 	rem Opt out from NVIDIA telemetry
 	reg add "HKLM\SOFTWARE\NVIDIA Corporation\NvControlPanel2\Client" /v "OptInOrOutPreference" /t REG_DWORD /d "0" /f 
 	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID44231" /t REG_DWORD /d "0" /f 
@@ -245,8 +236,8 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 :: MachineGuid
 :: ====================================================================================================
 
-rem Contains a UUID which is used by Anti-Cheats.
-del /F /Q "%SystemRoot%\System32\restore\MachineGuid.txt"
+rem Contains a UUID which is tracked & used by Anti-Cheats.
+DEL /F /S /Q "%HOMEDRIVE%\System32\restore\MachineGuid.txt"
 
 :: ====================================================================================================
 
@@ -258,10 +249,10 @@ del /F /Q "%SystemRoot%\System32\restore\MachineGuid.txt"
 :: ====================================================================================================
 
 >nul 2>&1(
-	REG DELETE "HKLM\SYSTEM" /v "HardwareConfig" /va /f
+	REG delete "HKLM\SYSTEM" /v "HardwareConfig" /va /f
 	call :RGUID&call :UUID
 	reg add "HKLM\SYSTEM\HardwareConfig" /v "LastConfig" /t REG_SZ /d "{!RGUID!}" /f
-	REG DELETE "HKLM\SYSTEM\HardwareConfig\{!UUID!}" /f
+	REG delete "HKLM\SYSTEM\HardwareConfig\{!UUID!}" /f
 	call :RGUID
 	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /f
 	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
@@ -294,11 +285,11 @@ del /F /Q "%SystemRoot%\System32\restore\MachineGuid.txt"
 	call :RGUID
 	net stop cryptsvc
 	reg add "HKLM\SOFTWARE\Microsoft\Cryptography" /v "MachineGuid" /t REG_SZ /d "!RGUID!" /f
-	del /f/s/q/a "%SystemRoot%\System32\catroot2\dberr.txt"
-	del /f/s/q/a "%SystemRoot%\System32\catroot2.log"
-	del /f/s/q/a "%SystemRoot%\System32\catroot2.jrs"
-	del /f/s/q/a "%SystemRoot%\System32\catroot2.edb"
-	del /f/s/q/a "%SystemRoot%\System32\catroot2.chk"
+	DEL /F /S /Q "%HOMEDRIVE%\System32\catroot2\dberr.txt"
+	DEL /F /S /Q "%HOMEDRIVE%\System32\catroot2.log"
+	DEL /F /S /Q "%HOMEDRIVE%\System32\catroot2.jrs"
+	DEL /F /S /Q "%HOMEDRIVE%\System32\catroot2.edb"
+	DEL /F /S /Q "%HOMEDRIVE%\System32\catroot2.chk"
 	net start cryptsvc
 )
 
@@ -359,9 +350,17 @@ del /F /Q "%SystemRoot%\System32\restore\MachineGuid.txt"
 :: ====================================================================================================
 
 >nul 2>&1(
+	rem System Name
+	reg add "HKLM\SYSTEM\CurrentControlSet\services\Tcpip\Parameters" /v "Hostname" /t REG_SZ /d "%random:~-5%" /f
+	reg add "HKLM\SYSTEM\CurrentControlSet\services\Tcpip\Parameters" /v "NV Hostname" /t REG_SZ /d "%random:~-5%" /f
+	reg add "HKLM\SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName" /v "ComputerName" /t REG_SZ /d "%random:~-5%" /f
+	reg add "HKLM\SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName" /v "ComputerName" /t REG_SZ /d "%random:~-5%" /f
+	rem SystemInformation
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "BIOSReleaseDate" /t REG_SZ /d "0%random:~-1%/1%random:~-1%/%random:~-4%" /f
+	call :RGUID
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareId" /t REG_SZ /d "{!RGUID!}" /f
-	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareIds" /t REG_MULTI_SZ /d "{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}" /f
+	call :RGUID
+	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareIds" /t REG_MULTI_SZ /d "{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}" /f
 )
 
 :: ====================================================================================================
@@ -384,125 +383,15 @@ del /F /Q "%SystemRoot%\System32\restore\MachineGuid.txt"
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t REG_SZ /d "%random%-%random%-%random%-%random%" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "RegisteredOwner" /t REG_SZ /d "%random%" /f
 
-	net stop wuauserv rem WSUS change
+	rem WSUS change	
+	net stop wuauserv
 	reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientId" /t REG_SZ /d "!RGUID!" /f  
 	reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientIDValidation" /t REG_BINARY /d "%random:~-5%%random:~-5%2C53003400310%random:~-5%4E00580030004D00330031003%random:~-5%00320033005A002000200020002000200006001A7DDA710C0600D8613A05B44A%random:~-5%03100360032003300340038003900390054006F00200062006500%random:~-5%60069006C006C006500640020006200790020004F002E0045002E%random:~-5%%random:~-5%" /f 
 	net start wuauserv
 
 	reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Migration" /v "IE Installed Date" /t REG_BINARY /d "" /f
-	reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Registration" /v "ProductId" /t REG_SZ /d "" /f rem InternetExplorer PID change
+	reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Registration" /v "ProductId" /t REG_SZ /d "!RGUID!" /f rem InternetExplorer PID change
 	reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer" /v "svcKBNumber" /t REG_SZ /d "KB%random:~-5%%random:~-3%" /f
-)
-
-:: ====================================================================================================
-
-
-
-
-:: ====================================================================================================
-:: Events
-:: ====================================================================================================
-
->nul 2>&1(
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\Connected" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\Disconnected" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\EmailImage" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\FaxImage" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\PrintImage" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\ScanButton" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\StillImage\Events\STIproxyEvent" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-)
-
-:: ====================================================================================================
-
-
-
-
-:: ====================================================================================================
-:: Variables
-:: ====================================================================================================
-
->nul 2>&1(
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e965-e325-11ce-bfc1-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 4d36e965
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e967-e325-11ce-bfc1-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem --------
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\DeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f    rem 4d36e968
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\Driver" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f        rem --------
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\DriverRank" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f    rem --------
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\Service" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f       rem --------
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\Driver" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f        rem --------
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\Configuration\Variables\Driver" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f        rem --------
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e96a-e325-11ce-bfc1-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 4d36e96a
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e96c-e325-11ce-bfc1-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 4d36e96c
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e96c-e325-11ce-bfc1-08002be10318}\Configuration\Variables\EnumName" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f      rem --------
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e96c-e325-11ce-bfc1-08002be10318}\Configuration\Variables\FriendlyNameProperty" /v "Value" /t REG_SZ /d "{!RGUID!}" /f rem --------
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e980-e325-11ce-bfc1-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 4d36e980
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{5989fce8-9cd0-467d-8a6a-5419e31529d4}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 5989fce8
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{5c4c3332-344d-483c-8739-259e934c9cc8}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 5c4c3332
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{62f9c741-b25a-46ce-b54c-9bccce08b6f2}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 62f9c741
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{6bdd1fc6-810f-11d0-bec7-08002be2092f}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 6bdd1fc6
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{6bdd1fc6-810f-11d0-bec7-08002be2092f}\Configuration\Variables\EnumName" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f      rem -------- 
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{6bdd1fc6-810f-11d0-bec7-08002be2092f}\Configuration\Variables\FriendlyNameProperty" /v "Value" /t REG_SZ /d "{!RGUID!}" /f rem --------
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{6d807884-7d21-11cf-801c-08002be10318}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 6d807884
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Class\{88bae032-5a81-49f0-bc3d-a4ff138216d6}\Configuration\Variables\BusDeviceDesc" /v "PropertyGuid" /t REG_SZ /d "{!RGUID!}" /f rem 88bae032
-)
-
-:: ====================================================================================================
-
-
-
-
-:: ====================================================================================================
-:: CKCL
-:: ====================================================================================================
-
->nul 2>&1(
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Diagnostics\Performance\BootCKCLSettings" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Diagnostics\Performance\SecondaryLogonCKCLSettings" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	reg add "HKLM\SYSTEM\ControlSet001\Control\Diagnostics\Performance\ShutdownCKCLSettings" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-)
-
-:: ====================================================================================================
-
-
-
-
-:: ====================================================================================================
-:: Internet Explorer
-:: ====================================================================================================
-
->nul 2>&1(
-	call :RGUID
-	reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer" /v "svcKBNumber" /t REG_SZ /d "KB%random:~-5%%random:~-3%" /f
-	reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Registration" /v "ProductId" /t REG_SZ /d "!RGUID!" /f
 )
 
 :: ====================================================================================================
@@ -516,21 +405,21 @@ del /F /Q "%SystemRoot%\System32\restore\MachineGuid.txt"
 
 >nul 2>&1(
 	rem Spoofs VolumeID xxxx-xxxx
-	Volumeid64.exe %SystemDrive% %random:~-4%-%random:~-4% -nobanner
+	Volumeid64.exe %HOMEDRIVE% %random:~-4%-%random:~-4% -nobanner
 	Volumeid64.exe D: %random:~-4%-%random:~-4% -nobanner
 	
 	rem Resets all status's of the physical disk(s).
 	powershell Reset-PhysicalDisk *
 	
-	rem Deletes all volume shadow copies.
+	rem deletes all volume shadow copies.
 	wmic shadowcopy delete /nointeractive
-	vssadmin delete shadows /ALL /quiet
+	vssadmin delete shadows /all /quiet
 	
 	rem Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism, so we delete them.
-	fsutil usn deletejournal /D C:
-	fsutil usn deletejournal /D D:
-	fsutil usn deletejournal /D E:
-	fsutil usn deletejournal /D F:
+	fsutil usn deleteJournal /d %HOMEDRIVE%
+	fsutil usn deleteJournal /d D:
+	fsutil usn deleteJournal /d E:
+	fsutil usn deleteJournal /d F:
 )
 
 :: ====================================================================================================
@@ -543,87 +432,7 @@ del /F /Q "%SystemRoot%\System32\restore\MachineGuid.txt"
 :: ====================================================================================================
 
 >nul 2>&1(
-	call :RGUID
-	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareId" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareIds" /t REG_MULTI_SZ /d "{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}{!RGUID!}" /f
-	reg add "HKLM\SYSTEM\CurrentControlSet\services\Tcpip\Parameters" /v "Hostname" /t REG_SZ /d "%random:~-5%" /f
-	reg add "HKLM\SYSTEM\CurrentControlSet\services\Tcpip\Parameters" /v "NV Hostname" /t REG_SZ /d "%random:~-5%" /f
-	reg add "HKLM\SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName" /v "ComputerName" /t REG_SZ /d "%random:~-5%" /f
-	reg add "HKLM\SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName" /v "ComputerName" /t REG_SZ /d "%random:~-5%" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\Circular Kernel Context Logger" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\CloudExperienceHostOobe" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\DataMarket" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\DefenderApiLogger" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\DefenderAuditLogger" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\DiagLog" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\Diagtrack-Listener" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\EventLog-Application" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	rem call :RGUID
-	rem reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\EventLog-Security" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f ACCESS DENIED
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\EventLog-System" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\HolographicDevice" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\LwtNetLog" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\Mellanox-Kernel" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\Microsoft-Windows-AssignedAccess-Trace" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\Microsoft-Windows-Rdp-Graphics-RdpIdd-Trace" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\Microsoft-Windows-Setup" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\NBSMBLOGGER" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	rem call :RGUID
-	rem reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\NetCore" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f ACCESS DENIED
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\NtfsLog" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\PEAuthLog" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	rem call :RGUID
-	rem reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\RadioMgr" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f ACCESS DENIED
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\RdrLog" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\ReadyBoot" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\SetupPlatform" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\SetupPlatformTel" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\SpoolerLogger" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\SQMLogger" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\TCPIPLOGGER" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\TileStore" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\Tpm" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	rem reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\UBPM" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f - NEVER CHANGE THIS VALUE OR START MENU + SEARCH BAR WILL BREAK!!!
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\WdiContextLog" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\WFP-IPsec Trace" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\WiFiDriverIHVSession" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\WiFiDriverIHVSessionRepro" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\WiFiSession" /v "GUID" /t REG_SZ /d "{!RGUID!}" /f
+	
 )
 
 :: ====================================================================================================
@@ -640,45 +449,45 @@ echo   # [35mCleaning Traces[0m
 :: Files
 
 >nul 2>&1(
-	del /F /Q "%LOCALAPPDATA%\Microsoft\CLR_v4.0\UsageTraces\*"
-	del /F /Q "%LOCALAPPDATA%\Microsoft\CLR_v4.0_32\UsageTraces\*"
-	del /F /Q "%LOCALAPPDATA%\Microsoft\Windows\WebCache\*"
-	del /F /Q "%SystemRoot%\UserviceProfiles\NetworkService\NTSER.dat"
-	del /F /Q "%SystemRoot%\UserviceProfiles\LocalService\AppData\Local\Microsoft\Windows\qwavecache.dat"
-	del /F /Q "%SystemRoot%\memory.dmp"
-	del /F /Q "%SystemRoot%\win.ini"
-	del /F /Q "%SystemRoot%\debug"
-	del /F /Q "%SystemRoot%\Logs"
-	del /F /Q "%SystemRoot%\CbsTemp\*"
-	del /F /Q "%SystemRoot%\ModemLogs\*"
-	del /F /Q "%SystemRoot%\Prefetch\*"
-	del /F /Q "%SystemRoot%\rescache\_merged\*"
-	del /F /Q "%SystemRoot%\SchCache\*"
-	del /F /Q "%systemdrive%\PerfLogs\*"
-	del /F /Q "%systemdrive%\desktop.ini"
-	del /F /Q "%systemdrive%\MSOCache\*"
-	del /F /Q "%systemdrive%\Recovery\*"
-	del /F /Q "%systemdrive%\AMD"
-	del /F /Q "%systemdrive%\Intel"
-	del /F /Q "%systemdrive%\Users\Public\*"
-	del /F /Q "%SystemRoot%\Performance\WinSAT\winsat.log"
-	del /F /Q "%SystemRoot%\debug\PASSWD.LOG"
-	del /F /Q "%SystemRoot%\Logs\SIH\*"
-	del /F /Q "%SystemRoot%\Traces\WindowsUpdate\*"
-	del /F /Q "%SystemRoot%\System32\LogFiles\setupcln\*"
-	del /F /Q "%SystemRoot%\Logs\NetSetup\*"
-	del /F /Q "%homepath%\AppData\Local\Microsoft\Windows\Explorer\iconcache*"
-	del /F /Q "%homepath%\AppData\Local\Microsoft\Windows\Explorer\thumbcache_*.db"
-	del /F /Q "%windir%\SoftwareDistribution\Download\*"
+	DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\CLR_v4.0\UsageTraces\*"
+	DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\CLR_v4.0_32\UsageTraces\*"
+	DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\Windows\WebCache\*"
+	DEL /F /S /Q "%HOMEDRIVE%\UserviceProfiles\NetworkService\NTSER.dat"
+	DEL /F /S /Q "%HOMEDRIVE%\UserviceProfiles\LocalService\AppData\Local\Microsoft\Windows\qwavecache.dat"
+	DEL /F /S /Q "%HOMEDRIVE%\memory.dmp"
+	DEL /F /S /Q "%HOMEDRIVE%\win.ini"
+	DEL /F /S /Q "%HOMEDRIVE%\debug"
+	DEL /F /S /Q "%HOMEDRIVE%\Logs"
+	DEL /F /S /Q "%HOMEDRIVE%\CbsTemp\*"
+	DEL /F /S /Q "%HOMEDRIVE%\ModemLogs\*"
+	DEL /F /S /Q "%HOMEDRIVE%\Prefetch\*"
+	DEL /F /S /Q "%HOMEDRIVE%\rescache\_merged\*"
+	DEL /F /S /Q "%HOMEDRIVE%\SchCache\*"
+	DEL /F /S /Q "%HOMEDRIVE%\PerfLogs\*"
+	DEL /F /S /Q "%HOMEDRIVE%\desktop.ini"
+	DEL /F /S /Q "%HOMEDRIVE%\MSOCache\*"
+	DEL /F /S /Q "%HOMEDRIVE%\Recovery\*"
+	DEL /F /S /Q "%HOMEDRIVE%\AMD"
+	DEL /F /S /Q "%HOMEDRIVE%\Intel"
+	DEL /F /S /Q "%HOMEDRIVE%\Users\Public\*"
+	DEL /F /S /Q "%HOMEDRIVE%\Performance\WinSAT\winsat.log"
+	DEL /F /S /Q "%HOMEDRIVE%\debug\PASSWD.LOG"
+	DEL /F /S /Q "%HOMEDRIVE%\Logs\SIH\*"
+	DEL /F /S /Q "%HOMEDRIVE%\Traces\WindowsUpdate\*"
+	DEL /F /S /Q "%HOMEDRIVE%\System32\LogFiles\setupcln\*"
+	DEL /F /S /Q "%HOMEDRIVE%\Logs\NetSetup\*"
+	DEL /F /S /Q "%homepath%\AppData\Local\Microsoft\Windows\Explorer\iconcache*"
+	DEL /F /S /Q "%homepath%\AppData\Local\Microsoft\Windows\Explorer\thumbcache_*.db"
+	DEL /F /S /Q "%windir%\SoftwareDistribution\Download\*"
 	
-	if exist "%SystemDrive%\Windows.old" (
-		takeown /f "%SystemDrive%\Windows.old" /a /r /d y
-		icacls "%SystemDrive%\Windows.old" /grant administrators:F /t
-		rd /s /q "%SystemDrive%\Windows.old"
+	IF EXIST "%HOMEDRIVE%\Windows.old" (
+		takeown /f "%HOMEDRIVE%\Windows.old" /a /r /d y
+		icacls "%HOMEDRIVE%\Windows.old" /grant administrators:F /t
+		rd /s /q "%HOMEDRIVE%\Windows.old"
 	)
 	
-	del /F /Q %tmp%\*
-	del /F /Q %systemdrive%\*.log *.etl *.tmp *.hta
+	DEL /F /S /Q %tmp%\*
+	DEL /F /S /Q %HOMEDRIVE%\*.log *.etl *.tmp *.hta
 	
 	rem Emptying Recycle Bins & Resetting explorer.exe
 	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
@@ -688,9 +497,9 @@ echo   # [35mCleaning Traces[0m
 :: Networking
 
 >nul 2>&1(
-	rem Delete all Network Data Usage & Disable it.
+	rem delete all Network Data Usage & Disable it.
 	sc stop "DPS" & sc config "DPS" start= disabled
-	del /F /Q "%windir%\System32\sru\*"
+	DEL /F /S /Q "%windir%\System32\sru\*"
 	
 	rem Clear SSL State
 	certutil -URLCache * delete
@@ -699,7 +508,8 @@ echo   # [35mCleaning Traces[0m
 	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 16 rem Clear Form Data
 	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 32 rem Clear Saved Passwords
 	
-	:: Misc
+	rem Misc
+	arp -d * rem Clear ARP/Route Tables - Contains MAC Address's used by anti-cheats to track you.
 	netsh int ip delete arpcache
 	netsh int ip delete destinationcache
 	netsh int ip delete neighbors
@@ -725,18 +535,17 @@ echo   # [35mCleaning Traces[0m
 	netsh rpc reset
 	netsh advfirewall reset
 	netsh advfirewall firewall set rule group="Network Discovery" new enable=No
-	arp -d * rem Clear ARP/Route Tables - Contains MAC Address's used by anti-cheats to track you.
 	nbtstat -R
 	nbtstat -RR
 	bcdedit -set TESTSIGNING OFF
 	ipconfig/flushdns
 	
 	rem Switching to DHCP.
-	for /f "tokens=3*" %%a in ('netsh interface show interface ^| findstr Ethernet') do (
-		netsh dnsclient set dnsservers name="%%a" source=dhcp
-		netsh interface ip set winsservers name="%%a" source=dhcp
-		netsh interface ip set address name="%%a" dhcp
-		netsh interface ip set dns name="%%a" dhcp
+	for /f "tokens=3*" %%A in ('netsh interface show interface ^| findstr Ethernet') do (
+		netsh dnsclient set dnsservers name="%%A" source=dhcp
+		netsh interface ip set winsservers name="%%A" source=dhcp
+		netsh interface ip set address name="%%A" dhcp
+		netsh interface ip set dns name="%%A" dhcp
 	)
 	
 	rem Resetting connections
@@ -758,7 +567,7 @@ exit /b 0
 
 :CheckSerials
 cls&echo(
-echo   # VolumeID: %systemdrive% !VolID!
+echo   # VolumeID: %HOMEDRIVE% !VolID!
 >nul pause&goto :MENU
 
 :: NVIDIA -----------------------------------------------------
@@ -769,7 +578,7 @@ for /f "skip=2 tokens=2*" %%a in ('reg query "HKLM\SOFTWARE\NVIDIA Corporation\G
 :: ------------------------------------------------------------
 
 :: VolumeID ---------------------------------------------------
-for /f "tokens=5" %%a in ('vol %systemdrive% ^| find "-"') do (
+for /f "tokens=5" %%a in ('vol %HOMEDRIVE% ^| find "-"') do (
     set VolID=%%a
 	exit /b
 )
@@ -805,7 +614,7 @@ for /f %%a in ('wmic csproduct get UUID ^| find "-"') do (
 :: ------------------------------------------------------------
 rem wmic path win32_VideoController get name,PNPDeviceID
 rem wmic memorychip get name,serialnumber
-rem wmic diskdrive get Model,serialnumber
+rem wmic diskdrive get MoDEL,serialnumber
 rem wmic nicconfig where (IPEnabled=True) GET Description,SettingID,MACAddress
 :: ------------------------------------------------------------
 exit /b
