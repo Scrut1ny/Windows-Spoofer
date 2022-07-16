@@ -72,7 +72,7 @@ cls&title Spoofing Windows...
 
 echo(&echo   # [31mWARNING:[0m [33mDon't turn off system.[0m
 
->nul timeout/t 5&echo(&echo   # [35mTerminating Conflicting Processes[0m&echo(
+echo(&echo   # [35mTerminating Conflicting Processes[0m&echo(
 
 >nul 2>&1(
 	ipconfig/release
@@ -98,7 +98,7 @@ echo(&echo   # [31mWARNING:[0m [33mDon't turn off system.[0m
 
 :: SPOOFING REG
 
-echo   # [35mSpoofing Registry (HWID # SID # GUID/UUID # Time/Dates...)[0m&echo(
+echo   # [35mSpoofing Registry (HWID - SID - GUID/UUID - Time/Dates...)[0m&echo(
 
 
 
@@ -112,8 +112,7 @@ echo   # [35mSpoofing Registry (HWID # SID # GUID/UUID # Time/Dates...)[0m&ech
 		set SID=%%a
 	)
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\S-1-5-18" /v "Sid" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-4%" /f
-call :SID
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!SID!" /v "Sid" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%1DF6EB044D4DF962E515FB9E90%random:~-5%" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!SID!" /v "Sid" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-1%" /f
 )
 
 :: ====================================================================================================
@@ -138,6 +137,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 )
 
 :: ====================================================================================================
+
 
 
 
@@ -237,7 +237,10 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 :: ====================================================================================================
 
 rem Contains a UUID which is tracked & used by Anti-Cheats.
-DEL /F /S /Q "%HOMEDRIVE%\System32\restore\MachineGuid.txt"
+
+>nul 2>&1(
+	DEL /F /Q "%HOMEDRIVE%\System32\restore\MachineGuid.txt"
+)
 
 :: ====================================================================================================
 
@@ -249,12 +252,7 @@ DEL /F /S /Q "%HOMEDRIVE%\System32\restore\MachineGuid.txt"
 :: ====================================================================================================
 
 >nul 2>&1(
-	REG delete "HKLM\SYSTEM" /v "HardwareConfig" /va /f
-	call :RGUID&call :UUID
-	reg add "HKLM\SYSTEM\HardwareConfig" /v "LastConfig" /t REG_SZ /d "{!RGUID!}" /f
-	REG delete "HKLM\SYSTEM\HardwareConfig\{!UUID!}" /f
 	call :RGUID
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /f
 	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BIOSReleaseDate" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
@@ -380,7 +378,7 @@ DEL /F /S /Q "%HOMEDRIVE%\System32\restore\MachineGuid.txt"
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "DisplayVersion" /t REG_SZ /d "00H0" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "InstallDate" /t REG_DWORD /d "5a%random:~-4%e6" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "InstallTime" /t REG_QWORD /d "1d%random:~-5%e23fc090" /f
-	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t REG_SZ /d "%random%-%random%-%random%-%random%" /f
+	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t REG_SZ /d "%random:~-4%-%random:~-4%-%random:~-4%-%random:~-5%" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "RegisteredOwner" /t REG_SZ /d "%random%" /f
 
 	rem WSUS change	
@@ -425,20 +423,7 @@ DEL /F /S /Q "%HOMEDRIVE%\System32\restore\MachineGuid.txt"
 :: ====================================================================================================
 
 
-
-
-:: ====================================================================================================
-:: Misc
-:: ====================================================================================================
-
->nul 2>&1(
-	
-)
-
-:: ====================================================================================================
-
-
-
+pause
 
 :: ====================================================================================================
 :: Windows Logs, Traces, Networking, etc
@@ -566,58 +551,84 @@ exit /b 0
 :: ====================================================================================================
 
 :CheckSerials
-cls&echo(
-echo   # VolumeID: %HOMEDRIVE% !VolID!
+cls
+
+>>%~dp0\HWID.txt (
+	echo(&echo - [31mWindows Product ID[0m ----------&echo(
+	wmic os get serialnumber
+	echo -------------------------------
+
+	echo(&echo - [31mCPU SN[0m ----------------------&echo(
+	wmic cpu get serialnumber
+	echo -------------------------------
+
+	echo(&echo - [31mRAM SN[0m ----------------------&echo(
+	wmic memorychip get name^,serialnumber
+	echo -------------------------------
+
+	echo(&echo - [31mBIOS SN[0m ---------------------&echo(
+	wmic bios get serialnumber
+	echo -------------------------------
+
+	echo(&echo - [31mSMBIOS SN[0m -------------------&echo(
+	wmic csproduct get UUID
+	echo -------------------------------
+
+	echo(&echo - [31mMotherboard SN[0m --------------&echo(
+	wmic baseboard get serialnumber
+	echo -------------------------------
+
+	echo(&echo - [31mChassis[0m ---------------------&echo(
+	wmic systemenclosure get serialnumber
+	echo -------------------------------
+
+	echo(&echo - [31mHD SN[0m -----------------------&echo(
+	wmic diskdrive get Model^,serialnumber
+	echo -------------------------------
+
+	echo(&echo - [31mVolumeID SN[0m -----------------&echo(
+	call :VolumeID_SN
+	echo C: ^> !VolID!
+	echo(
+	echo -------------------------------
+
+	echo(&echo - [31mMAC SN[0m ----------------------&echo(
+	wmic nicconfig where (IPEnabled=True^) GET Description^,SettingID^,MACAddress
+	echo -------------------------------
+
+	echo(&echo - [31mGPU SN[0m ----------------------&echo(
+	wmic path win32_VideoController get name^,PNPDeviceID
+	echo -------------------------------
+
+	echo(&echo - [31mNVIDIA SN[0m -------------------&echo(
+	call :NVIDIA_SN
+	echo SerialNumber
+	echo !NVIDIA!
+	echo(&echo -------------------------------
+)
+
 >nul pause&goto :MENU
 
-:: NVIDIA -----------------------------------------------------
-for /f "skip=2 tokens=2*" %%a in ('reg query "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager"') do (
-	set NVIDIA=%%a
-	exit /b
-)
-:: ------------------------------------------------------------
-
 :: VolumeID ---------------------------------------------------
-for /f "tokens=5" %%a in ('vol %HOMEDRIVE% ^| find "-"') do (
-    set VolID=%%a
-	exit /b
+:VolumeID_SN
+for /f "tokens=5" %%A in ('vol %HOMEDRIVE% ^| find "-"') do (
+    set "VolID=%%A"
 )
-:: ------------------------------------------------------------
-
-:: CPU --------------------------------------------------------
-for /f "skip=1" %%a in ('wmic cpu get serialnumber') do (
-    set CPU=%%a
-	exit /b
-)
-:: ------------------------------------------------------------
-
-:: BIOS -------------------------------------------------------
-for /f "skip=1" %%a in ('wmic bios get serialnumber') do (
-    set BIOS=%%a
-	exit /b
-)
-:: ------------------------------------------------------------
-
-:: Motherboard ------------------------------------------------
-for /f "skip=1" %%a in ('wmic baseboard get serialnumber') do (
-    set Motherboard=%%a
-	exit /b
-)
-:: ------------------------------------------------------------
-
-:: UUID -------------------------------------------------------
-:UUID
-for /f %%a in ('wmic csproduct get UUID ^| find "-"') do (
-	set UUID=%%a
-	exit /b
-)
-:: ------------------------------------------------------------
-rem wmic path win32_VideoController get name,PNPDeviceID
-rem wmic memorychip get name,serialnumber
-rem wmic diskdrive get MoDEL,serialnumber
-rem wmic nicconfig where (IPEnabled=True) GET Description,SettingID,MACAddress
-:: ------------------------------------------------------------
 exit /b
+:: ------------------------------------------------------------
+
+:: NVIDIA -----------------------------------------------------
+:NVIDIA_SN
+for /f "tokens=3" %%A in ('reg query "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" ^| find "ChipsetMatchID"') do (
+	set "NVIDIA=%%A"
+)
+exit /b
+:: ------------------------------------------------------------
+
+:: ====================================================================================================
+
+
+
 
 :AGAIN
 echo(&echo(&cls&title Main Menu
