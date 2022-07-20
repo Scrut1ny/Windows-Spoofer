@@ -74,7 +74,7 @@ echo(&echo   # [31mWARNING:[0m [33mDon't turn off system.[0m
 
 echo(&echo   # [35mTerminating Conflicting Processes[0m&echo(
 
->nul 2>&1(
+>nul 2>&1 (
 	ipconfig/release
 	net stop msiserver rem https://www.minitool.com/news/windows-installer-service.html
 )
@@ -86,7 +86,7 @@ echo(&echo   # [35mTerminating Conflicting Processes[0m&echo(
 :: MAC Address
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	rem REG delete "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" /v "OriginalNetworkAddress" /f rem Microsoft Kernel Debug Network Adapter
 	rem REG delete "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0001" /v "OriginalNetworkAddress" /f rem Actual NIC
 )
@@ -98,7 +98,7 @@ echo(&echo   # [35mTerminating Conflicting Processes[0m&echo(
 
 :: SPOOFING REG
 
-echo   # [35mSpoofing Registry (HWID - SID - GUID/UUID - Time/Dates...)[0m&echo(
+echo   # [35mSpoofing Registry[0m&echo(
 
 
 
@@ -107,7 +107,7 @@ echo   # [35mSpoofing Registry (HWID - SID - GUID/UUID - Time/Dates...)[0m&ech
 :: SID
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	for /f "tokens=7 delims=\" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList" ^| find "S-1-5-21"') do (
 		set SID=%%a
 	)
@@ -124,7 +124,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!SID!" /v
 :: Monitor
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	set counter=-1
 	for /f "skip=1 tokens=7 delims=\" %%a in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor"') do (
 		set /a counter+=1
@@ -145,7 +145,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 :: MSSMBIOS
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	net stop winmgmt /Y
 	reg add "HKLM\SYSTEM\CurrentControlSet\Services\mssmbios\Data" /v "AcpiData" /t REG_BINARY /d "4D%random:~-5%73C00000001F4414C41534B4141204D2049000000092007014D534654130001000000000000000000000000F0000000000000007F0000000046414350140100000680414C41534B4141204D204920000009200701414D4920130001000000CCBC00905CBB00010900B2000000A0A1000000080000000000000408000000000000415049435E0100000315414C41534B4141204D204920000009200701414D4920130001000000E0FE010000000008000001000000000802020100000000080404010000000008060849565253D000000002D8414D44202000416D645461626C6501000000414D44200000000041302000000000000000000010B04800020040000000B8FE00000000000000006E8F0480485045543800000001BD414C41534B4141204D204900000009200701414D49200500000001822210004000000000D0FE0000000000EE3700465044544400000001EC414C41534B4141204D204920000009200701414D492013000001000010010000000000B051BB000000000100100100000000009057BB0000000053534454988C0000021A414D44000000416D645461626C65020000004D5346540000000453534454988C0000021A414D44000000416D645461626C65020000004D5346540000000453534454988C0000021A414D44000000416D645461626C65020000004D53465400000004464944549C00000001C1414C41534B4141204D204900000009200701414D49201300010024464944047800314154584830310000B0D2A30ACD9BE99A9ADB36CD0819803B3035003153534454988C0000021A414D44000000416D645461626C65020000004D5346540000000453534454988C0000021A414D44000000416D645461626C65020000004D5346540000000443524154D00B000001FA414D44000000416D645461626C6501000000414D442001000000300000000100000000000000002800000500000000000000000000000C00000000000000434449542900000001E7414D44000000416D645461626C6501000000414D442001000000010000000A53534454988C0000021A414D44000000416D645461626C65020000004D5346540000000453534454988C0000021A414D44000000416D645461626C65020000004D5346540000000457534D54280000000165414C41534B4141204D204920000009200701414D4920130001000700000053534454988C0000021A414D44000000416D645461626C65020000004D53465400000004" /f
 	reg add "HKLM\SYSTEM\CurrentControlSet\Services\mssmbios\Data" /v "BiosData" /t REG_BINARY /d "0A%random:~-5%07E004D0048007A0000000400000004000000480D00002C00000043006F006D0070006F006E0065006E007400200049006E0066006F0072006D006100740069006F006E0000000300000010000000000000000000000000000000000000002600000043006F006E00660069006700750072006100740069006F006E002000440061007400610000000900000010000000FFFFFFFFFFFFFFFF0000000000000000160000004900640065006E007400690066006900650072000000010000004600000041004D004400360034002000460061006D0069006C00790020003200330020004D006F00640065006C002000380020005300740065007000700069006E00670020003200000028000000500072006F0063006500730073006F0072004E0061006D00650053007400720069006E0067000000010000006000000041004D0044002000520079007A0065006E00200035002000320036003000300020005300690078002D0043006F00720065002000500072006F0063006500730073006F00720020002000200020002000200020002000200020002000200000001C0000005500700064006100740065002000530074006100740075007300000004000000040000000100000022000000560065006E0064006F0072004900640065006E007400690066006900650072000000010000001A000000410075007400680065006E0074006900630041004D0044000000" /f
@@ -163,7 +163,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 :: NVIDIA
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	call :RGUID
 	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global" /v "ClientUUID" /t REG_SZ /d "{!RGUID!}" /f
 	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" /v "ChipsetMatchID" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-3%B%random:~-2%" /f
@@ -198,7 +198,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 :: BIOS
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
@@ -221,7 +221,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 :: HwProfileGuid
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	call :RGUID
 	reg add "HKLM\SYSTEM\ControlSet001\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
@@ -238,7 +238,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 
 rem Contains a UUID which is tracked & used by Anti-Cheats.
 
->nul 2>&1(
+>nul 2>&1 (
 	DEL /F /Q "%HOMEDRIVE%\System32\restore\MachineGuid.txt"
 )
 
@@ -251,7 +251,7 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 :: HardwareConfig
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	call :RGUID
 	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
 	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
@@ -279,7 +279,7 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 :: Cryptography
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	call :RGUID
 	net stop cryptsvc
 	reg add "HKLM\SOFTWARE\Microsoft\Cryptography" /v "MachineGuid" /t REG_SZ /d "!RGUID!" /f
@@ -300,7 +300,7 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 :: Physical Drives
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
     for /f "tokens=5 delims=\" %%A in ('reg query "HKLM\HARDWARE\DEVICEMAP\Scsi"') do (
         reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\%%A\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "DeviceIdentifierPage" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
         reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\%%A\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "InquiryData" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-2%" /f
@@ -332,11 +332,11 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 :: SQMClient
 :: ====================================================================================================
 
->nul 2>&1(
-	call :RGUID
-	reg add "HKCU\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
-	reg add "HKLM\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
-)
+
+call :RGUID
+reg add "HKCU\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f >nul 2>&1
+
 
 :: ====================================================================================================
 
@@ -347,7 +347,7 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 :: SystemInformation
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	rem System Name
 	reg add "HKLM\SYSTEM\CurrentControlSet\services\Tcpip\Parameters" /v "Hostname" /t REG_SZ /d "%random:~-5%" /f
 	reg add "HKLM\SYSTEM\CurrentControlSet\services\Tcpip\Parameters" /v "NV Hostname" /t REG_SZ /d "%random:~-5%" /f
@@ -370,7 +370,7 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 :: CurrentVersion
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	call :RGUID
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "BuildGUID" /t REG_SZ /d "!RGUID!" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "DigitalProductId" /t REG_BINARY /d "A4%random:~-5%00300000036303437312D3436342D313734353137392D32343434329BCCB84B60916EDDF5BFA0BCA94E703DB16744F61B839018FEBAE6B73951DAD9022A04BB7700ECB0F148A4E92725099A9FEDEB4C1FB559F2C6E2663F76A56C5A08EE453A1E717E268CD7567A01DEAB94A2C2B3745385C7E805AF2C639EB412280EE3847C3716FDCB6A368A433C1C6DA768111ACA6FDB8B2F7996E00D871035FA78B9EC21734640BE4FE72%random:~-5%" /f
@@ -401,11 +401,14 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 :: VolumeID - Shadow Copies - USN Journal ID
 :: ====================================================================================================
 
->nul 2>&1(
+>nul 2>&1 (
 	rem Spoofs VolumeID xxxx-xxxx
 	Volumeid64.exe %HOMEDRIVE% %random:~-4%-%random:~-4% -nobanner
 	Volumeid64.exe D: %random:~-4%-%random:~-4% -nobanner
-	
+	Volumeid64.exe E: %random:~-4%-%random:~-4% -nobanner
+	Volumeid64.exe F: %random:~-4%-%random:~-4% -nobanner
+	Volumeid64.exe G: %random:~-4%-%random:~-4% -nobanner
+
 	rem Resets all status's of the physical disk(s).
 	powershell Reset-PhysicalDisk *
 	
@@ -418,12 +421,13 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 	fsutil usn deleteJournal /d D:
 	fsutil usn deleteJournal /d E:
 	fsutil usn deleteJournal /d F:
+	fsutil usn deleteJournal /d G:
 )
 
 :: ====================================================================================================
 
 
-pause
+
 
 :: ====================================================================================================
 :: Windows Logs, Traces, Networking, etc
@@ -433,7 +437,7 @@ echo   # [35mCleaning Traces[0m
 
 :: Files
 
->nul 2>&1(
+>nul 2>&1 (
 	DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\CLR_v4.0\UsageTraces\*"
 	DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\CLR_v4.0_32\UsageTraces\*"
 	DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\Windows\WebCache\*"
@@ -481,7 +485,7 @@ echo   # [35mCleaning Traces[0m
 
 :: Networking
 
->nul 2>&1(
+>nul 2>&1 (
 	rem delete all Network Data Usage & Disable it.
 	sc stop "DPS" & sc config "DPS" start= disabled
 	DEL /F /S /Q "%windir%\System32\sru\*"
@@ -536,9 +540,10 @@ echo   # [35mCleaning Traces[0m
 	rem Resetting connections
 	ipconfig/renew
 	net start msiserver
+	
+	goto :AGAIN
 )
 
-goto :AGAIN
 exit /b 0
 
 :: ====================================================================================================
@@ -553,59 +558,57 @@ exit /b 0
 :CheckSerials
 cls
 
->>%~dp0\HWID.txt (
-	echo(&echo - [31mWindows Product ID[0m ----------&echo(
-	wmic os get serialnumber
-	echo -------------------------------
+echo(&echo - [31mWindows Product ID[0m ----------&echo(
+wmic os get serialnumber
+echo -------------------------------
 
-	echo(&echo - [31mCPU SN[0m ----------------------&echo(
-	wmic cpu get serialnumber
-	echo -------------------------------
+echo(&echo - [31mCPU SN[0m ----------------------&echo(
+wmic cpu get serialnumber
+echo -------------------------------
 
-	echo(&echo - [31mRAM SN[0m ----------------------&echo(
-	wmic memorychip get name^,serialnumber
-	echo -------------------------------
+echo(&echo - [31mRAM SN[0m ----------------------&echo(
+wmic memorychip get name^,serialnumber
+echo -------------------------------
 
-	echo(&echo - [31mBIOS SN[0m ---------------------&echo(
-	wmic bios get serialnumber
-	echo -------------------------------
+echo(&echo - [31mBIOS SN[0m ---------------------&echo(
+wmic bios get serialnumber
+echo -------------------------------
 
-	echo(&echo - [31mSMBIOS SN[0m -------------------&echo(
-	wmic csproduct get UUID
-	echo -------------------------------
+echo(&echo - [31mSMBIOS SN[0m -------------------&echo(
+wmic csproduct get UUID
+echo -------------------------------
 
-	echo(&echo - [31mMotherboard SN[0m --------------&echo(
-	wmic baseboard get serialnumber
-	echo -------------------------------
+echo(&echo - [31mMotherboard SN[0m --------------&echo(
+wmic baseboard get serialnumber
+echo -------------------------------
 
-	echo(&echo - [31mChassis[0m ---------------------&echo(
-	wmic systemenclosure get serialnumber
-	echo -------------------------------
+echo(&echo - [31mChassis[0m ---------------------&echo(
+wmic systemenclosure get serialnumber
+echo -------------------------------
 
-	echo(&echo - [31mHD SN[0m -----------------------&echo(
-	wmic diskdrive get Model^,serialnumber
-	echo -------------------------------
+echo(&echo - [31mHD SN[0m -----------------------&echo(
+wmic diskdrive get Model^,serialnumber
+echo -------------------------------
 
-	echo(&echo - [31mVolumeID SN[0m -----------------&echo(
-	call :VolumeID_SN
-	echo C: ^> !VolID!
-	echo(
-	echo -------------------------------
+echo(&echo - [31mVolumeID SN[0m -----------------&echo(
+call :VolumeID_SN
+echo C: ^> !VolID!
+echo(
+echo -------------------------------
 
-	echo(&echo - [31mMAC SN[0m ----------------------&echo(
-	wmic nicconfig where (IPEnabled=True^) GET Description^,SettingID^,MACAddress
-	echo -------------------------------
+echo(&echo - [31mMAC SN[0m ----------------------&echo(
+wmic nicconfig where (IPEnabled=True^) GET Description^,SettingID^,MACAddress
+echo -------------------------------
 
-	echo(&echo - [31mGPU SN[0m ----------------------&echo(
-	wmic path win32_VideoController get name^,PNPDeviceID
-	echo -------------------------------
+echo(&echo - [31mGPU SN[0m ----------------------&echo(
+wmic path win32_VideoController get name^,PNPDeviceID
+echo -------------------------------
 
-	echo(&echo - [31mNVIDIA SN[0m -------------------&echo(
-	call :NVIDIA_SN
-	echo SerialNumber
-	echo !NVIDIA!
-	echo(&echo -------------------------------
-)
+echo(&echo - [31mNVIDIA SN[0m -------------------&echo(
+call :NVIDIA_SN
+echo SerialNumber
+echo !NVIDIA!
+echo(&echo -------------------------------
 
 >nul pause&goto :MENU
 
