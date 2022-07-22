@@ -1,9 +1,14 @@
-:: ==============================
-::     Windows Spoofer v6.0
-:: ==============================
-:: Dev  - Scut1ny
-:: Link - https://github.com/Scrut1ny/Windows-Spoofer
-:: ==============================
+:: ==================================================
+::  Windows Spoofer v6.0
+:: ==================================================
+::  Dev  - Scut1ny
+::  Link - https://github.com/Scrut1ny/Windows-Spoofer
+:: ==================================================
+
+
+
+
+:: ==================================================
 
 @echo off
 setlocal EnableDelayedExpansion
@@ -17,9 +22,34 @@ fltmc >nul 2>&1 || (
     exit 0
 )
 
+:: ==================================================
+
+
+
+
+:: ==================================================
+
+:A
+cls&title # Login Screen&echo(
+
+set /p "user=.  [44m# Username:[30;40m"
+cls&echo(
+set /p "pass=[0m.  [44m# Password:[30;40m"
+if "!user!"=="Scrutiny" if "!pass!"=="420" goto :MENU
+if "!user!"=="Test" if "!pass!"=="69" goto :MENU
+
+cls&color 07&echo(&echo   # [31mIncorrect Username or Password.[0m& >nul timeout /t 2
+goto :A
+
+:: ==================================================
+
+
+
+
+:: ==================================================
+
 :MENU
-cls&title https://github.com/Scrut1ny/Windows-Spoofer ^| v6.0
-echo(
+cls&title https://github.com/Scrut1ny/Windows-Spoofer ^| v6.0 ^| Welcome: !user!
 echo   ===============================
 echo       [31mWindows Spoofer[0m ^>^> [32mv5.5[0m
 echo   ===============================
@@ -318,7 +348,7 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 :: ====================================================================================================
 
 >nul 2>&1 (
-    for /f "tokens=10 delims=\" %%A in ('2^>nul reg query "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral"') do (
+    for /f "tokens=10 delims=\" %%A in ('reg query "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral"') do (
         reg add "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral\%%A" /v "Identifier" /t REG_SZ /d "%random:~-5%%random:~-3%-%random:~-5%%random:~-3%-A" /f
     )
 )
@@ -333,10 +363,11 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 :: ====================================================================================================
 
 
-call :RGUID
-reg add "HKCU\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f >nul 2>&1
-reg add "HKLM\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f >nul 2>&1
-
+>nul 2>&1 (
+	call :RGUID
+	reg add "HKCU\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
+	reg add "HKLM\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
+)
 
 :: ====================================================================================================
 
