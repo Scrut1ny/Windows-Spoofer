@@ -12,6 +12,7 @@
 
 @echo off
 setlocal EnableDelayedExpansion
+mode con:cols=60 lines=20
 
 fltmc >nul 2>&1 || (
     echo(&echo   [33m# Administrator privileges are required.&echo([0m
@@ -49,6 +50,7 @@ goto :A
 :: ==================================================
 
 :MENU
+mode con:cols=60 lines=20
 cls&title https://github.com/Scrut1ny/Windows-Spoofer ^| v6.0 ^| Welcome: !user!
 echo   ===============================
 echo       [31mWindows Spoofer[0m ^>^> [32mv5.5[0m
@@ -587,6 +589,7 @@ exit /b 0
 :: ====================================================================================================
 
 :CheckSerials
+mode con:cols=100 lines=100
 cls
 
 echo(&echo - [31mWindows Product ID[0m ----------&echo(
