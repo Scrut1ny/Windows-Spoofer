@@ -1,0 +1,33 @@
+EAC HWID Generation​
+EAC knows exactly who you are, lots of spoofing might be necessary
+
+    KUSER_SHARED_DATA.ProcessorFeatures ( 0xFFFFF78000000274 )
+    Registry
+    WMI
+    Ntoskernl.exe version
+    Mac address
+    Disk serials
+
+Registry Keys for HWID​
+
+    HKEY_LOCAL_MACHINE\Hardware\Description\System\CentralProcessor\0
+        SystemProductName
+    HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\Scsi\Scsi Port 0\Scsi Bus 0\Target Id 0\Logical Unit Id 0
+        Identifier
+        SerialNumber
+        SystemManufacturer
+    Computer\HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SystemInformation
+        ComputerHardwareId
+    Computer\HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System\BIOS
+        BIOSVendor
+        BIOSReleaseDate
+        ProductId
+        ProcessorNameString
+    Computer\HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000
+    Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion
+        InstallDate
+        DriverDesc
+    Computer\HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\WindowsUpdate
+        SusClientId
+    Registry\Machine\System\CurrentControlSet\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0001
+    Registry\Machine\Software\Microsoft\Windows NT\CurrentVersion\Windows Activation Technologies\AdminObject\Store

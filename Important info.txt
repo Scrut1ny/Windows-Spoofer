@@ -1,0 +1,39 @@
+Looking into the logs when you log into EFT and play I found what they do and are looking for exactly.
+
+1: 
+2021.07.10 21:51:12.932 -04:00  [INFO] Starting launcher v.12.8.3.1445 TRACE_ID: bf16124c-5a65-40b4-a537-e0a48d905cb0
+
+2: (CHECKING WHAT WIN VERSION YOU'RE RUNNING)
+2021.07.10 21:51:12.985 -04:00  [INFO] OS Win32NT 10.0.19043.0
+
+3. (SERVICES RUNNING IN THE BACKGROUND)
+2021.07.10 21:51:12.990 -04:00 [DEBUG] Awakening of services...
+2021.07.10 21:51:13.015 -04:00 [DEBUG] SettingsService is awakened
+2021.07.10 21:51:13.017 -04:00 [DEBUG] AnalyticsService is awakened
+2021.07.10 21:51:13.018 -04:00 [DEBUG] BugReportService is awakened
+2021.07.10 21:51:13.018 -04:00 [DEBUG]  is awakened
+2021.07.10 21:51:13.018 -04:00 [DEBUG] All services are awakened
+
+4. (VERY IMPORTANT)
+2021.07.10 21:53:20.922 -04:00 [DEBUG] Collecting SystemInfo...
+2021.07.10 21:53:20.934 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_BaseBoard. Code: InvalidQuery
+2021.07.10 21:53:20.940 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_BIOS. Code: InvalidQuery
+2021.07.10 21:53:20.946 -04:00 [ERROR] Could not execute WMI request SELECT UUID FROM Win32_ComputerSystemProduct. Code: InvalidQuery
+2021.07.10 21:53:20.950 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_Processor. Code: InvalidQuery
+2021.07.10 21:53:20.957 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_VideoController. Code: InvalidQuery
+2021.07.10 21:53:20.962 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_NetworkAdapter. Code: InvalidQuery
+2021.07.10 21:53:20.996 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_OperatingSystem. Code: InvalidQuery
+2021.07.10 21:53:21.002 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_PhysicalMemory. Code: InvalidQuery
+2021.07.10 21:53:21.009 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_DiskDrive. Code: InvalidQuery
+2021.07.10 21:53:21.029 -04:00 [DEBUG] SystemInfo successfully collected
+
+This means they check all of those, and if any of them match whats on their EFT Blacklist of BANNED players, you'll get banned instantly!
+If you read it out too, you'll recongnize that they are selecting specific parts of it using "WMI requests" and selecting "'*' = everything"
+FROM for ex. "Win32_BaseBoard" and all the info from it when it gets printed out basically. they aren't going for JUST the HWID's....
+
+https://stackoverflow.com/questions/1290533/wmi-win32-baseboard-serialnumber#31369674
+
+
+
+5.
+
