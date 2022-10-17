@@ -85,18 +85,36 @@ exit /b
 
 :choice3
 cls&title Contacting ISP
+mode con:cols=60 lines=25
 
-for /f "delims=[] tokens=2" %%a in ('ping -4 %ComputerName% ^| findstr="["') do set LIP=%%a
 for /f %%a in ('curl -fs api.ipify.org') do set PIP4=%%a
-for /f %%a in ('curl -fs api64.ipify.org') do set PIP6=%%a
-for /f "delims=, tokens=1,2,3,4,5,6,7,8,9" %%a in ('curl -fs http://ip-api.com/csv/!PIP4!?fields=66846719') do set IPInfo=%%a
 
-if !ERRORLEVEL!==0 (
-	echo(
-	echo 
-	echo(
-	
+for /f "tokens=1,2 delims=:" %%a in ('curl -kfs "http://ip-api.com/!PIP4!?fields=66846719"') do (
+    if not "%%b"=="" (
+        call :deANSIfy %%a field
+        call :deANSIfy %%b value
+        
+        set "!field!=!value!"
+        echo !field! : !value!
+    )
+)
+
+pause >nul
 goto :MENU
+exit /b
+
+::-------------------------------------------------------------------------------
+:: Strips ANSI sequences from a given string
+::
+:: Arguments: %1 - The string to process
+::            %2 - The variable to store the value in
+:: Returns:   None
+::-------------------------------------------------------------------------------
+:deANSIfy
+set "string=%~1"
+for %%A in (39 92 94 95 96) do set "string=!string:[%%Am=!"
+for /f "usebackq delims=" %%A in ('!string!') do set "string=%%~A"
+set "%~2=!string!"
 exit /b
 
 :SPOOF
@@ -532,33 +550,19 @@ echo   # [35mCleaning Traces[0m
 	
 	rem Misc
 	arp -d * rem Clear ARP/Route Tables - Contains MAC Address's used by anti-cheats to track you.
-	netsh int ip delete arpcache
-	netsh int ip delete destinationcache
-	netsh int ip delete neighbors
-	netsh int ip reset catalog
-	netsh int ip reset
-	netsh int ipv4 reset
-	netsh int ipv6 reset
-	netsh int httpstunnel reset
-	netsh int portproxy reset
-	netsh int udp reset
-	netsh int tcp reset
-	netsh winsock set autotuning off
-	netsh winhttp reset autoproxy
-	netsh winsock reset catalog
-	netsh winhttp reset tracing
-	netsh winhttp reset proxy
-	netsh winsock reset
-	netsh dhcpclient trace disable
-	netsh http flush logbuffer
-	netsh http delete cache
-	netsh branchcache reset
-	netsh trace stop
-	netsh rpc reset
-	netsh advfirewall reset
-	netsh advfirewall firewall set rule group="Network Discovery" new enable=No
 	nbtstat -R
 	nbtstat -RR
+	netsh branchcache reset
+	netsh dhcpclient trace disable
+	netsh http flush
+	netsh nap reset
+	netsh routing reset
+	netsh rpc reset
+	netsh trace stop
+	netsh winhttp reset
+	netsh winsock reset
+	netsh winsock set autotuning off
+	netsh interface reset all
 	bcdedit -set TESTSIGNING OFF
 	ipconfig/flushdns
 	
@@ -589,7 +593,7 @@ exit /b 0
 :: ====================================================================================================
 
 :CheckSerials
-mode con:cols=100 lines=100
+mode con:cols=105 lines=65
 cls
 
 echo(&echo - [31mWindows Product ID[0m ----------&echo(
