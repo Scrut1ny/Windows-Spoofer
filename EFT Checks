@@ -1,0 +1,13 @@
+2021.07.10 21:51:12.932 -04:00  [INFO] Starting launcher v.12.8.3.1445 TRACE_ID: bf16124c-5a65-40b4-a537-e0a48d905cb0
+
+2021.07.10 21:53:20.922 -04:00 [DEBUG] Collecting SystemInfo...
+2021.07.10 21:53:20.934 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_BaseBoard. Code: InvalidQuery
+2021.07.10 21:53:20.940 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_BIOS. Code: InvalidQuery
+2021.07.10 21:53:20.946 -04:00 [ERROR] Could not execute WMI request SELECT UUID FROM Win32_ComputerSystemProduct. Code: InvalidQuery
+2021.07.10 21:53:20.950 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_Processor. Code: InvalidQuery
+2021.07.10 21:53:20.957 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_VideoController. Code: InvalidQuery
+2021.07.10 21:53:20.962 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_NetworkAdapter. Code: InvalidQuery
+2021.07.10 21:53:20.996 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_OperatingSystem. Code: InvalidQuery
+2021.07.10 21:53:21.002 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_PhysicalMemory. Code: InvalidQuery
+2021.07.10 21:53:21.009 -04:00 [ERROR] Could not execute WMI request SELECT * FROM Win32_DiskDrive. Code: InvalidQuery
+2021.07.10 21:53:21.029 -04:00 [DEBUG] SystemInfo successfully collected
