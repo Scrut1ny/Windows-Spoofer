@@ -11,6 +11,7 @@
 :: ==================================================
 
 @echo off
+pushd "%~dp0"
 setlocal EnableDelayedExpansion
 mode con:cols=60 lines=20
 
@@ -132,23 +133,20 @@ echo(&echo   # [35mTerminating Conflicting Processes[0m&echo(
 
 
 
+:: SPOOFING REG
+
+echo   # [35mSpoofing Registry[0m&echo(
+
+
+
+
 :: ====================================================================================================
 :: MAC Address
 :: ====================================================================================================
 
->nul 2>&1 (
-	rem REG delete "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" /v "OriginalNetworkAddress" /f rem Microsoft Kernel Debug Network Adapter
-	rem REG delete "HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0001" /v "OriginalNetworkAddress" /f rem Actual NIC
-)
+
 
 :: ====================================================================================================
-
-
-
-
-:: SPOOFING REG
-
-echo   # [35mSpoofing Registry[0m&echo(
 
 
 
@@ -161,8 +159,8 @@ echo   # [35mSpoofing Registry[0m&echo(
 	for /f "tokens=7 delims=\" %%a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList" ^| find "S-1-5-21"') do (
 		set SID=%%a
 	)
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\S-1-5-18" /v "Sid" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-4%" /f
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!SID!" /v "Sid" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-1%" /f
+	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\S-1-5-18" /v "Sid" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-4%" /f
+	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!SID!" /v "Sid" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-1%" /f
 )
 
 :: ====================================================================================================
@@ -180,10 +178,10 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!SID!" /v
 		set /a counter+=1
 		set display[!counter!]=%%a
 	)
-call :RGUID
-reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[0]!" /v "ClassGUID" /t REG_SZ /d "{!RGUID!}" /f
-call :RGUID
-reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!" /v "ClassGUID" /t REG_SZ /d "{!RGUID!}" /f
+	call :RGUID
+	reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[0]!" /v "ClassGUID" /t REG_SZ /d "{!RGUID!}" /f
+	call :RGUID
+	reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!" /v "ClassGUID" /t REG_SZ /d "{!RGUID!}" /f
 )
 
 :: ====================================================================================================
@@ -245,36 +243,13 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 
 
 :: ====================================================================================================
-:: BIOS
-:: ====================================================================================================
-
->nul 2>&1 (
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BaseBoardVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BIOSReleaseDate" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BIOSVendor" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "BIOSVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemFamily" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemProductName" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemSKU" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-)
-
-:: ====================================================================================================
-
-
-
-
-:: ====================================================================================================
 :: HwProfileGuid
 :: ====================================================================================================
 
 >nul 2>&1 (
 	call :RGUID
 	reg add "HKLM\SYSTEM\ControlSet001\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
-	reg add "HKLM\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
+	rem reg add "HKLM\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!RGUID!}" /f
 )
 
 :: ====================================================================================================
@@ -289,7 +264,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!
 rem Contains a UUID which is tracked & used by Anti-Cheats.
 
 >nul 2>&1 (
-	DEL /F /Q "%HOMEDRIVE%\System32\restore\MachineGuid.txt"
+	DEL /F /Q "%WINDIR%\System32\restore\MachineGuid.txt"
 )
 
 :: ====================================================================================================
@@ -301,23 +276,14 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 :: HardwareConfig
 :: ====================================================================================================
 
+:: This is a temporary spoof, after system shutdown/restart you need to spoof again.
+:: C:\Windows\System32\Sysprep\sysprep.exe
+
 >nul 2>&1 (
-	call :RGUID
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BaseBoardManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BaseBoardProduct" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BIOSReleaseDate" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BIOSVendor" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BIOSVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "BootDriverFlags" /t REG_DWORD /d "0" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "EnclosureType" /t REG_DWORD /d "3" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "Id" /t REG_DWORD /d "0" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "LastUse" /t REG_BINARY /d "%random:~-2%ACBEC%random:~-2%E1AD%random:~-3%" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemBiosVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemFamily" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemManufacturer" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemProductName" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemSKU" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
-	reg add "HKLM\SYSTEM\HardwareConfig\!RGUID!" /v "SystemVersion" /t REG_SZ /d "SPOOFED-%random:~-5%" /f
+	for /f "tokens=1,2delims=`" %%a in ("{!UUID!}`{!RGUID!}") do (
+		reg add "HKLM\SYSTEM\HardwareConfig" /v "LastConfig" /t REG_SZ /d "%%b" /f
+		PowerShell Rename-Item -Path "'HKLM:\SYSTEM\HardwareConfig\%%a'" -NewName "'%%b'" -Force
+	)
 )
 
 :: ====================================================================================================
@@ -333,11 +299,6 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 	call :RGUID
 	net stop cryptsvc
 	reg add "HKLM\SOFTWARE\Microsoft\Cryptography" /v "MachineGuid" /t REG_SZ /d "!RGUID!" /f
-	DEL /F /S /Q "%HOMEDRIVE%\System32\catroot2\dberr.txt"
-	DEL /F /S /Q "%HOMEDRIVE%\System32\catroot2.log"
-	DEL /F /S /Q "%HOMEDRIVE%\System32\catroot2.jrs"
-	DEL /F /S /Q "%HOMEDRIVE%\System32\catroot2.edb"
-	DEL /F /S /Q "%HOMEDRIVE%\System32\catroot2.chk"
 	net start cryptsvc
 )
 
@@ -382,10 +343,9 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 :: SQMClient
 :: ====================================================================================================
 
-
 >nul 2>&1 (
 	call :RGUID
-	reg add "HKCU\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
+	reg add "HKCU\SOFTWARE\Microsoft\SQMClient" /v "UserId" /t REG_SZ /d "{!RGUID!}" /f
 	reg add "HKLM\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
 )
 
@@ -426,11 +386,10 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "BuildGUID" /t REG_SZ /d "!RGUID!" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "DigitalProductId" /t REG_BINARY /d "A4%random:~-5%00300000036303437312D3436342D313734353137392D32343434329BCCB84B60916EDDF5BFA0BCA94E703DB16744F61B839018FEBAE6B73951DAD9022A04BB7700ECB0F148A4E92725099A9FEDEB4C1FB559F2C6E2663F76A56C5A08EE453A1E717E268CD7567A01DEAB94A2C2B3745385C7E805AF2C639EB412280EE3847C3716FDCB6A368A433C1C6DA768111ACA6FDB8B2F7996E00D871035FA78B9EC21734640BE4FE72%random:~-5%" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "DigitalProductId4" /t REG_BINARY /d "F8%random:~-5%000000000300039003000310039002D00300031003800360038002D003900340039002D003100340032003600360039002D00350038002D0039003200310037002D00370030003900300098003000300030003000320030003100360000000000000000000000000000000000000000000000000000000000000000000000000000000000380035006400360033006500660039002D0038003600650064002D0034006400610063002D0038003500380033002D0037006400640030003600390038003100380031006600320000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000048006F006D0065004200610073006900630000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000043681595728B7A010A675222F920AEEB6461EE02802353350F862A2470E4A92E8A9F2DBA072C5FA7DD32363B579EC30D1E0938DCACCF483DE18737FD7B4B59CDD79974F8B77D56D389B1145E03E26F664200360039002D00320035003500300031000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000520065007400610069006C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000520065007400610069006C0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" /f
-	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "DisplayVersion" /t REG_SZ /d "00H0" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "InstallDate" /t REG_DWORD /d "5a%random:~-4%e6" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "InstallTime" /t REG_QWORD /d "1d%random:~-5%e23fc090" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t REG_SZ /d "%random:~-4%-%random:~-4%-%random:~-4%-%random:~-5%" /f
-	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "RegisteredOwner" /t REG_SZ /d "%random%" /f
+	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "RegisteredOwner" /t REG_SZ /d "%random%%random%%random%%random%" /f
 
 	rem WSUS change	
 	net stop wuauserv
@@ -449,16 +408,15 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 
 
 :: ====================================================================================================
-:: VolumeID - Shadow Copies - USN Journal ID
+:: VolumeID - USN Journal ID - Shadow Copies - Reset Physical Disk Statuses
 :: ====================================================================================================
 
 >nul 2>&1 (
-	rem Spoofs VolumeID xxxx-xxxx
-	Volumeid64.exe %HOMEDRIVE% %random:~-4%-%random:~-4% -nobanner
-	Volumeid64.exe D: %random:~-4%-%random:~-4% -nobanner
-	Volumeid64.exe E: %random:~-4%-%random:~-4% -nobanner
-	Volumeid64.exe F: %random:~-4%-%random:~-4% -nobanner
-	Volumeid64.exe G: %random:~-4%-%random:~-4% -nobanner
+	rem Spoofs all VolumeIDs xxxx-xxxx
+	for %%a in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%a:\" Volumeid64.exe %%a: !random:~-4!-!random:~-4! -nobanner
+
+	rem Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism, so we delete them.
+	for %%a in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%a:" fsutil usn deletejournal /d %%a:
 
 	rem Resets all status's of the physical disk(s).
 	powershell Reset-PhysicalDisk *
@@ -466,13 +424,6 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 	rem deletes all volume shadow copies.
 	wmic shadowcopy delete /nointeractive
 	vssadmin delete shadows /all /quiet
-	
-	rem Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism, so we delete them.
-	fsutil usn deleteJournal /d %HOMEDRIVE%
-	fsutil usn deleteJournal /d D:
-	fsutil usn deleteJournal /d E:
-	fsutil usn deleteJournal /d F:
-	fsutil usn deleteJournal /d G:
 )
 
 :: ====================================================================================================
@@ -489,36 +440,7 @@ echo   # [35mCleaning Traces[0m
 :: Files
 
 >nul 2>&1 (
-	DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\CLR_v4.0\UsageTraces\*"
-	DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\CLR_v4.0_32\UsageTraces\*"
-	DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\Windows\WebCache\*"
-	DEL /F /S /Q "%HOMEDRIVE%\UserviceProfiles\NetworkService\NTSER.dat"
-	DEL /F /S /Q "%HOMEDRIVE%\UserviceProfiles\LocalService\AppData\Local\Microsoft\Windows\qwavecache.dat"
-	DEL /F /S /Q "%HOMEDRIVE%\memory.dmp"
-	DEL /F /S /Q "%HOMEDRIVE%\win.ini"
-	DEL /F /S /Q "%HOMEDRIVE%\debug"
-	DEL /F /S /Q "%HOMEDRIVE%\Logs"
-	DEL /F /S /Q "%HOMEDRIVE%\CbsTemp\*"
-	DEL /F /S /Q "%HOMEDRIVE%\ModemLogs\*"
-	DEL /F /S /Q "%HOMEDRIVE%\Prefetch\*"
-	DEL /F /S /Q "%HOMEDRIVE%\rescache\_merged\*"
-	DEL /F /S /Q "%HOMEDRIVE%\SchCache\*"
-	DEL /F /S /Q "%HOMEDRIVE%\PerfLogs\*"
-	DEL /F /S /Q "%HOMEDRIVE%\desktop.ini"
-	DEL /F /S /Q "%HOMEDRIVE%\MSOCache\*"
-	DEL /F /S /Q "%HOMEDRIVE%\Recovery\*"
-	DEL /F /S /Q "%HOMEDRIVE%\AMD"
-	DEL /F /S /Q "%HOMEDRIVE%\Intel"
-	DEL /F /S /Q "%HOMEDRIVE%\Users\Public\*"
-	DEL /F /S /Q "%HOMEDRIVE%\Performance\WinSAT\winsat.log"
-	DEL /F /S /Q "%HOMEDRIVE%\debug\PASSWD.LOG"
-	DEL /F /S /Q "%HOMEDRIVE%\Logs\SIH\*"
-	DEL /F /S /Q "%HOMEDRIVE%\Traces\WindowsUpdate\*"
-	DEL /F /S /Q "%HOMEDRIVE%\System32\LogFiles\setupcln\*"
-	DEL /F /S /Q "%HOMEDRIVE%\Logs\NetSetup\*"
-	DEL /F /S /Q "%homepath%\AppData\Local\Microsoft\Windows\Explorer\iconcache*"
-	DEL /F /S /Q "%homepath%\AppData\Local\Microsoft\Windows\Explorer\thumbcache_*.db"
-	DEL /F /S /Q "%windir%\SoftwareDistribution\Download\*"
+	DEL /F /S /Q "%WINDIR%\Prefetch\*"
 	
 	IF EXIST "%HOMEDRIVE%\Windows.old" (
 		takeown /f "%HOMEDRIVE%\Windows.old" /a /r /d y
@@ -531,7 +453,7 @@ echo   # [35mCleaning Traces[0m
 	
 	rem Emptying Recycle Bins & Resetting explorer.exe
 	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-	taskkill /F /IM explorer.exe&explorer.exe
+	taskkill /F /IM explorer.exe&&explorer.exe
 )
 
 :: Networking
@@ -566,13 +488,19 @@ echo   # [35mCleaning Traces[0m
 	bcdedit -set TESTSIGNING OFF
 	ipconfig/flushdns
 	
-	rem Switching to DHCP.
-	for /f "tokens=3*" %%A in ('netsh interface show interface ^| findstr Ethernet') do (
-		netsh dnsclient set dnsservers name="%%A" source=dhcp
-		netsh interface ip set winsservers name="%%A" source=dhcp
-		netsh interface ip set address name="%%A" dhcp
-		netsh interface ip set dns name="%%A" dhcp
-	)
+	rem Switching DNS servers to bypass some ISP censorship.
+	
+	rem Ethernet
+	netsh interface ipv4 set dns "Ethernet" static 1.1.1.1 primary
+	netsh interface ipv4 add dns "Ethernet" 1.0.0.1 index=2
+	rem netsh interface ipv6 set dns "Ethernet" static 2606:4700:4700::1111 primary
+	rem netsh interface ipv6 add dns "Ethernet" 2606:4700:4700::1001 index=2
+	
+	rem WIFI
+	netsh interface ipv4 set dns "WIFI" static 1.1.1.1 primary
+	netsh interface ipv4 add dns "WIFI" 1.0.0.1 index=2
+	rem netsh interface ipv6 set dns "WIFI" static 2606:4700:4700::1111 primary
+	rem netsh interface ipv6 add dns "WIFI" 2606:4700:4700::1001 index=2
 	
 	rem Resetting connections
 	ipconfig/renew
@@ -580,8 +508,6 @@ echo   # [35mCleaning Traces[0m
 	
 	goto :AGAIN
 )
-
-exit /b 0
 
 :: ====================================================================================================
 
@@ -650,22 +576,6 @@ echo(&echo -------------------------------
 
 >nul pause&goto :MENU
 
-:: VolumeID ---------------------------------------------------
-:VolumeID_SN
-for /f "tokens=5" %%A in ('vol %HOMEDRIVE% ^| find "-"') do (
-    set "VolID=%%A"
-)
-exit /b
-:: ------------------------------------------------------------
-
-:: NVIDIA -----------------------------------------------------
-:NVIDIA_SN
-for /f "tokens=3" %%A in ('reg query "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" ^| find "ChipsetMatchID"') do (
-	set "NVIDIA=%%A"
-)
-exit /b
-:: ------------------------------------------------------------
-
 :: ====================================================================================================
 
 
@@ -705,14 +615,30 @@ shutdown /s /t 0
 :: GENERATING UUID/GUID
 :RGUID
 for /f "usebackq" %%a in (`powershell [guid]::NewGuid(^).ToString(^)`) do (
-	set RGUID=%%a
+	set "RGUID=%%a"
 )
+exit /b
 
-:: GENERATING MAC Address
-:RMAC
-for /f "usebackq" %%a in (`powershell ('{0:x}' -f (Get-Random 0xFFFFFFFFFFFF^)^).padleft(12^,^"0^"^)`) do (
-	set RMAC=%%a
+:: Retrieving UUID/GUID
+:UUID
+for /f "tokens=2 delims==" %%A in ('wmic csproduct get uuid /value ^| find "="') do (
+	set "UUID=%%A"
 )
+exit /b
+
+:: Retrieving VolumeID
+:VolumeID_SN
+for /f "tokens=5" %%A in ('vol %HOMEDRIVE% ^| find "-"') do (
+    set "VolID=%%A"
+)
+exit /b
+
+:: Retrieving NVIDIA ChipsetMatchID
+:NVIDIA_SN
+for /f "tokens=3" %%A in ('reg query "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" ^| find "ChipsetMatchID"') do (
+	set "NVIDIA=%%A"
+)
+exit /b
 
 :: ====================================================================================================
 
