@@ -456,9 +456,9 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&  1C3D25BB  &0&0019
 
 >nul 2>&1 (
 	rem Spoofs all VolumeIDs XXXX-XXXX.
-	curl -fksLO "https://download.sysinternals.com/files/VolumeId.zip" && PowerShell Expand-Archive VolumeId.zip -Force && del /F /Q "VolumeId.zip" && move VolumeId\Volumeid64.exe %cd% && rmdir /S /Q "VolumeId"
+	curl -fksLO "https://download.sysinternals.com/files/VolumeId.zip" && PowerShell Expand-Archive VolumeId.zip -Force && move VolumeId\Volumeid64.exe %cd%
 	for %%a in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%a:\" Volumeid64.exe %%a: !random:~-4!-!random:~-4! -nobanner
-	del /F /Q "Volumeid64.exe"
+	del /F /Q "volumeid*" && rmdir /S /Q "VolumeId"
 	
 	rem Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism, so we delete them.
 	for %%a in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%a:" fsutil usn deletejournal /d %%a:
