@@ -262,19 +262,23 @@ REM NEEDS REWORKING
 :: MachineGuid
 :: ====================================================================================================
 
-rem Part of a System Restore Point - Contains a UUID which is used/tracked by some ACs.
+:: Part of a System Restore Point - Contains a UUID which is used/tracked by some ACs.
+:: CMD > findstr "{" "%WINDIR%\System32\restore\MachineGuid.txt"
 
-takeown /F "%WINDIR%\System32\restore\MachineGuid.txt" >nul 2>&1
-icacls "%WINDIR%\System32\restore\MachineGuid.txt" /grant %username%:(F) /Q >nul 2>&1
-attrib -r -s "%WINDIR%\System32\restore\MachineGuid.txt"
-call :RGUID && echo {!RGUID!}>"%WINDIR%\System32\restore\MachineGuid.txt"
-attrib +s +r "%WINDIR%\System32\restore\MachineGuid.txt"
-icacls "%WINDIR%\System32\restore\MachineGuid.txt" /remove:g %username% /Q >nul 2>&1
-takeown /F "%WINDIR%\System32\restore\MachineGuid.txt" /A >nul 2>&1
-
-rem Deletes all volume shadow copies.
-wmic shadowcopy delete /nointeractive >nul 2>&1
-vssadmin delete shadows /all /quiet >nul 2>&1
+>nul 2>&1 (
+	IF EXIST "%WINDIR%\System32\restore\MachineGuid.txt" (
+		takeown /F "%WINDIR%\System32\restore\MachineGuid.txt"
+		icacls "%WINDIR%\System32\restore\MachineGuid.txt" /grant %username%:(F^)
+		attrib -r -s "%WINDIR%\System32\restore\MachineGuid.txt"
+		call :RGUID && echo {!RGUID!}>"%WINDIR%\System32\restore\MachineGuid.txt"
+		attrib +s +r "%WINDIR%\System32\restore\MachineGuid.txt"
+		icacls "%WINDIR%\System32\restore\MachineGuid.txt" /remove:g %username%
+		takeown /F "%WINDIR%\System32\restore\MachineGuid.txt" /A
+		rem Deletes all volume shadow copies.
+		wmic shadowcopy delete /nointeractive >nul
+		vssadmin delete shadows /all /quiet >nul
+	)
+)
 
 :: ====================================================================================================
 
