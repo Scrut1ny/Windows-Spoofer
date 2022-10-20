@@ -261,10 +261,20 @@ echo   # [35mSpoofing Registry[0m&echo(
 :: MachineGuid
 :: ====================================================================================================
 
-rem Contains a UUID which is tracked & used by Anti-Cheats.
+rem Part of a System Restore Point - Contains a UUID which is used/tracked by some ACs.
 
 >nul 2>&1 (
-	DEL /F /Q "%WINDIR%\System32\restore\MachineGuid.txt"
+	takeown /f "%WINDIR%\System32\restore\MachineGuid.txt"
+	icacls "%WINDIR%\System32\restore\MachineGuid.txt" /grant %username%:(F)
+	attrib -r -s "%WINDIR%\System32\restore\MachineGuid.txt"
+	call :RGUID && echo {!RGUID!}>"%WINDIR%\System32\restore\MachineGuid.txt"
+	attrib +s +r "%WINDIR%\System32\restore\MachineGuid.txt"
+	icacls "%WINDIR%\System32\restore\MachineGuid.txt" /remove:g %username%
+	takeown /F "%WINDIR%\System32\restore\MachineGuid.txt" /A
+	
+	rem Deletes all volume shadow copies.
+	wmic shadowcopy delete /nointeractive
+	vssadmin delete shadows /all /quiet
 )
 
 :: ====================================================================================================
@@ -301,6 +311,28 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 	reg add "HKLM\SOFTWARE\Microsoft\Cryptography" /v "MachineGuid" /t REG_SZ /d "!RGUID!" /f
 	net start cryptsvc
 )
+
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
+:: GPU/PCI PNPDeviceID - DeviceInstance
+:: ====================================================================================================
+
+reg query loop through every instance of PNPDeviceID and spoof it
+
+Parsing It
+
+Looking at the PNPDeviceID value, break it up by "\".
+
+    The first piece it the bus type. For me, it is PCI.
+    The second section describes the card. There's a vendor code, model number, etc.
+    The last section contains a number separated by ampersands. The serial number is the second number in that list, formatted in hex.
+    Translate the hex to decimal
+	
+PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&  1C3D25BB  &0&0019
 
 :: ====================================================================================================
 
@@ -408,22 +440,29 @@ rem Contains a UUID which is tracked & used by Anti-Cheats.
 
 
 :: ====================================================================================================
-:: VolumeID - USN Journal ID - Shadow Copies - Reset Physical Disk Statuses
+:: AMIDEWIN Spoofing - https://www.thetechgame.com/Tutorials/id=28615/c=12091/mwhwid-ban-change-uuid-and-serial-of-ami-bios-motherboard.html
+:: ====================================================================================================
+
+
+
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
+:: VolumeID - USN Journal ID - Reset Physical Disk Statuses
 :: ====================================================================================================
 
 >nul 2>&1 (
-	rem Spoofs all VolumeIDs xxxx-xxxx
+	rem Spoofs all VolumeIDs XXXX-XXXX.
 	for %%a in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%a:\" Volumeid64.exe %%a: !random:~-4!-!random:~-4! -nobanner
-
+	
 	rem Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism, so we delete them.
 	for %%a in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%a:" fsutil usn deletejournal /d %%a:
 
-	rem Resets all status's of the physical disk(s).
+	rem Resets all statuses of the physical disks.
 	powershell Reset-PhysicalDisk *
-	
-	rem deletes all volume shadow copies.
-	wmic shadowcopy delete /nointeractive
-	vssadmin delete shadows /all /quiet
 )
 
 :: ====================================================================================================
@@ -486,7 +525,6 @@ echo   # [35mCleaning Traces[0m
 	netsh winsock set autotuning off
 	netsh interface reset all
 	bcdedit -set TESTSIGNING OFF
-	ipconfig/flushdns
 	
 	rem Switching DNS servers to bypass some ISP censorship.
 	
@@ -503,6 +541,7 @@ echo   # [35mCleaning Traces[0m
 	rem netsh interface ipv6 add dns "WIFI" 2606:4700:4700::1001 index=2
 	
 	rem Resetting connections
+	ipconfig/flushdns
 	ipconfig/renew
 	net start msiserver
 	
@@ -568,6 +607,12 @@ echo(&echo - [31mGPU SN[0m ----------------------&echo(
 wmic path win32_VideoController get name^,PNPDeviceID
 echo -------------------------------
 
+echo(&echo - [31mMachineGuid[0m -----------------&echo(
+call :MachineGuid
+echo MachineGuid
+echo !MachineGuid!
+echo -------------------------------
+
 echo(&echo - [31mNVIDIA SN[0m -------------------&echo(
 call :NVIDIA_SN
 echo SerialNumber
@@ -614,8 +659,8 @@ shutdown /s /t 0
 
 :: GENERATING UUID/GUID
 :RGUID
-for /f "usebackq" %%a in (`powershell [guid]::NewGuid(^).ToString(^)`) do (
-	set "RGUID=%%a"
+for /f "usebackq" %%A in (`powershell [guid]::NewGuid(^).ToString(^)`) do (
+	set "RGUID=%%A"
 )
 exit /b
 
@@ -637,6 +682,13 @@ exit /b
 :NVIDIA_SN
 for /f "tokens=3" %%A in ('reg query "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" ^| find "ChipsetMatchID"') do (
 	set "NVIDIA=%%A"
+)
+exit /b
+
+:: Retrieving MachineGuid
+:MachineGuid
+for /f %%A in ('findstr "{" "%WINDIR%\System32\restore\MachineGuid.txt"') do (
+	set "MachineGuid=%%A"
 )
 exit /b
 
