@@ -608,7 +608,7 @@ echo(&echo - [31mMachineGuid[0m -----------------&echo(
 call :MachineGuid
 echo MachineGuid
 echo !MachineGuid!
-echo -------------------------------
+echo(&echo -------------------------------
 
 echo(&echo - [31mNVIDIA SN[0m -------------------&echo(
 call :NVIDIA_SN
