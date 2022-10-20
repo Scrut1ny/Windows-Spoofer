@@ -264,14 +264,14 @@ echo   # [35mSpoofing Registry[0m&echo(
 rem Part of a System Restore Point - Contains a UUID which is used/tracked by some ACs.
 
 >nul 2>&1 (
-	takeown /f "%WINDIR%\System32\restore\MachineGuid.txt"
-	icacls "%WINDIR%\System32\restore\MachineGuid.txt" /grant %username%:(F)
+	takeown /F "%WINDIR%\System32\restore\MachineGuid.txt"
+	icacls "%WINDIR%\System32\restore\MachineGuid.txt" /grant %username%:(F) /Q
 	attrib -r -s "%WINDIR%\System32\restore\MachineGuid.txt"
 	call :RGUID && echo {!RGUID!}>"%WINDIR%\System32\restore\MachineGuid.txt"
 	attrib +s +r "%WINDIR%\System32\restore\MachineGuid.txt"
-	icacls "%WINDIR%\System32\restore\MachineGuid.txt" /remove:g %username%
+	icacls "%WINDIR%\System32\restore\MachineGuid.txt" /remove:g %username% /Q
 	takeown /F "%WINDIR%\System32\restore\MachineGuid.txt" /A
-	
+
 	rem Deletes all volume shadow copies.
 	wmic shadowcopy delete /nointeractive
 	vssadmin delete shadows /all /quiet
@@ -321,18 +321,15 @@ rem Part of a System Restore Point - Contains a UUID which is used/tracked by so
 :: GPU/PCI PNPDeviceID - DeviceInstance
 :: ====================================================================================================
 
-reg query loop through every instance of PNPDeviceID and spoof it
+rem reg query loop through every instance of PNPDeviceID and spoof it
 
-Parsing It
-
-Looking at the PNPDeviceID value, break it up by "\".
-
-    The first piece it the bus type. For me, it is PCI.
-    The second section describes the card. There's a vendor code, model number, etc.
-    The last section contains a number separated by ampersands. The serial number is the second number in that list, formatted in hex.
-    Translate the hex to decimal
+rem Looking at the PNPDeviceID value, break it up by "\".
+rem The first piece it the bus type. For me, it is PCI.
+rem The second section describes the card. There's a vendor code, model number, etc.
+rem The last section contains a number separated by ampersands. The serial number is the second number in that list, formatted in hex.
+rem Translate the hex to decimal
 	
-PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&  1C3D25BB  &0&0019
+rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&  1C3D25BB  &0&0019
 
 :: ====================================================================================================
 
