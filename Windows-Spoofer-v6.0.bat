@@ -275,8 +275,8 @@ REM NEEDS REWORKING
 		icacls "%WINDIR%\System32\restore\MachineGuid.txt" /remove:g %username%
 		takeown /F "%WINDIR%\System32\restore\MachineGuid.txt" /A
 		rem Deletes all volume shadow copies.
-		wmic shadowcopy delete /nointeractive >nul
-		vssadmin delete shadows /all /quiet >nul
+		wmic shadowcopy delete /nointeractive
+		vssadmin delete shadows /all /quiet
 	)
 )
 
