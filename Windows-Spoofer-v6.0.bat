@@ -126,7 +126,6 @@ echo(&echo   # [31mWARNING:[0m [33mDon't turn off system.[0m
 echo(&echo   # [35mTerminating Conflicting Processes[0m&echo(
 
 >nul 2>&1 (
-	ipconfig/release
 	net stop msiserver rem https://www.minitool.com/news/windows-installer-service.html
 )
 
@@ -171,6 +170,8 @@ echo   # [35mSpoofing Registry[0m&echo(
 :: ====================================================================================================
 :: Monitor
 :: ====================================================================================================
+
+REM NEEDS REWORKING
 
 >nul 2>&1 (
 	set counter=-1
@@ -263,19 +264,17 @@ echo   # [35mSpoofing Registry[0m&echo(
 
 rem Part of a System Restore Point - Contains a UUID which is used/tracked by some ACs.
 
->nul 2>&1 (
-	takeown /F "%WINDIR%\System32\restore\MachineGuid.txt"
-	icacls "%WINDIR%\System32\restore\MachineGuid.txt" /grant %username%:(F) /Q
-	attrib -r -s "%WINDIR%\System32\restore\MachineGuid.txt"
-	call :RGUID && echo {!RGUID!}>"%WINDIR%\System32\restore\MachineGuid.txt"
-	attrib +s +r "%WINDIR%\System32\restore\MachineGuid.txt"
-	icacls "%WINDIR%\System32\restore\MachineGuid.txt" /remove:g %username% /Q
-	takeown /F "%WINDIR%\System32\restore\MachineGuid.txt" /A
+takeown /F "%WINDIR%\System32\restore\MachineGuid.txt" >nul 2>&1
+icacls "%WINDIR%\System32\restore\MachineGuid.txt" /grant %username%:(F) /Q >nul 2>&1
+attrib -r -s "%WINDIR%\System32\restore\MachineGuid.txt"
+call :RGUID && echo {!RGUID!}>"%WINDIR%\System32\restore\MachineGuid.txt"
+attrib +s +r "%WINDIR%\System32\restore\MachineGuid.txt"
+icacls "%WINDIR%\System32\restore\MachineGuid.txt" /remove:g %username% /Q >nul 2>&1
+takeown /F "%WINDIR%\System32\restore\MachineGuid.txt" /A >nul 2>&1
 
-	rem Deletes all volume shadow copies.
-	wmic shadowcopy delete /nointeractive
-	vssadmin delete shadows /all /quiet
-)
+rem Deletes all volume shadow copies.
+wmic shadowcopy delete /nointeractive >nul 2>&1
+vssadmin delete shadows /all /quiet >nul 2>&1
 
 :: ====================================================================================================
 
@@ -494,6 +493,8 @@ echo   # [35mCleaning Traces[0m
 
 :: Networking
 
+echo(&&echo   # [35mRevising Networking[0m
+
 >nul 2>&1 (
 	rem delete all Network Data Usage & Disable it.
 	sc stop "DPS" & sc config "DPS" start= disabled
@@ -539,7 +540,6 @@ echo   # [35mCleaning Traces[0m
 	
 	rem Resetting connections
 	ipconfig/flushdns
-	ipconfig/renew
 	net start msiserver
 	
 	goto :AGAIN
