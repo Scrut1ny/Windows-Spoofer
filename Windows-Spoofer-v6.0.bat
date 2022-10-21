@@ -459,7 +459,7 @@ rem Disable Windows Signature Enforcement
 		for /f "delims=" %%B in ("%%~A") do (
 			if not "To be filled by O.E.M."=="%%B" (
 				if not "Unknown"=="%%B" (
-					AMIDEWINx64.EXE /BS "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%"
+					AMIDEWINx64.EXE /BS "!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!"
 				)
 			)
 		)
