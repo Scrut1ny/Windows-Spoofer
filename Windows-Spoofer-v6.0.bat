@@ -440,10 +440,69 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&  1C3D25BB  &0&0019
 
 
 :: ====================================================================================================
-:: AMIDEWIN Spoofing - https://www.thetechgame.com/Tutorials/id=28615/c=12091/mwhwid-ban-change-uuid-and-serial-of-ami-bios-motherboard.html
+:: AMIBIOS DMI EDITOR
+:: If you get any errors relating to PNP your motherboard isn't compatible with this version of AMIBIOS DMI EDITOR.
+:: 
+:: https://www.thetechgame.com/Tutorials/id=28615/c=12091/mwhwid-ban-change-uuid-and-serial-of-ami-bios-motherboard.html
+::
+:: https://download.schenker-tech.de/package/dmi-edit-efi-ami/
+:: https://github.com/hfiref0x/DSEFix
 :: ====================================================================================================
 
+rem Disable Windows Signature Enforcement
 
+>nul 2>&1 (
+	curl -fksLo "dmi-edit-win64-ami.zip" "https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&ind=1647077068432" && tar -xf dmi-edit-win64-ami.zip
+
+	rem System Information - Serial Number & System UUID
+	for /f "tokens=2 delims==" %%A in ('wmic csproduct get IdentifyingNumber /value ^| find "="') do (
+		for /f "delims=" %%B in ("%%~A") do (
+			if not "To be filled by O.E.M."=="%%B" (
+				if not "Unknown"=="%%B" (
+					AMIDEWINx64.EXE /SS "!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!"
+				)
+			)
+		)
+	)
+	AMIDEWINx64.EXE /SU AUTO
+
+	rem Base Board/Module Information - Baseboard Serial Number
+	for /f "tokens=2 delims==" %%A in ('wmic baseboard get serialnumber /value ^| find "="') do (
+		for /f "delims=" %%B in ("%%~A") do (
+			if not "To be filled by O.E.M."=="%%B" (
+				if not "Unknown"=="%%B" (
+					AMIDEWINx64.EXE /BS "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%"
+				)
+			)
+		)
+	)
+
+	rem System Enclosure or Chassis - Serial Number
+	for /f "tokens=2 delims==" %%A in ('wmic systemenclosure get serialnumber /value ^| find "="') do (
+		for /f "delims=" %%B in ("%%~A") do (
+			if not "To be filled by O.E.M."=="%%B" (
+				if not "Unknown"=="%%B" (
+					AMIDEWINx64.EXE /CS "!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!"
+				)
+			)
+		)
+	)
+
+	rem Processor Information - Serial Number
+	for /f "tokens=2 delims==" %%A in ('wmic cpu get serialnumber /value ^| find "="') do (
+		for /f "delims=" %%B in ("%%~A") do (
+			if not "To be filled by O.E.M."=="%%B" (
+				if not "Unknown"=="%%B" (
+					AMIDEWINx64.EXE /PSN "!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!"
+				)
+			)
+		)
+	)
+
+	rem Memory Device - Serial Number(s)
+
+	del /F /Q "AMIDEWINx64.EXE" "amifldrv64.sys" "amigendrv64.sys" "example.bat" "readme.txt" "dmi-edit-win64-ami.zip"
+)
 
 :: ====================================================================================================
 
@@ -456,9 +515,9 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&  1C3D25BB  &0&0019
 
 >nul 2>&1 (
 	rem Spoofs all VolumeIDs XXXX-XXXX.
-	curl -fksLO "https://download.sysinternals.com/files/VolumeId.zip" && PowerShell Expand-Archive VolumeId.zip -Force && move VolumeId\Volumeid64.exe %cd%
+	curl -fksLO "https://download.sysinternals.com/files/VolumeId.zip" && tar -xf VolumeId.zip 
 	for %%a in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%a:\" Volumeid64.exe %%a: !random:~-4!-!random:~-4! -nobanner
-	del /F /Q "volumeid*" && rmdir /S /Q "VolumeId"
+	del /F /Q "volumeid*" "Eula.txt"
 	
 	rem Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism, so we delete them.
 	for %%a in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%a:" fsutil usn deletejournal /d %%a:
@@ -481,16 +540,37 @@ echo   # [35mCleaning Traces[0m
 :: Files
 
 >nul 2>&1 (
-	DEL /F /S /Q "%WINDIR%\Prefetch\*"
+	rem Activision Tracers - The game replaces/rebuilds next time you launch it.
+	tasklist | find /i "Battle.net.exe" && taskkill /im battle.net.exe /F || echo Battle.net was not running.
+	reg delete "HKEY_CURRENT_USER\SOFTWARE\Activision" /f
+	reg delete "HKEY_CURRENT_USER\SOFTWARE\Blizzard Entertainment" /f
+	reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Blizzard Entertainment" /f
+	del /F /Q "%CODFOLDER%\Data\data\shmem"
+	del /F /Q "%CODFOLDER%\main\data0.dcache"
+	del /F /Q "%CODFOLDER%\main\data1.dcache"
+	del /F /Q "%CODFOLDER%\main\toc0.dcache"
+	del /F /Q "%CODFOLDER%\main\toc1.dcache"
+	REM del /F /Q "%CODFOLDER%\main\recipes\cmr_hist"
+	rmdir /S /Q "%appdata%\Battle.net"
+	rmdir /S /Q "%DOCSFOLDER%\Call of Duty Modern Warfare"
+	rmdir /S /Q "%localappdata%\Activision"
+	rmdir /S /Q "%localappdata%\Battle.net"
+	rmdir /S /Q "%localappdata%\Blizzard Entertainment"
+	rmdir /S /Q "%localappdata%\CrashDumps"
+	rmdir /S /Q "%programdata%\Battle.net"
+	rmdir /S /Q "%programdata%\Blizzard Entertainment"
 	
+	rem 
+
 	IF EXIST "%HOMEDRIVE%\Windows.old" (
 		takeown /f "%HOMEDRIVE%\Windows.old" /a /r /d y
 		icacls "%HOMEDRIVE%\Windows.old" /grant administrators:F /t
-		rd /s /q "%HOMEDRIVE%\Windows.old"
+		rd /S /Q "%HOMEDRIVE%\Windows.old"
 	)
 	
-	DEL /F /S /Q %tmp%\*
-	DEL /F /S /Q %HOMEDRIVE%\*.log *.etl *.tmp *.hta
+	del /F /S /Q "%WINDIR%\Prefetch\*"
+	for /f "tokens=*" %%1 in ('wevtutil.exe el') do wevtutil.exe cl "%%1" rem Clear Event Logs
+	del /F /S /Q %HOMEDRIVE%\*.log *.etl *.tmp *.hta && del /F /S /Q %tmp%\*
 	
 	rem Emptying Recycle Bins & Resetting explorer.exe
 	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
@@ -563,6 +643,10 @@ echo(&&echo   # [35mRevising Networking[0m
 :CheckSerials
 mode con:cols=105 lines=65
 cls
+
+echo(&echo - [31mUser Account Name ^& SID[0m ----------&echo(
+wmic useraccount get name,sid
+echo -------------------------------
 
 echo(&echo - [31mWindows Product ID[0m ----------&echo(
 wmic os get serialnumber
