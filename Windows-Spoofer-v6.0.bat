@@ -143,7 +143,7 @@ echo   # [35mSpoofing Registry[0m&echo(
 :: MAC Address
 :: ====================================================================================================
 
-
+arp -d * rem Clear ARP/Route Tables - Contains MAC Address's used by anti-cheats to track you.
 
 :: ====================================================================================================
 
@@ -169,7 +169,7 @@ echo   # [35mSpoofing Registry[0m&echo(
 
 
 :: ====================================================================================================
-:: Monitor
+:: Monitor | Serial Number
 :: ====================================================================================================
 
 REM NEEDS REWORKING
@@ -193,7 +193,7 @@ rem Add DISPLAY\MSI3EA2 not just DISPLAY\Default_Monitor
 
 
 :: ====================================================================================================
-:: NVIDIA
+:: NVIDIA | UUID | Serial Number
 ::
 :: nvidia-smi -L
 :: ====================================================================================================
@@ -230,7 +230,7 @@ rem Add DISPLAY\MSI3EA2 not just DISPLAY\Default_Monitor
 
 
 :: ====================================================================================================
-:: HwProfileGuid
+:: HwProfileGuid | GUID
 :: ====================================================================================================
 
 >nul 2>&1 (
@@ -245,7 +245,7 @@ rem Add DISPLAY\MSI3EA2 not just DISPLAY\Default_Monitor
 
 
 :: ====================================================================================================
-:: MachineGuid
+:: MachineGuid | GUID
 ::
 :: Part of a System Restore Point - Contains a UUID which is used/tracked by some ACs.
 :: CMD > findstr "{" "%WINDIR%\System32\restore\MachineGuid.txt"
@@ -272,7 +272,7 @@ rem Add DISPLAY\MSI3EA2 not just DISPLAY\Default_Monitor
 
 
 :: ====================================================================================================
-:: HardwareConfig
+:: HardwareConfig | GUID
 ::
 :: This is a temporary spoof, after system shutdown/restart you need to spoof again.
 :: C:\Windows\System32\Sysprep\sysprep.exe
@@ -291,7 +291,7 @@ rem Add DISPLAY\MSI3EA2 not just DISPLAY\Default_Monitor
 
 
 :: ====================================================================================================
-:: Cryptography
+:: Cryptography | GUID
 :: ====================================================================================================
 
 >nul 2>&1 (
@@ -307,7 +307,7 @@ rem Add DISPLAY\MSI3EA2 not just DISPLAY\Default_Monitor
 
 
 :: ====================================================================================================
-:: GPU/PCI PNPDeviceID - DeviceInstance
+:: GPU/PCI PNPDeviceID - DeviceInstance | Serial Number
 :: ====================================================================================================
 
 rem reg query loop through every instance of PNPDeviceID and spoof it
@@ -326,32 +326,34 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&  1C3D25BB  &0&0019
 
 
 :: ====================================================================================================
-:: Physical Drives
+:: DiskPeripheral | Identifier(s)
 :: ====================================================================================================
 
 >nul 2>&1 (
-    for /f "tokens=5 delims=\" %%A in ('reg query "HKLM\HARDWARE\DEVICEMAP\Scsi"') do (
-        reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\%%A\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "DeviceIdentifierPage" /t REG_BINARY /d "!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-2!" /f
-        reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\%%A\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "InquiryData" /t REG_BINARY /d "!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-2!" /f
-        reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\%%A\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "SerialNumber" /t REG_SZ /d "!random:~-5!!random:~-5!!random:~-5!" /f
-    )
+	for /f "tokens=10 delims=\" %%A in ('reg query "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral"') do (
+		for /l %%B in (0,1,%%A) do (
+			if "%%A"=="%%B" (
+				reg add "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral\%%B" /v "Identifier" /t REG_SZ /d "!random:~-5!!random:~-3!-00000000-A" /f
+			)
+		)
+	)
 )
 
 :: ====================================================================================================
 
 
 
-
 :: ====================================================================================================
-:: DiskPeripheral Identifier
+:: Physical Drives | SSD / HDD Serial Number(s) | Reset Physical Disk Status(es)
 :: ====================================================================================================
-
-rem ADD 0-9 spoof
 
 >nul 2>&1 (
-	for /f "tokens=10 delims=\" %%A in ('reg query "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral"') do (
-		for /l %%B in (0,1,9) do (
-			reg add "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral\%%B" /v "Identifier" /t REG_SZ /d "!random:~-5!!random:~-3!-00000000-A" /f
+	for /f "tokens=3" %%A in ('reg query "HKLM\HARDWARE\DEVICEMAP\Scsi" /s /f "Scsi Port" /k') do (
+		for /l %%B in (0,1,%%A) do (
+			if "%%A"=="%%B" (
+				reg add "HKLM\HARDWARE\DEVICEMAP\Scsi\Scsi Port %%A\Scsi Bus 0\Target Id 0\Logical Unit Id 0" /v "SerialNumber" /t REG_SZ /d "!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!" /f
+				powershell Reset-PhysicalDisk *
+			)
 		)
 	)
 )
@@ -388,10 +390,8 @@ rem ADD 0-9 spoof
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName" /v "ComputerName" /t REG_SZ /d "%random:~-5%" /f
 	rem SystemInformation
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "BIOSReleaseDate" /t REG_SZ /d "0%random:~-1%/1%random:~-1%/%random:~-4%" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareId" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID
-	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareIds" /t REG_MULTI_SZ /d "{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}" /f
+	call :RGUID && reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareId" /t REG_SZ /d "{!RGUID!}" /f
+	call :RGUID && reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareIds" /t REG_MULTI_SZ /d "{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}" /f
 )
 
 :: ====================================================================================================
@@ -498,7 +498,7 @@ rem Disable Windows Signature Enforcement
 
 
 :: ====================================================================================================
-:: VolumeID - USN Journal ID - Reset Physical Disk Statuses
+:: VolumeID - USN Journal ID
 :: ====================================================================================================
 
 >nul 2>&1 (
@@ -509,9 +509,6 @@ rem Disable Windows Signature Enforcement
 	
 	rem Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism, so we delete them.
 	for %%a in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%a:" fsutil usn deletejournal /d %%a:
-
-	rem Resets all statuses of the physical disks.
-	powershell Reset-PhysicalDisk *
 )
 
 :: ====================================================================================================
@@ -520,7 +517,7 @@ rem Disable Windows Signature Enforcement
 
 
 :: ====================================================================================================
-:: Windows Logs, Traces, Networking, etc
+:: Windows Logs/Traces/misc. - Networking - Remove Windows "Activate Windows" Watermark
 :: ====================================================================================================
 
 echo   # [35mCleaning Traces[0m
@@ -528,8 +525,8 @@ echo   # [35mCleaning Traces[0m
 :: Files
 
 >nul 2>&1 (
-	rem Activision Tracers - The game replaces/rebuilds next time you launch it.
-	tasklist | find /i "Battle.net.exe" && taskkill /im battle.net.exe /F || echo Battle.net was not running.
+	rem Activision: Call of Duty - Tracers - The game replaces/rebuilds next time you launch it.
+	tasklist | find /i "Battle.net.exe" && taskkill /F /IM battle.net.exe || echo Battle.net was not running.
 	reg delete "HKEY_CURRENT_USER\SOFTWARE\Activision" /f
 	reg delete "HKEY_CURRENT_USER\SOFTWARE\Blizzard Entertainment" /f
 	reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Blizzard Entertainment" /f
@@ -548,8 +545,15 @@ echo   # [35mCleaning Traces[0m
 	rmdir /S /Q "%programdata%\Battle.net"
 	rmdir /S /Q "%programdata%\Blizzard Entertainment"
 	
-	rem 
-
+	rem Epic Games: Fortnite
+	tasklist | find /i "EpicGamesLauncher.exe" && taskkill /F /IM EpicGamesLauncher.exe
+	tasklist | find /i "FortniteClient-Win64-Shipping.exe" && taskkill /F /IM FortniteClient-Win64-Shipping.exe
+	tasklist | find /i "FortniteClient-Win64-Shipping_BE.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_BE.exe
+	tasklist | find /i "FortniteClient-Win64-Shipping_EAC.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_EAC.exe
+	tasklist | find /i "taskkill /F /IM FortniteLauncher.exe" && taskkill /F /IM taskkill /F /IM FortniteLauncher.exe
+	
+	
+	rem Delete Old Windows Backup
 	IF EXIST "%HOMEDRIVE%\Windows.old" (
 		takeown /f "%HOMEDRIVE%\Windows.old" /a /r /d y
 		icacls "%HOMEDRIVE%\Windows.old" /grant administrators:F /t
@@ -581,7 +585,6 @@ echo(&&echo   # [35mRevising Networking[0m
 	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 16 rem Clear Form Data
 	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 32 rem Clear Saved Passwords
 	
-	rem Misc
 	arp -d * rem Clear ARP/Route Tables - Contains MAC Address's used by anti-cheats to track you.
 	nbtstat -R
 	nbtstat -RR
@@ -596,7 +599,6 @@ echo(&&echo   # [35mRevising Networking[0m
 	netsh winsock reset
 	netsh winsock set autotuning off
 	netsh interface reset all
-	bcdedit -set TESTSIGNING OFF
 	
 	rem Switching DNS servers to bypass some ISP censorship.
 	
@@ -617,6 +619,15 @@ echo(&&echo   # [35mRevising Networking[0m
 	net start msiserver
 	
 	goto :AGAIN
+)
+
+:: Removing Windows "Activate Windows" Watermark
+echo(&&echo   # [35mRevising Networking[0m
+
+>nul 2>&1 (
+	bcdedit -set TESTSIGNING OFF
+	reg add "HKCU\Control Panel\Desktop" /v "PaintDesktopVersion" /d "0" /f
+	taskkill /F /IM explorer.exe&&explorer.exe
 )
 
 :: ====================================================================================================
@@ -657,9 +668,14 @@ echo - [31mChassis[0m -----
 wmic systemenclosure get serialnumber
 
 echo - [31mVolumeID[0m -----
-call :VolumeID_SN
 for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
-	if exist "%%A:" echo (%%A:^) ^> !VolID!
+    if exist "%%A:\" (
+        for /f "tokens=5" %%B in ('vol %%A: ^| find "-"') do (
+            if not "The system cannot find the path specified."=="%%B:" (
+                echo (%%A:^) ^> %%B
+            )
+        )
+    )
 )
 
 echo(&&echo - [31mMAC Address - (Media Access Control)[0m -----
@@ -729,13 +745,6 @@ for /f "tokens=2 delims==" %%A in ('wmic csproduct get uuid /value ^| find "="')
 )
 exit /b
 
-:: Retrieving VolumeID
-:VolumeID_SN
-for /f "tokens=5" %%A in ('vol %HOMEDRIVE% ^| find "-"') do (
-    set "VolID=%%A"
-)
-exit /b
-
 :: Retrieving NVIDIA ChipsetMatchID
 :NVIDIA_SN
 for /f "tokens=3" %%A in ('reg query "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" ^| find "ChipsetMatchID"') do (
@@ -745,7 +754,7 @@ exit /b
 
 :: Retrieving MachineGuid
 :MachineGuid
-for /f %%A in ('findstr "{" "%WINDIR%\System32\restore\MachineGuid.txt"') do (
+for /f "delims=" %%A in ('findstr "{" "%WINDIR%\System32\restore\MachineGuid.txt"') do (
 	set "MachineGuid=%%A"
 )
 exit /b
