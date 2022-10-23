@@ -138,21 +138,25 @@ echo   # [35mSpoofing Registry[0m&&echo(
 
 set "reg_path=HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}"
 
-for /f "tokens=1delims=[]" %%A in ('wmic nic where physicaladapter^=true get caption ^| find "["') do (
-    set "Index=%%A" && set "Index=!Index:~-4!"
+for /f "tokens=1delims=[]" %%C in ('wmic nic where physicaladapter^=true get caption ^| find "["') do (
+	set "Index=%%C" && set "Index=!Index:~-4!"
 	rem Disables Power Saving Mode for Network Adapter(s), so wireless connection doesn't go down or stop background downloads etc.
 	reg add "!reg_path!\!Index:~-4!" /v "PnPCapabilities" /t REG_DWORD /d "24" /f
 	rem Changes the MAC Address using Hexidecimal formating, starting with "02" for compatibility.
 	call :generateMAC && reg add "!reg_path!\!Index:~-4!" /v "NetworkAddress" /t REG_SZ /d "!new_MAC!" /f
 	rem Deletes "OriginalNetworkAddress" registry keys made from TMAC MAC Address Changer, just in case ACs look for it.
-	reg delete "!reg_path!\!Index:~-4!" /v "OriginalNetworkAddress" /f
+	reg delete "!reg_path!\!Index:~-4!" /v "OriginalNetworkAddress" /f >nul
 )
 
-rem disable & enable network adapters
+for /f "skip=1delims=" %%A in ('wmic nic where netenabled^=true get netconnectionid') do (
+	for /f %%B in ("%%A") do (
+		netsh interface set interface name="%%B" admin=DISABLED >nul
+		netsh interface set interface name="%%B" admin=ENABLED >nul
+	)
+)
 
-
-
-arp -d * rem Clear ARP/Route Tables - Contains MAC Address's used by anti-cheats to track you.
+rem Clear ARP/Route Tables - Contains MAC Address's used by anti-cheats to track you.
+arp -d *
 
 :: ====================================================================================================
 
