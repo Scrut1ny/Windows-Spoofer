@@ -2,6 +2,7 @@
 ::  Windows Spoofer v6.0
 :: ==================================================
 ::  Dev  - Scut1ny
+::	Help - Mathieu, Sintrode, 
 ::  Link - https://github.com/Scrut1ny/Windows-Spoofer
 :: ==================================================
 
@@ -29,21 +30,9 @@ fltmc >nul 2>&1 || (
 
 
 
-:: ==================================================
-
-:A
-cls&&title # Login Screen&&echo(
-
-set /p "user=.  [44m# Username:[30;40m"
-cls&&echo(
-set /p "pass=[0m.  [44m# Password:[30;40m"
-if "!user!"=="Scrutiny" if "!pass!"=="420" goto :MENU
-if "!user!"=="Test" if "!pass!"=="69" goto :MENU
-
-cls&color 07&&echo(&&echo   # [31mIncorrect Username or Password.[0m&& >nul timeout /t 2
-goto :A
-
-:: ==================================================
+if "%~1"=="CheckSerials" (
+    goto :CheckSerials
+)
 
 
 
@@ -76,8 +65,8 @@ goto :SPOOF
 exit /b
 
 :choice2
-goto :CheckSerials
-exit /b
+start "" "%~f0" CheckSerials
+goto :MENU
 
 echo(&>nul pause
 goto :MENU
@@ -128,6 +117,18 @@ echo(&&echo   # [35mTerminating Conflicting Processes[0m&&echo(
 :: SPOOFING REG
 
 echo   # [35mSpoofing Registry[0m&&echo(
+
+
+
+
+:: ==================================================
+
+
+
+
+if "%~1"=="CheckSerials" (
+    goto :CheckSerials
+)
 
 
 
@@ -429,7 +430,6 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&1C3D25BB&0&0019
 			netsh interface set interface name="%%B" admin=ENABLED
 		)
 	)
-
 	rem Clear ARP/Route Tables - Contains MAC Address(es) used by ACs to track you after spoofing MAC Address(es).
 	arp -d *
 )
@@ -565,6 +565,7 @@ echo   # [35mCleaning Traces[0m
 	tasklist | find /i "FortniteClient-Win64-Shipping_EAC.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_EAC.exe
 	tasklist | find /i "taskkill /F /IM FortniteLauncher.exe" && taskkill /F /IM taskkill /F /IM FortniteLauncher.exe
 	
+	rem Escape from Tarkov
 	
 	rem Delete Old Windows Backup
 	if exist "%HOMEDRIVE%\Windows.old" (
@@ -672,13 +673,13 @@ wmic systemenclosure get serialnumber
 
 echo - [31mVolumeID[0m -----
 for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
-    if exist "%%A:\" (
-        for /f "tokens=5" %%B in ('vol %%A: ^| find "-"') do (
-            if not "The system cannot find the path specified."=="%%B:" (
-                echo (%%A:^) ^> %%B
-            )
-        )
-    )
+	if exist "%%A:\" (
+		for /f "tokens=5" %%B in ('vol %%A: ^| find "-"') do (
+			if not "The system cannot find the path specified."=="%%B:" (
+				echo (%%A:^) ^> %%B
+			)
+		)
+	)
 )
 
 echo(&&echo - [31mMAC Address - (Media Access Control)[0m -----
@@ -695,7 +696,8 @@ echo !NVIDIA! && echo(
 echo - [31mWindows Product ID[0m -----
 wmic os get serialnumber
 
->nul pause&goto :MENU
+>nul pause
+exit /b 0
 
 :: ====================================================================================================
 
