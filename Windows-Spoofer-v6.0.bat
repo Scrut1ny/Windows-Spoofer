@@ -136,27 +136,32 @@ echo   # [35mSpoofing Registry[0m&&echo(
 :: MAC Address(es)
 :: ====================================================================================================
 
-set "reg_path=HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}"
+>nul 2>&1 (
+	set "reg_path=HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}"
 
-for /f "tokens=1delims=[]" %%C in ('wmic nic where physicaladapter^=true get caption ^| find "["') do (
-	set "Index=%%C" && set "Index=!Index:~-4!"
-	rem Disables Power Saving Mode for Network Adapter(s), so wireless connection doesn't go down or stop background downloads etc.
-	reg add "!reg_path!\!Index:~-4!" /v "PnPCapabilities" /t REG_DWORD /d "24" /f
-	rem Changes the MAC Address using Hexidecimal formating, starting with "02" for compatibility.
-	call :generateMAC && reg add "!reg_path!\!Index:~-4!" /v "NetworkAddress" /t REG_SZ /d "!new_MAC!" /f
-	rem Deletes "OriginalNetworkAddress" registry keys made from TMAC MAC Address Changer, just in case ACs look for it.
-	reg delete "!reg_path!\!Index:~-4!" /v "OriginalNetworkAddress" /f >nul
-)
-
-for /f "skip=1delims=" %%A in ('wmic nic where netenabled^=true get netconnectionid') do (
-	for /f %%B in ("%%A") do (
-		netsh interface set interface name="%%B" admin=DISABLED >nul
-		netsh interface set interface name="%%B" admin=ENABLED >nul
+	for /f "tokens=1delims=[]" %%A in ('wmic nic where physicaladapter^=true get caption ^| find "["') do (
+		set "Index=%%A" && set "Index=!Index:~-4!"
+		rem Disables Power Saving Mode for Network Adapter(s), so wireless connection doesn't go down or stop background downloads etc.
+		reg add "!reg_path!\!Index:~-4!" /v "PnPCapabilities" /t REG_DWORD /d "24" /f
+		rem Changes the MAC Address using Hexidecimal formating, starting with "02" for compatibility.
+		call :generateMAC && reg add "!reg_path!\!Index:~-4!" /v "NetworkAddress" /t REG_SZ /d "!new_MAC!" /f
+		rem Deletes "OriginalNetworkAddress" registry keys made from TMAC MAC Address Changer, just in case ACs look for it.
+		reg query "!reg_path!\!Index:~-4!" /v "OriginalNetworkAddress"
+		if !ERRORLEVEL!==0 (
+			reg delete "!reg_path!\!Index:~-4!" /v "OriginalNetworkAddress" /f
+		)
 	)
-)
 
-rem Clear ARP/Route Tables - Contains MAC Address's used by anti-cheats to track you.
-arp -d *
+	for /f "skip=1delims=" %%A in ('wmic nic where netenabled^=true get netconnectionid') do (
+		for /f %%B in ("%%A") do (
+			netsh interface set interface name="%%B" admin=DISABLED
+			netsh interface set interface name="%%B" admin=ENABLED
+		)
+	)
+
+	rem Clear ARP/Route Tables - Contains MAC Address's used by anti-cheats to track you.
+	arp -d *
+)
 
 :: ====================================================================================================
 
@@ -756,6 +761,28 @@ shutdown /s /t 0
 :: ====================================================================================================
 :: Generation
 :: ====================================================================================================
+
+:: Generating Random MAC Address
+:generateMAC
+set "new_MAC=02"
+for /L %%A in (1,1,5) do (
+	set /a "rnd=!RANDOM!%%256"
+	call :toHex !rnd! octet
+	set "new_MAC=!new_MAC!-!octet!"
+)
+exit /b
+
+:toHex
+set /a "dec=%~1"
+set "hex="
+set "map=0123456789ABCDEF"
+for /L %%N in (1,1,8) do (
+    set /a "d=dec&15,dec>>=4"
+    for %%D in (!d!) do set "hex=!map:~%%D,1!!hex!"
+)
+set "hex=%hex:~-2%"
+endlocal & set "%~2=%hex%"
+exit /b
 
 :: GENERATING UUID/GUID
 :RGUID
