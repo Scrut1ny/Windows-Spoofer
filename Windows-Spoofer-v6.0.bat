@@ -133,34 +133,17 @@ echo   # [35mSpoofing Registry[0m&&echo(
 
 
 :: ====================================================================================================
-:: MAC Address(es)
+:: System Information
 :: ====================================================================================================
 
 >nul 2>&1 (
-	set "reg_path=HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}"
-
-	for /f "tokens=1delims=[]" %%A in ('wmic nic where physicaladapter^=true get caption ^| find "["') do (
-		set "Index=%%A" && set "Index=!Index:~-4!"
-		rem Disables Power Saving Mode for Network Adapter(s), so wireless connection doesn't go down or stop background downloads etc.
-		reg add "!reg_path!\!Index:~-4!" /v "PnPCapabilities" /t REG_DWORD /d "24" /f
-		rem Changes the MAC Address using Hexidecimal formating, starting with "02" for compatibility.
-		call :generateMAC && reg add "!reg_path!\!Index:~-4!" /v "NetworkAddress" /t REG_SZ /d "!new_MAC!" /f
-		rem Deletes "OriginalNetworkAddress" registry keys made from TMAC MAC Address Changer, just in case ACs look for it.
-		reg query "!reg_path!\!Index:~-4!" /v "OriginalNetworkAddress"
-		if !ERRORLEVEL!==0 (
-			reg delete "!reg_path!\!Index:~-4!" /v "OriginalNetworkAddress" /f
-		)
-	)
-
-	for /f "skip=1delims=" %%A in ('wmic nic where netenabled^=true get netconnectionid') do (
-		for /f %%B in ("%%A") do (
-			netsh interface set interface name="%%B" admin=DISABLED
-			netsh interface set interface name="%%B" admin=ENABLED
-		)
-	)
-
-	rem Clear ARP/Route Tables - Contains MAC Address's used by anti-cheats to track you.
-	arp -d *
+	rem Rename Computer System Name
+	rem wmic computersystem where Caption='%ComputerName%' rename
+	reg add "HKLM\SYSTEM\ControlSet001\Services\Tcpip\Parameters" /v "NV Hostname" /t REG_SZ /d "System-Spoofed" /f
+	reg add "HKLM\SYSTEM\ControlSet001\Control\ComputerName\ComputerName" /v "ComputerName" /t REG_SZ /d "SYSTEM-SPOOFED" /f
+	rem SystemInformation
+	call :RGUID && reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareId" /t REG_SZ /d "{!RGUID!}" /f
+	call :RGUID && reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareIds" /t REG_MULTI_SZ /d "{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}" /f
 )
 
 :: ====================================================================================================
@@ -169,78 +152,43 @@ echo   # [35mSpoofing Registry[0m&&echo(
 
 
 :: ====================================================================================================
-:: SID
-:: ====================================================================================================
-
->nul 2>&1 (
-	for /f "tokens=7 delims=\" %%A in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList" ^| find "S-1-5-21"') do (
-		reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\S-1-5-18" /v "Sid" /t REG_BINARY /d "!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-4!" /f
-		reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!SID!" /v "Sid" /t REG_BINARY /d "!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-1!" /f
-		PowerShell Rename-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\%%A" -NewName "S-1-5-21-!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-4!-1001" -Force
-		PowerShell Rename-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\%%A" -NewName "S-1-5-21-!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-4!-1001" -Force
-	)
-)
-
-:: ====================================================================================================
-
-
-
-
-:: ====================================================================================================
-:: Monitor | Serial Number
-:: ====================================================================================================
-
-REM NEEDS REWORKING
-
-rem Serial Number > 5&  14465d9b  &0&UID0
-rem Add DISPLAY\MSI3EA2 not just DISPLAY\Default_Monitor
-
->nul 2>&1 (
-	set counter=-1
-	for /f "skip=1 tokens=7 delims=\" %%a in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor"') do (
-		set /a counter+=1
-		set display[!counter!]=%%a
-	)
-	call :RGUID && PowerShell Rename-Item -Path "'HKLM:\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[0]!'" -NewName "'!random:~-1!&!random:~-5!!random:~-5!&0&UID!random:~-5!'" -Force
-	call :RGUID && PowerShell Rename-Item -Path "'HKLM:\SYSTEM\CurrentControlSet\Enum\DISPLAY\Default_Monitor\!display[1]!'" -NewName "'!random:~-1!&!random:~-5!!random:~-5!&0&UID!random:~-5!'" -Force
-)
-
-:: ====================================================================================================
-
-
-
-
-:: ====================================================================================================
-:: NVIDIA | UUID | Serial Number
-::
-:: nvidia-smi -L
+:: CurrentVersion
 :: ====================================================================================================
 
 >nul 2>&1 (
 	call :RGUID
-	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global" /v "ClientUUID" /t REG_SZ /d "{!RGUID!}" /f
-	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" /v "ChipsetMatchID" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-3%B%random:~-2%" /f
-	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" /v "DriverInstallationDate" /t REG_SZ /d "%random:~-2%-%random:~-2%%random:~-4%" /f rem Anti-Cheats Check for installation dates too.
-	rem Uninstall NVIDIA telemetry tasks
-	IF EXIST "%ProgramFiles%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL" (
-		rundll32 "%PROGRAMFILES%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL",UninstallPackage NvTelemetryContainer
-		rundll32 "%PROGRAMFILES%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL",UninstallPackage NvTelemetry
-	)
-	rem delete NVIDIA residual telemetry files
-	DEL /s %HOMEDRIVE%\System32\DriverStore\FileRepository\NvTelemetry*.dll
-	RD /S /Q "%ProgramFiles(x86)%\NVIDIA Corporation\NvTelemetry"
-	RD /S /Q "%ProgramFiles%\NVIDIA Corporation\NvTelemetry"
-	rem Opt out from NVIDIA telemetry
-	reg add "HKLM\SOFTWARE\NVIDIA Corporation\NvControlPanel2\Client" /v "OptInOrOutPreference" /t REG_DWORD /d "0" /f 
-	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID44231" /t REG_DWORD /d "0" /f 
-	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID64640" /t REG_DWORD /d "0" /f 
-	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID66610" /t REG_DWORD /d "0" /f 
-	reg add "HKLM\SYSTEM\CurrentControlSet\Services\nvlddmkm\Global\Startup" /v "SendTelemetryData" /t REG_DWORD /d "0" /f
-	rem Disable NVIDIA telemetry services
-	schtasks /change /TN NvTmMon_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
-	schtasks /change /TN NvTmRep_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
-	schtasks /change /TN NvTmRepOnLogon_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
+	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "BuildGUID" /t REG_SZ /d "!RGUID!" /f
+	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "DigitalProductId" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%" /f
+	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "DigitalProductId4" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%" /f
+	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "InstallDate" /t REG_DWORD /d "5a%random:~-4%e6" /f
+	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "InstallTime" /t REG_QWORD /d "1d%random:~-5%e23fc090" /f
+	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t REG_SZ /d "%random:~-4%-%random:~-4%-%random:~-4%-%random:~-5%" /f
+
+	rem WSUS change	
+	net stop wuauserv
+	reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientId" /t REG_SZ /d "!RGUID!" /f  
+	reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientIDValidation" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%" /f 
+	net start wuauserv
+
+	reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer" /f
 )
+
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
+:: SID (Security Identifiers)
+:: ====================================================================================================
+
+:: >nul 2>&1 (
+:: for /f "tokens=7 delims=\" %%A in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList" ^| find "S-1-5-21"') do (
+:: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\S-1-5-18" /v "Sid" /t REG_BINARY /d "!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-4!" /f
+:: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\%%A" /v "Sid" /t REG_BINARY /d "!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-5!!random:~-1!" /f
+:: PowerShell Rename-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\%%A" -NewName "S-1-5-21-!random:~-5!!random:~-5!-!random:~-5!!random:~-5!-!random:~-5!!random:~-5!-!random:~-4!" -Force
+:: )
+:: )
 
 :: ====================================================================================================
 
@@ -325,6 +273,78 @@ rem Add DISPLAY\MSI3EA2 not just DISPLAY\Default_Monitor
 
 
 :: ====================================================================================================
+:: SQMClient | GUID
+:: ====================================================================================================
+
+>nul 2>&1 (
+	call :RGUID
+	reg add "HKCU\SOFTWARE\Microsoft\SQMClient" /v "UserId" /t REG_SZ /d "{!RGUID!}" /f
+	reg add "HKLM\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
+)
+
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
+:: NVIDIA | UUID | Serial Number
+::
+:: nvidia-smi -L
+:: ====================================================================================================
+
+>nul 2>&1 (
+	call :RGUID
+	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global" /v "ClientUUID" /t REG_SZ /d "{!RGUID!}" /f
+	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" /v "ChipsetMatchID" /t REG_SZ /d "%random:~-5%%random:~-5%%random:~-3%B%random:~-2%" /f
+	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\CoProcManager" /v "DriverInstallationDate" /t REG_SZ /d "%random:~-2%-%random:~-2%%random:~-4%" /f rem Anti-Cheats Check for installation dates too.
+	rem Uninstall NVIDIA telemetry tasks
+	IF EXIST "%ProgramFiles%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL" (
+		rundll32 "%PROGRAMFILES%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL",UninstallPackage NvTelemetryContainer
+		rundll32 "%PROGRAMFILES%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL",UninstallPackage NvTelemetry
+	)
+	rem delete NVIDIA residual telemetry files
+	DEL /s %HOMEDRIVE%\System32\DriverStore\FileRepository\NvTelemetry*.dll
+	RD /S /Q "%ProgramFiles(x86)%\NVIDIA Corporation\NvTelemetry"
+	RD /S /Q "%ProgramFiles%\NVIDIA Corporation\NvTelemetry"
+	rem Opt out from NVIDIA telemetry
+	reg add "HKLM\SOFTWARE\NVIDIA Corporation\NvControlPanel2\Client" /v "OptInOrOutPreference" /t REG_DWORD /d "0" /f 
+	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID44231" /t REG_DWORD /d "0" /f 
+	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID64640" /t REG_DWORD /d "0" /f 
+	reg add "HKLM\SOFTWARE\NVIDIA Corporation\Global\FTS" /v "EnableRID66610" /t REG_DWORD /d "0" /f 
+	reg add "HKLM\SYSTEM\CurrentControlSet\Services\nvlddmkm\Global\Startup" /v "SendTelemetryData" /t REG_DWORD /d "0" /f
+	rem Disable NVIDIA telemetry services
+	schtasks /change /TN NvTmMon_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
+	schtasks /change /TN NvTmRep_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
+	schtasks /change /TN NvTmRepOnLogon_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8} /DISABLE
+)
+
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
+:: Monitor | Serial Number
+:: ====================================================================================================
+
+:: POWERSHELL ERROR: Rename-Item : Requested registry access is not allowed.
+
+:: >nul 2>&1 (
+:: 		for /f "skip=1 tokens=6 delims=\" %%A in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY"') do (
+:: 				for /f "skip=1 tokens=7 delims=\" %%B in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\%%A"') do (
+:: 						call :GEN_HEX 7 no_caps && PowerShell Rename-Item -Path "'HKLM:\SYSTEM\CurrentControlSet\Enum\DISPLAY\%%A\%%B'" -NewName "'!random:~-1!&!GEN_HEX[hex]!&!random:~-1!&UID!random:~-5!'" -Force
+:: 						call :GEN_HEX 7 no_caps && PowerShell Rename-Item -Path "'HKLM:\SYSTEM\CurrentControlSet\Enum\DISPLAY\%%A\%%B'" -NewName "'!random:~-1!&!GEN_HEX[hex]!&!random:~-1!&UID!random:~-5!'" -Force
+:: 				)
+:: 		)
+:: )
+
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: GPU/PCI PNPDeviceID - DeviceInstance | Serial Number
 :: ====================================================================================================
 
@@ -386,62 +406,35 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&1C3D25BB&0&0019
 
 
 :: ====================================================================================================
-:: SQMClient
+:: MAC Address(es)
 :: ====================================================================================================
 
 >nul 2>&1 (
-	call :RGUID
-	reg add "HKCU\SOFTWARE\Microsoft\SQMClient" /v "UserId" /t REG_SZ /d "{!RGUID!}" /f
-	reg add "HKLM\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!RGUID!}" /f
-)
+	set "reg_path=HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}"
+	call :GEN_HEX 12 only_caps && set "new_MAC=02-!GEN_HEX[hex]:~2,2!-!GEN_HEX[hex]:~4,2!-!GEN_HEX[hex]:~6,2!-!GEN_HEX[hex]:~8,2!-!GEN_HEX[hex]:~10,2!"
 
-:: ====================================================================================================
+	for /f "tokens=1delims=[]" %%A in ('wmic nic where physicaladapter^=true get caption ^| find "["') do (
+		set "Index=%%A" && set "Index=!Index:~-4!"
+		rem Disables Power Saving Mode for Network Adapter(s), so wireless connection doesn't go down or stop background downloads etc.
+		reg add "!reg_path!\!Index:~-4!" /v "PnPCapabilities" /t REG_DWORD /d "24" /f
+		rem Changes the MAC Address using Hexidecimal formating, starting with "02" for compatibility.
+		reg add "!reg_path!\!Index:~-4!" /v "NetworkAddress" /t REG_SZ /d "!new_MAC!" /f
+		rem Deletes "OriginalNetworkAddress" registry keys made from TMAC MAC Address Changer, just in case ACs look for it.
+		reg query "!reg_path!\!Index:~-4!" /v "OriginalNetworkAddress"
+		if !ERRORLEVEL!==0 (
+			reg delete "!reg_path!\!Index:~-4!" /v "OriginalNetworkAddress" /f
+		)
+	)
 
+	for /f "skip=1delims=" %%A in ('wmic nic where netenabled^=true get netconnectionid') do (
+		for /f %%B in ("%%A") do (
+			netsh interface set interface name="%%B" admin=DISABLED
+			netsh interface set interface name="%%B" admin=ENABLED
+		)
+	)
 
-
-
-:: ====================================================================================================
-:: SystemInformation
-:: ====================================================================================================
-
->nul 2>&1 (
-	rem System Name
-	reg add "HKLM\SYSTEM\CurrentControlSet\services\Tcpip\Parameters" /v "Hostname" /t REG_SZ /d "%random:~-5%" /f
-	reg add "HKLM\SYSTEM\CurrentControlSet\services\Tcpip\Parameters" /v "NV Hostname" /t REG_SZ /d "%random:~-5%" /f
-	reg add "HKLM\SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName" /v "ComputerName" /t REG_SZ /d "%random:~-5%" /f
-	reg add "HKLM\SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName" /v "ComputerName" /t REG_SZ /d "%random:~-5%" /f
-	rem SystemInformation
-	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "BIOSReleaseDate" /t REG_SZ /d "0%random:~-1%/1%random:~-1%/%random:~-4%" /f
-	call :RGUID && reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareId" /t REG_SZ /d "{!RGUID!}" /f
-	call :RGUID && reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareIds" /t REG_MULTI_SZ /d "{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}"\0"{!RGUID!}" /f
-)
-
-:: ====================================================================================================
-
-
-
-
-:: ====================================================================================================
-:: CurrentVersion
-:: ====================================================================================================
-
->nul 2>&1 (
-	call :RGUID
-	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "BuildGUID" /t REG_SZ /d "!RGUID!" /f
-	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "DigitalProductId" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%" /f
-	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "DigitalProductId4" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%" /f
-	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "InstallDate" /t REG_DWORD /d "5a%random:~-4%e6" /f
-	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "InstallTime" /t REG_QWORD /d "1d%random:~-5%e23fc090" /f
-	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t REG_SZ /d "%random:~-4%-%random:~-4%-%random:~-4%-%random:~-5%" /f
-	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "RegisteredOwner" /t REG_SZ /d "%random%%random%%random%%random%" /f
-
-	rem WSUS change	
-	net stop wuauserv
-	reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientId" /t REG_SZ /d "!RGUID!" /f  
-	reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientIDValidation" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%" /f 
-	net start wuauserv
-
-	reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer" /f
+	rem Clear ARP/Route Tables - Contains MAC Address(es) used by ACs to track you after spoofing MAC Address(es).
+	arp -d *
 )
 
 :: ====================================================================================================
@@ -524,12 +517,12 @@ rem Disable Windows Signature Enforcement
 :: ====================================================================================================
 
 >nul 2>&1 (
-	rem Spoofs all VolumeIDs XXXX-XXXX.
+	rem Changes all VolumeIDs XXXX-XXXX.
 	curl -fksLO "https://download.sysinternals.com/files/VolumeId.zip" && tar -xf VolumeId.zip 
 	for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:\" Volumeid64.exe %%A: !random:~-4!-!random:~-4! -nobanner
 	del /F /Q "volumeid*" "Eula.txt"
 	
-	rem Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism, so we delete them.
+	rem ACs use "USN Journal IDs" as a HWID tagging mechanism.
 	for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:" fsutil usn deletejournal /d %%A:
 )
 
@@ -759,32 +752,42 @@ shutdown /s /t 0
 
 
 :: ====================================================================================================
-:: Generation
+:: Generation / Retrieving
 :: ====================================================================================================
 
-:: Generating Random MAC Address
-:generateMAC
-set "new_MAC=02"
-for /L %%A in (1,1,5) do (
-	set /a "rnd=!RANDOM!%%256"
-	call :toHex !rnd! octet
-	set "new_MAC=!new_MAC!-!octet!"
+:: Generating Random Hexidecimal Value - Serial Number / MAC Address / etc.
+:GEN_HEX
+if %2==no_caps (
+    set GEN_HEX[map]=0123456789abcdef
+    set GEN_HEX[round]=16
+) else if %2==only_caps (
+    set GEN_HEX[map]=0123456789ABCDEF
+    set GEN_HEX[round]=16
+) else (
+    set GEN_HEX[map]=0123456789ABCDEFabcdef
+    set GEN_HEX[round]=22
+)
+if defined GEN_HEX[hex] (
+    set GEN_HEX[hex]=
+)
+for /l %%A in (1,1,%1) do (
+    set /a "GEN_HEX[rnd]=!RANDOM! %%!GEN_HEX[round]!"
+    for %%B in (!GEN_HEX[rnd]!) do (
+        set GEN_HEX[hex]=!GEN_HEX[hex]!!GEN_HEX[map]:~%%B,1!
+    )
+)
+for %%A in (
+    map
+    rnd
+    round
+) do (
+    if defined GEN_HEX[%%A] (
+        set GEN_HEX[%%A]=
+    )
 )
 exit /b
 
-:toHex
-set /a "dec=%~1"
-set "hex="
-set "map=0123456789ABCDEF"
-for /L %%N in (1,1,8) do (
-    set /a "d=dec&15,dec>>=4"
-    for %%D in (!d!) do set "hex=!map:~%%D,1!!hex!"
-)
-set "hex=%hex:~-2%"
-endlocal & set "%~2=%hex%"
-exit /b
-
-:: GENERATING UUID/GUID
+:: Generating UUID/GUID
 :RGUID
 for /f "usebackq" %%A in (`powershell [guid]::NewGuid(^).ToString(^)`) do (
 	set "RGUID=%%A"
