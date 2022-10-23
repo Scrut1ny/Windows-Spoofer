@@ -19,7 +19,7 @@ fltmc >nul 2>&1 || (
     echo(&echo   [33m# Administrator privileges are required.&echo([0m
     PowerShell Start -Verb RunAs '%0' 2> nul || (
         echo   [33m# Right-click on the script and select "Run as administrator".[0m
-        >nul pause&exit 1
+        >nul pause&&exit 1
     )
     exit 0
 )
@@ -32,15 +32,15 @@ fltmc >nul 2>&1 || (
 :: ==================================================
 
 :A
-cls&title # Login Screen&echo(
+cls&&title # Login Screen&&echo(
 
 set /p "user=.  [44m# Username:[30;40m"
-cls&echo(
+cls&&echo(
 set /p "pass=[0m.  [44m# Password:[30;40m"
 if "!user!"=="Scrutiny" if "!pass!"=="420" goto :MENU
 if "!user!"=="Test" if "!pass!"=="69" goto :MENU
 
-cls&color 07&echo(&echo   # [31mIncorrect Username or Password.[0m& >nul timeout /t 2
+cls&color 07&&echo(&&echo   # [31mIncorrect Username or Password.[0m&& >nul timeout /t 2
 goto :A
 
 :: ==================================================
@@ -67,12 +67,11 @@ set /p "c=.  # "
 if '%c%'=='1' goto :choice1
 if '%c%'=='2' goto :choice2
 if '%c%'=='3' goto :choice3
-cls&echo(&echo   [31m# "%c%" isn't a valid option, please try again.[0m& >nul timeout /t 3
+cls&&echo(&&echo   [31m# "%c%" isn't a valid option, please try again.[0m&& >nul timeout /t 3
 goto :MENU
 exit /b
 
 :choice1
-cls
 goto :SPOOF
 exit /b
 
@@ -120,28 +119,38 @@ exit /b
 
 :SPOOF
 cls&title Spoofing Windows...
-
-echo(&echo   # [31mWARNING:[0m [33mDon't turn off system.[0m
-
-echo(&echo   # [35mTerminating Conflicting Processes[0m&echo(
-
->nul 2>&1 (
-	net stop msiserver rem https://www.minitool.com/news/windows-installer-service.html
-)
+echo(&&echo   # [31mWARNING:[0m [33mDon't turn off system.[0m
+echo(&&echo   # [35mTerminating Conflicting Processes[0m&&echo(
 
 
 
 
 :: SPOOFING REG
 
-echo   # [35mSpoofing Registry[0m&echo(
+echo   # [35mSpoofing Registry[0m&&echo(
 
 
 
 
 :: ====================================================================================================
-:: MAC Address
+:: MAC Address(es)
 :: ====================================================================================================
+
+set "reg_path=HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}"
+
+for /f "tokens=1delims=[]" %%A in ('wmic nic where physicaladapter^=true get caption ^| find "["') do (
+    set "Index=%%A" && set "Index=!Index:~-4!"
+	rem Disables Power Saving Mode for Network Adapter(s), so wireless connection doesn't go down or stop background downloads etc.
+	reg add "!reg_path!\!Index:~-4!" /v "PnPCapabilities" /t REG_DWORD /d "24" /f
+	rem Changes the MAC Address using Hexidecimal formating, starting with "02" for compatibility.
+	call :generateMAC && reg add "!reg_path!\!Index:~-4!" /v "NetworkAddress" /t REG_SZ /d "!new_MAC!" /f
+	rem Deletes "OriginalNetworkAddress" registry keys made from TMAC MAC Address Changer, just in case ACs look for it.
+	reg delete "!reg_path!\!Index:~-4!" /v "OriginalNetworkAddress" /f
+)
+
+rem disable & enable network adapters
+
+
 
 arp -d * rem Clear ARP/Route Tables - Contains MAC Address's used by anti-cheats to track you.
 
@@ -252,7 +261,7 @@ rem Add DISPLAY\MSI3EA2 not just DISPLAY\Default_Monitor
 :: ====================================================================================================
 
 >nul 2>&1 (
-	IF EXIST "%WINDIR%\System32\restore\MachineGuid.txt" (
+	if exist "%WINDIR%\System32\restore\MachineGuid.txt" (
 		takeown /F "%WINDIR%\System32\restore\MachineGuid.txt"
 		icacls "%WINDIR%\System32\restore\MachineGuid.txt" /grant %username%:(F^)
 		attrib -r -s "%WINDIR%\System32\restore\MachineGuid.txt"
@@ -317,8 +326,12 @@ rem The first piece it the bus type. For me, it is PCI.
 rem The second section describes the card. There's a vendor code, model number, etc.
 rem The last section contains a number separated by ampersands. The serial number is the second number in that list, formatted in hex.
 rem Translate the hex to decimal
-	
-rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&  1C3D25BB  &0&0019
+rem 
+rem Need decimal to hex converter once variable is created to add back into the section below. 
+rem
+rem 	                                         This Section
+rem 	                                           --------
+rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&1C3D25BB&0&0019
 
 :: ====================================================================================================
 
@@ -504,11 +517,11 @@ rem Disable Windows Signature Enforcement
 >nul 2>&1 (
 	rem Spoofs all VolumeIDs XXXX-XXXX.
 	curl -fksLO "https://download.sysinternals.com/files/VolumeId.zip" && tar -xf VolumeId.zip 
-	for %%a in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%a:\" Volumeid64.exe %%a: !random:~-4!-!random:~-4! -nobanner
+	for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:\" Volumeid64.exe %%A: !random:~-4!-!random:~-4! -nobanner
 	del /F /Q "volumeid*" "Eula.txt"
 	
 	rem Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism, so we delete them.
-	for %%a in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%a:" fsutil usn deletejournal /d %%a:
+	for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:" fsutil usn deletejournal /d %%A:
 )
 
 :: ====================================================================================================
@@ -554,7 +567,7 @@ echo   # [35mCleaning Traces[0m
 	
 	
 	rem Delete Old Windows Backup
-	IF EXIST "%HOMEDRIVE%\Windows.old" (
+	if exist "%HOMEDRIVE%\Windows.old" (
 		takeown /f "%HOMEDRIVE%\Windows.old" /a /r /d y
 		icacls "%HOMEDRIVE%\Windows.old" /grant administrators:F /t
 		rd /S /Q "%HOMEDRIVE%\Windows.old"
@@ -627,6 +640,15 @@ echo(&&echo   # [35mRevising Networking[0m
 >nul 2>&1 (
 	bcdedit -set TESTSIGNING OFF
 	reg add "HKCU\Control Panel\Desktop" /v "PaintDesktopVersion" /d "0" /f
+	
+	rem Make sure "0.0.0.0 licensing.mp.microsoft.com" isn't in your hosts file!
+	for /f "tokens=1,* delims=: " %%A in ('curl -fksL "https://api.github.com/massgravel/Microsoft-Activation-Scripts/releases/latest" ^| findstr /c:"browser_download_url"') do (
+		curl -ksLO "%%~B"
+		for /f "tokens=8 delims=/" %%C in ("%%~B") do (
+			%%C tar -xf  && del /F /Q "%%C"
+		)
+	)
+	
 	taskkill /F /IM explorer.exe&&explorer.exe
 )
 
