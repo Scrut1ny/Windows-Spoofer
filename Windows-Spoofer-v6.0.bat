@@ -579,7 +579,6 @@ echo   # [35mCleaning Traces[0m
 	
 	rem Emptying Recycle Bins & Resetting explorer.exe
 	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-	taskkill /F /IM explorer.exe&&explorer.exe
 )
 
 :: Networking
@@ -633,23 +632,7 @@ echo(&&echo   # [35mRevising Networking[0m
 	goto :AGAIN
 )
 
-:: Removing Windows "Activate Windows" Watermark
-echo(&&echo   # [35mRevising Networking[0m
-
->nul 2>&1 (
-	bcdedit -set TESTSIGNING OFF
-	reg add "HKCU\Control Panel\Desktop" /v "PaintDesktopVersion" /d "0" /f
-	
-	rem Make sure "0.0.0.0 licensing.mp.microsoft.com" isn't in your hosts file!
-	for /f "tokens=1,* delims=: " %%A in ('curl -fksL "https://api.github.com/massgravel/Microsoft-Activation-Scripts/releases/latest" ^| findstr /c:"browser_download_url"') do (
-		curl -ksLO "%%~B"
-		for /f "tokens=8 delims=/" %%C in ("%%~B") do (
-			%%C tar -xf  && del /F /Q "%%C"
-		)
-	)
-	
-	taskkill /F /IM explorer.exe&&explorer.exe
-)
+taskkill /F /IM explorer.exe && explorer.exe
 
 :: ====================================================================================================
 
