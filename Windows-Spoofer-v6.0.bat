@@ -452,6 +452,9 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&1C3D25BB&0&0019
 
 rem Disable Windows Signature Enforcement
 
+echo(&&echo   # [35mSpoofing BIOS[0m
+
+
 >nul 2>&1 (
 	curl -fksLo "dmi-edit-win64-ami.zip" "https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&ind=1647077068432" && tar -xf dmi-edit-win64-ami.zip
 
