@@ -1,9 +1,9 @@
 :: ==================================================
-::  Windows Spoofer v6.0
+::  Windows Spoofer v9.5
 :: ==================================================
-::  Dev  - Scut1ny
-::	Help - Mathieu, Sintrode, 
-::  Link - https://github.com/Scrut1ny/Windows-Spoofer
+:: Dev  - Scut1ny
+:: Help - Mathieu, Sintrode, 
+:: Link - https://github.com/Scrut1ny/Windows-Spoofer
 :: ==================================================
 
 
