@@ -566,8 +566,8 @@ echo   # [35mCleaning Traces[0m
 	)
 	
 	del /F /S /Q "%WINDIR%\Prefetch\*"
-	for /f "tokens=*" %%1 in ('wevtutil.exe el') do wevtutil.exe cl "%%1" rem Clear Event Logs
-	del /F /S /Q %HOMEDRIVE%\*.log *.etl *.tmp *.hta && del /F /S /Q %tmp%\*
+	for /f "tokens=*" %%A in ('wevtutil.exe el') do wevtutil.exe cl "%%A" rem Clear Event Logs
+	del /F /S /Q %HOMEDRIVE%\*.log *.tmp && del /F /S /Q %tmp%\*
 	
 	rem Emptying Recycle Bins & Resetting explorer.exe
 	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
