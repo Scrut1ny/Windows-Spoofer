@@ -17,10 +17,10 @@ setlocal EnableDelayedExpansion
 mode con:cols=60 lines=20
 
 fltmc >nul 2>&1 || (
-    echo(&echo   [33m# Administrator privileges are required.&echo([0m
+    echo( && echo   [33m# Administrator privileges are required. && echo([0m
     PowerShell Start -Verb RunAs '%0' 2> nul || (
         echo   [33m# Right-click on the script and select "Run as administrator".[0m
-        >nul pause&&exit 1
+        >nul pause && exit 1
     )
     exit 0
 )
@@ -58,7 +58,7 @@ if '%c%'=='1' goto :choice1
 if '%c%'=='2' goto :choice2
 if '%c%'=='3' goto :choice3
 if '%c%'=='4' goto :choice4
-cls&&echo(&&echo   [31m# "%c%" isn't a valid option, please try again.[0m&& >nul timeout /t 3
+cls && echo( && echo   [31m# "%c%" isn't a valid option, please try again.[0m && >nul timeout /t 3
 goto :MENU
 exit /b
 
@@ -74,12 +74,12 @@ exit /b
 start "" "%~f0" CheckSerials
 goto :MENU
 
-echo(&>nul pause
+echo( && >nul pause
 goto :MENU
 exit /b
 
 :choice4
-cls&title Contacting ISP
+cls && title Contacting ISP
 mode con:cols=60 lines=25
 
 for /f %%a in ('curl -fs api.ipify.org') do set PIP4=%%a
@@ -137,38 +137,42 @@ exit /b
 
 :clean1
 cls && echo( && echo   [] Cleaning all traces - Call of Duty: Modern Warfare && echo(
-rem Activision: Call of Duty - Tracers - The game replaces/rebuilds next time you launch it.
-tasklist | find /i "Battle.net.exe" && taskkill /F /IM battle.net.exe
-del /F /S /Q %HOMEDRIVE%\*.log && del /F /S /Q %tmp%\*
-reg delete "HKEY_CURRENT_USER\SOFTWARE\Activision" /f
-reg delete "HKEY_CURRENT_USER\SOFTWARE\Blizzard Entertainment" /f
-reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Blizzard Entertainment" /f
-del /F /Q "%CODFOLDER%\Data\data\shmem"
-del /F /Q "%CODFOLDER%\main\data0.dcache"
-del /F /Q "%CODFOLDER%\main\data1.dcache"
-del /F /Q "%CODFOLDER%\main\toc0.dcache"
-del /F /Q "%CODFOLDER%\main\toc1.dcache"
-REM del /F /Q "%CODFOLDER%\main\recipes\cmr_hist"
-rmdir /S /Q "%appdata%\Battle.net"
-rmdir /S /Q "%DOCSFOLDER%\Call of Duty Modern Warfare"
-rmdir /S /Q "%localappdata%\Activision"
-rmdir /S /Q "%localappdata%\Battle.net"
-rmdir /S /Q "%localappdata%\Blizzard Entertainment"
-rmdir /S /Q "%localappdata%\CrashDumps"
-rmdir /S /Q "%programdata%\Battle.net"
-rmdir /S /Q "%programdata%\Blizzard Entertainment"
+>nul 2>&1 (
+	rem Activision: Call of Duty - Tracers - The game replaces/rebuilds next time you launch it.
+	tasklist | find /i "Battle.net.exe" && taskkill /F /IM battle.net.exe
+	del /F /S /Q %HOMEDRIVE%\*.log && del /F /S /Q %tmp%\*
+	reg delete "HKEY_CURRENT_USER\SOFTWARE\Activision" /f
+	reg delete "HKEY_CURRENT_USER\SOFTWARE\Blizzard Entertainment" /f
+	reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Blizzard Entertainment" /f
+	del /F /Q "%CODFOLDER%\Data\data\shmem"
+	del /F /Q "%CODFOLDER%\main\data0.dcache"
+	del /F /Q "%CODFOLDER%\main\data1.dcache"
+	del /F /Q "%CODFOLDER%\main\toc0.dcache"
+	del /F /Q "%CODFOLDER%\main\toc1.dcache"
+	REM del /F /Q "%CODFOLDER%\main\recipes\cmr_hist"
+	rmdir /S /Q "%appdata%\Battle.net"
+	rmdir /S /Q "%DOCSFOLDER%\Call of Duty Modern Warfare"
+	rmdir /S /Q "%localappdata%\Activision"
+	rmdir /S /Q "%localappdata%\Battle.net"
+	rmdir /S /Q "%localappdata%\Blizzard Entertainment"
+	rmdir /S /Q "%localappdata%\CrashDumps"
+	rmdir /S /Q "%programdata%\Battle.net"
+	rmdir /S /Q "%programdata%\Blizzard Entertainment"
+)
 goto :MENU1
 exit /b
 
 :clean2
 cls && echo( && echo   [] Cleaning all traces - Epic Games: Fortnite && echo(
-rem Epic Games: Fortnite
-tasklist | find /i "EpicGamesLauncher.exe" && taskkill /F /IM EpicGamesLauncher.exe
-tasklist | find /i "FortniteClient-Win64-Shipping.exe" && taskkill /F /IM FortniteClient-Win64-Shipping.exe
-tasklist | find /i "FortniteClient-Win64-Shipping_BE.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_BE.exe
-tasklist | find /i "FortniteClient-Win64-Shipping_EAC.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_EAC.exe
-tasklist | find /i "taskkill /F /IM FortniteLauncher.exe" && taskkill /F /IM taskkill /F /IM FortniteLauncher.exe
-del /F /S /Q %HOMEDRIVE%\*.log && del /F /S /Q %tmp%\*
+>nul 2>&1 (
+	rem Epic Games: Fortnite
+	tasklist | find /i "EpicGamesLauncher.exe" && taskkill /F /IM EpicGamesLauncher.exe
+	tasklist | find /i "FortniteClient-Win64-Shipping.exe" && taskkill /F /IM FortniteClient-Win64-Shipping.exe
+	tasklist | find /i "FortniteClient-Win64-Shipping_BE.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_BE.exe
+	tasklist | find /i "FortniteClient-Win64-Shipping_EAC.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_EAC.exe
+	tasklist | find /i "taskkill /F /IM FortniteLauncher.exe" && taskkill /F /IM taskkill /F /IM FortniteLauncher.exe
+	del /F /S /Q %HOMEDRIVE%\*.log && del /F /S /Q %tmp%\*
+)
 goto :MENU1
 exit /b
 
@@ -191,16 +195,16 @@ exit /b
 
 
 :SPOOF
-cls&title Spoofing Windows...
-echo(&&echo   # [31mWARNING:[0m [33mDon't turn off system.[0m
-echo(&&echo   # [35mTerminating Conflicting Processes[0m&&echo(
+cls && title Spoofing Windows...
+echo( && echo   # [31mWARNING:[0m [33mDon't turn off system.[0m
+echo( && echo   # [35mTerminating Conflicting Processes[0m && echo(
 
 
 
 
 :: SPOOFING REG
 
-echo   # [35mSpoofing Registry[0m&&echo(
+echo   # [35mSpoofing Registry[0m && echo(
 
 
 
