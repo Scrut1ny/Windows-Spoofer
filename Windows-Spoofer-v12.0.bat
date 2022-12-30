@@ -57,7 +57,7 @@ set /p "c=.  # "
 if '%c%'=='1' goto :choice1
 if '%c%'=='2' goto :choice2
 if '%c%'=='3' goto :choice3
-if '%c%'=='4' goto :choice3
+if '%c%'=='4' goto :choice4
 cls&&echo(&&echo   [31m# "%c%" isn't a valid option, please try again.[0m&& >nul timeout /t 3
 goto :MENU
 exit /b
