@@ -1,9 +1,9 @@
 :: ==================================================
-::  Windows Spoofer v9.5
+::  Windows Spoofer v12.0
 :: ==================================================
-:: Dev  - Scut1ny
-:: Help - Mathieu, Sintrode, 
-:: Link - https://github.com/Scrut1ny/Windows-Spoofer
+::  Dev  - Scut1ny
+::	Help - Mathieu, Sintrode, 
+::  Link - https://github.com/Scrut1ny/Windows-Spoofer
 :: ==================================================
 
 
@@ -41,13 +41,14 @@ if "%~1"=="CheckSerials" (
 
 :MENU
 mode con:cols=60 lines=20
-cls&title https://github.com/Scrut1ny/Windows-Spoofer ^| v6.0 ^| Welcome: !user!
+cls && echo( && title https://github.com/Scrut1ny/Windows-Spoofer ^| v12.0 ^| Welcome: !user!
 echo   ===============================
-echo       [31mWindows Spoofer[0m ^>^> [32mv5.5[0m
+echo      [31mWindows Spoofer[0m ^>^> [32mv12.0[0m
 echo   ===============================
 echo    1 ^> Spoof Windows
-echo    2 ^> Check Serials
-echo    3 ^> Check IP
+echo    2 ^> Clear Traces
+echo    3 ^> Check Serials
+echo    4 ^> Check IP
 echo   ===============================
 echo     [34mhttps://github.com/Scrut1ny[0m
 echo   ===============================
@@ -56,6 +57,7 @@ set /p "c=.  # "
 if '%c%'=='1' goto :choice1
 if '%c%'=='2' goto :choice2
 if '%c%'=='3' goto :choice3
+if '%c%'=='4' goto :choice3
 cls&&echo(&&echo   [31m# "%c%" isn't a valid option, please try again.[0m&& >nul timeout /t 3
 goto :MENU
 exit /b
@@ -65,6 +67,10 @@ goto :SPOOF
 exit /b
 
 :choice2
+goto :MENU1
+exit /b
+
+:choice3
 start "" "%~f0" CheckSerials
 goto :MENU
 
@@ -72,7 +78,7 @@ echo(&>nul pause
 goto :MENU
 exit /b
 
-:choice3
+:choice4
 cls&title Contacting ISP
 mode con:cols=60 lines=25
 
@@ -106,6 +112,84 @@ for /f "usebackq delims=" %%A in ('!string!') do set "string=%%~A"
 set "%~2=!string!"
 exit /b
 
+:MENU1
+cls && echo( && echo   ===============================
+echo        [31mClean Game Traces[0m
+echo   ===============================
+echo    1 ^> MW
+echo    2 ^> Fortnite
+echo    3 ^> Escape from Tarkov
+echo    4 ^> 
+echo    99 ^< Back
+echo   ===============================
+echo     [34mhttps://github.com/Scrut1ny[0m
+echo   ===============================
+echo(
+set /p "c=.  # "
+if '%c%'=='1' goto :clean1
+if '%c%'=='2' goto :clean2
+if '%c%'=='3' goto :clean3
+if '%c%'=='4' goto :clean4
+if '%c%'=='99' goto :clean99
+cls && echo( && echo   [31m# "%c%" isn't a valid option, please try again.[0m && >nul timeout /t 3
+goto :MENU
+exit /b
+
+:clean1
+cls && echo( && echo   [] Cleaning all traces - Call of Duty: Modern Warfare && echo(
+rem Activision: Call of Duty - Tracers - The game replaces/rebuilds next time you launch it.
+tasklist | find /i "Battle.net.exe" && taskkill /F /IM battle.net.exe
+del /F /S /Q %HOMEDRIVE%\*.log && del /F /S /Q %tmp%\*
+reg delete "HKEY_CURRENT_USER\SOFTWARE\Activision" /f
+reg delete "HKEY_CURRENT_USER\SOFTWARE\Blizzard Entertainment" /f
+reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Blizzard Entertainment" /f
+del /F /Q "%CODFOLDER%\Data\data\shmem"
+del /F /Q "%CODFOLDER%\main\data0.dcache"
+del /F /Q "%CODFOLDER%\main\data1.dcache"
+del /F /Q "%CODFOLDER%\main\toc0.dcache"
+del /F /Q "%CODFOLDER%\main\toc1.dcache"
+REM del /F /Q "%CODFOLDER%\main\recipes\cmr_hist"
+rmdir /S /Q "%appdata%\Battle.net"
+rmdir /S /Q "%DOCSFOLDER%\Call of Duty Modern Warfare"
+rmdir /S /Q "%localappdata%\Activision"
+rmdir /S /Q "%localappdata%\Battle.net"
+rmdir /S /Q "%localappdata%\Blizzard Entertainment"
+rmdir /S /Q "%localappdata%\CrashDumps"
+rmdir /S /Q "%programdata%\Battle.net"
+rmdir /S /Q "%programdata%\Blizzard Entertainment"
+goto :MENU1
+exit /b
+
+:clean2
+cls && echo( && echo   [] Cleaning all traces - Epic Games: Fortnite && echo(
+rem Epic Games: Fortnite
+tasklist | find /i "EpicGamesLauncher.exe" && taskkill /F /IM EpicGamesLauncher.exe
+tasklist | find /i "FortniteClient-Win64-Shipping.exe" && taskkill /F /IM FortniteClient-Win64-Shipping.exe
+tasklist | find /i "FortniteClient-Win64-Shipping_BE.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_BE.exe
+tasklist | find /i "FortniteClient-Win64-Shipping_EAC.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_EAC.exe
+tasklist | find /i "taskkill /F /IM FortniteLauncher.exe" && taskkill /F /IM taskkill /F /IM FortniteLauncher.exe
+del /F /S /Q %HOMEDRIVE%\*.log && del /F /S /Q %tmp%\*
+goto :MENU1
+exit /b
+
+:clean3
+>nul 2>&1 (
+	rem Escape from Tarkov
+)
+goto :MENU1
+exit /b
+
+:clean4
+goto :MENU1
+exit /b
+
+:clean99
+goto :MENU
+exit /b
+
+
+
+
 :SPOOF
 cls&title Spoofing Windows...
 echo(&&echo   # [31mWARNING:[0m [33mDon't turn off system.[0m
@@ -121,6 +205,18 @@ echo   # [35mSpoofing Registry[0m&&echo(
 
 
 
+:: ==================================================
+
+
+
+
+if "%~1"=="CheckSerials" (
+    goto :CheckSerials
+)
+
+
+
+
 :: ====================================================================================================
 :: System Information
 :: ====================================================================================================
@@ -130,7 +226,7 @@ echo   # [35mSpoofing Registry[0m&&echo(
 	rem wmic computersystem where Caption='%ComputerName%' rename
 	call :GEN_HEX 7 no_caps
 	reg add "HKLM\SYSTEM\ControlSet001\Services\Tcpip\Parameters" /v "NV Hostname" /t REG_SZ /d "System-Spoofed-!GEN_HEX[hex]!" /f
-	reg add "HKLM\SYSTEM\ControlSet001\Control\ComputerName\ComputerName" /v "ComputerName" /t REG_SZ /d "SYSTEM-SPOOFED-!GEN_HEX[hex]!" /f
+	reg add "HKLM\SYSTEM\ControlSet001\Control\ComputerName\ComputerName" /v "ComputerName" /t REG_SZ /d "System-Spoofed-!GEN_HEX[hex]!" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "RegisteredOwner" /t REG_SZ /d "System-Spoofed-!GEN_HEX[hex]!" /f
 	rem SystemInformation
 	call :lowerRGUID && reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareId" /t REG_SZ /d "{!lowerRGUID!}" /f
@@ -312,6 +408,9 @@ echo   # [35mSpoofing Registry[0m&&echo(
 
 :: ====================================================================================================
 :: Monitor - Serial Number
+::
+:: https://www.nirsoft.net/utils/monitor_info_view.html
+::
 :: ====================================================================================================
 
 :: POWERSHELL ERROR: Rename-Item : Requested registry access is not allowed.
@@ -321,6 +420,27 @@ echo   # [35mSpoofing Registry[0m&&echo(
 :: 				for /f "skip=1 tokens=7 delims=\" %%B in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY\%%A"') do (
 :: 						call :GEN_HEX 7 no_caps && PowerShell Rename-Item -Path "'HKLM:\SYSTEM\CurrentControlSet\Enum\DISPLAY\%%A\%%B'" -NewName "'!random:~-1!&!GEN_HEX[hex]!&!random:~-1!&UID!random:~-5!'" -Force
 :: 						call :GEN_HEX 7 no_caps && PowerShell Rename-Item -Path "'HKLM:\SYSTEM\CurrentControlSet\Enum\DISPLAY\%%A\%%B'" -NewName "'!random:~-1!&!GEN_HEX[hex]!&!random:~-1!&UID!random:~-5!'" -Force
+:: 				)
+:: 		)
+:: )
+
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
+:: USB Devices - Serial Number
+::
+:: https://www.nirsoft.net/utils/usb_devices_view.html
+::
+:: ====================================================================================================
+
+:: >nul 2>&1 (
+:: 		for /f "skip=1 tokens=6 delims=\" %%A in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\USB"') do (
+:: 				for /f "skip=1 tokens=7 delims=\" %%B in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\USB\%%A"') do (
+:: 						call :GEN_HEX 7 no_caps && PowerShell Rename-Item -Path "'HKLM:\SYSTEM\CurrentControlSet\Enum\USB\%%A\%%B'" -NewName "'!random:~-5!!random:~-5!!random:~-5!'" -Force
+:: 						call :GEN_HEX 7 no_caps && PowerShell Rename-Item -Path "'HKLM:\SYSTEM\CurrentControlSet\Enum\USB\%%A\%%B'" -NewName "'!random:~-5!!random:~-5!!random:~-5!'" -Force
 :: 				)
 :: 		)
 :: )
@@ -438,7 +558,10 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&1C3D25BB&0&0019
 :: https://github.com/hfiref0x/DSEFix
 :: ====================================================================================================
 
+rem Turn off Windows Test Mode
+bcdedit /set TESTSIGNING OFF
 rem Disable Windows Signature Enforcement
+bcdedit.exe /set nointegritychecks on
 
 echo(&&echo   # [35mSpoofing BIOS[0m
 
@@ -496,6 +619,11 @@ echo(&&echo   # [35mSpoofing BIOS[0m
 	del /F /Q "AMIDEWINx64.EXE" "amifldrv64.sys" "amigendrv64.sys" "example.bat" "readme.txt" "dmi-edit-win64-ami.zip"
 )
 
+rem Enable Windows Signature Enforcement
+bcdedit.exe /set nointegritychecks off
+rem Turn on Windows Test Mode
+bcdedit /set TESTSIGNING ON
+
 :: ====================================================================================================
 
 
@@ -521,59 +649,33 @@ echo(&&echo   # [35mSpoofing BIOS[0m
 
 
 :: ====================================================================================================
-:: Windows - Logs/Traces/misc. | Networking | Remove Windows "Activate Windows" Watermark
+:: General System Cleanup
 :: ====================================================================================================
 
-echo   # [35mCleaning Traces[0m
-
-:: Files
-
->nul 2>&1 (
-	rem Activision: Call of Duty - Tracers - The game replaces/rebuilds next time you launch it.
-	tasklist | find /i "Battle.net.exe" && taskkill /F /IM battle.net.exe || echo Battle.net was not running.
-	reg delete "HKEY_CURRENT_USER\SOFTWARE\Activision" /f
-	reg delete "HKEY_CURRENT_USER\SOFTWARE\Blizzard Entertainment" /f
-	reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Blizzard Entertainment" /f
-	del /F /Q "%CODFOLDER%\Data\data\shmem"
-	del /F /Q "%CODFOLDER%\main\data0.dcache"
-	del /F /Q "%CODFOLDER%\main\data1.dcache"
-	del /F /Q "%CODFOLDER%\main\toc0.dcache"
-	del /F /Q "%CODFOLDER%\main\toc1.dcache"
-	REM del /F /Q "%CODFOLDER%\main\recipes\cmr_hist"
-	rmdir /S /Q "%appdata%\Battle.net"
-	rmdir /S /Q "%DOCSFOLDER%\Call of Duty Modern Warfare"
-	rmdir /S /Q "%localappdata%\Activision"
-	rmdir /S /Q "%localappdata%\Battle.net"
-	rmdir /S /Q "%localappdata%\Blizzard Entertainment"
-	rmdir /S /Q "%localappdata%\CrashDumps"
-	rmdir /S /Q "%programdata%\Battle.net"
-	rmdir /S /Q "%programdata%\Blizzard Entertainment"
-	
-	rem Epic Games: Fortnite
-	tasklist | find /i "EpicGamesLauncher.exe" && taskkill /F /IM EpicGamesLauncher.exe
-	tasklist | find /i "FortniteClient-Win64-Shipping.exe" && taskkill /F /IM FortniteClient-Win64-Shipping.exe
-	tasklist | find /i "FortniteClient-Win64-Shipping_BE.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_BE.exe
-	tasklist | find /i "FortniteClient-Win64-Shipping_EAC.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_EAC.exe
-	tasklist | find /i "taskkill /F /IM FortniteLauncher.exe" && taskkill /F /IM taskkill /F /IM FortniteLauncher.exe
-	
-	rem Escape from Tarkov
-	
-	rem Delete Old Windows Backup
-	if exist "%HOMEDRIVE%\Windows.old" (
-		takeown /f "%HOMEDRIVE%\Windows.old" /a /r /d y
-		icacls "%HOMEDRIVE%\Windows.old" /grant administrators:F /t
-		rd /S /Q "%HOMEDRIVE%\Windows.old"
-	)
-	
-	del /F /S /Q "%WINDIR%\Prefetch\*"
-	for /f "tokens=*" %%A in ('wevtutil.exe el') do wevtutil.exe cl "%%A" rem Clear Event Logs
-	del /F /S /Q %HOMEDRIVE%\*.log *.tmp && del /F /S /Q %tmp%\*
-	
-	rem Emptying Recycle Bins & Resetting explorer.exe
-	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+rem Delete Old Windows Backup
+if exist "%HOMEDRIVE%\Windows.old" (
+	takeown /f "%HOMEDRIVE%\Windows.old" /a /r /d y
+	icacls "%HOMEDRIVE%\Windows.old" /grant administrators:F /t
+	rd /S /Q "%HOMEDRIVE%\Windows.old"
 )
 
+rem Delete all Prefetch Files
+del /F /S /Q "%WINDIR%\Prefetch\*"
+
+rem Clear all Event Logs
+for /f "tokens=*" %%a in ('wevtutil.exe el') do wevtutil.exe cl "%%a"
+	
+rem Emptying Recycle Bins & Resetting explorer.exe
+powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
 :: Networking
+:: ====================================================================================================
 
 echo(&&echo   # [35mRevising Networking[0m
 
