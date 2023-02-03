@@ -2,7 +2,7 @@
 ::  Windows Spoofer v12.0
 :: ==================================================
 ::  Dev  - Scut1ny
-::	Help - Mathieu, Sintrode, 
+::  Help - Mathieu, Sintrode, 
 ::  Link - https://github.com/Scrut1ny/Windows-Spoofer
 :: ==================================================
 
