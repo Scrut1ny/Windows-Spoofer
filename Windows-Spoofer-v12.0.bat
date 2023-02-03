@@ -389,7 +389,7 @@ if "%~1"=="CheckSerials" (
 		rundll32 "%PROGRAMFILES%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL",UninstallPackage NvTelemetryContainer
 		rundll32 "%PROGRAMFILES%\NVIDIA Corporation\Installer2\InstallerCore\NVI2.DLL",UninstallPackage NvTelemetry
 	)
-	rem delete NVIDIA residual telemetry files
+	rem Delete NVIDIA residual telemetry files
 	DEL /s %HOMEDRIVE%\System32\DriverStore\FileRepository\NvTelemetry*.dll
 	RD /S /Q "%ProgramFiles(x86)%\NVIDIA Corporation\NvTelemetry"
 	RD /S /Q "%ProgramFiles%\NVIDIA Corporation\NvTelemetry"
@@ -521,7 +521,7 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&1C3D25BB&0&0019
 
 >nul 2>&1 (
 	set "reg_path=HKLM\SYSTEM\ControlSet001\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}"
-	call :GEN_HEX 12 only_caps && set "new_MAC=02-!GEN_HEX[hex]:~2,2!-!GEN_HEX[hex]:~4,2!-!GEN_HEX[hex]:~6,2!-!GEN_HEX[hex]:~8,2!-!GEN_HEX[hex]:~10,2!"
+	call :GEN_HEX 12 only_caps && set "new_MAC=02:!GEN_HEX[hex]:~2,2!:!GEN_HEX[hex]:~4,2!:!GEN_HEX[hex]:~6,2!:!GEN_HEX[hex]:~8,2!:!GEN_HEX[hex]:~10,2!"
 
 	for /f "tokens=1delims=[]" %%A in ('wmic nic where physicaladapter^=true get caption ^| find "["') do (
 		set "Index=%%A" && set "Index=!Index:~-4!"
@@ -538,8 +538,8 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&1C3D25BB&0&0019
 
 	for /f "skip=1delims=" %%A in ('wmic nic where netenabled^=true get netconnectionid') do (
 		for /f %%B in ("%%A") do (
-			netsh interface set interface name="%%B" admin=DISABLED
-			netsh interface set interface name="%%B" admin=ENABLED
+			netsh interface set interface name="%%B" admin=disable
+			netsh interface set interface name="%%B" admin=enable
 		)
 	)
 	rem Clear ARP/Route Tables - Contains MAC Address(es) used by ACs to track you after spoofing MAC Address(es).
