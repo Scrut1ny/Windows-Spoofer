@@ -2,7 +2,7 @@
 ::  Windows Spoofer v12.0
 :: ==================================================
 ::  Dev  - Scut1ny
-::  Help - Mathieu, Sintrode, 
+::	Help - Mathieu, Sintrode, 
 ::  Link - https://github.com/Scrut1ny/Windows-Spoofer
 :: ==================================================
 
@@ -47,8 +47,9 @@ echo      [31mWindows Spoofer[0m ^>^> [32mv12.0[0m
 echo   ===============================
 echo    1 ^> Spoof Windows
 echo    2 ^> Clear Traces
-echo    3 ^> Check Serials
-echo    4 ^> Check IP
+echo    3 ^> Activate Windows
+echo    4 ^> Check Serials
+echo    5 ^> Check IP
 echo   ===============================
 echo     [34mhttps://github.com/Scrut1ny[0m
 echo   ===============================
@@ -58,6 +59,7 @@ if '%c%'=='1' goto :choice1
 if '%c%'=='2' goto :choice2
 if '%c%'=='3' goto :choice3
 if '%c%'=='4' goto :choice4
+if '%c%'=='5' goto :choice5
 cls && echo( && echo   [31m# "%c%" isn't a valid option, please try again.[0m && >nul timeout /t 3
 goto :MENU
 exit /b
@@ -71,6 +73,11 @@ goto :MENU1
 exit /b
 
 :choice3
+powershell irm https://massgrave.dev/get ^| iex
+goto :MENU
+exit /b
+
+:choice4
 start "" "%~f0" CheckSerials
 goto :MENU
 
@@ -78,7 +85,7 @@ echo( && >nul pause
 goto :MENU
 exit /b
 
-:choice4
+:choice5
 cls && title Contacting ISP
 mode con:cols=60 lines=25
 
