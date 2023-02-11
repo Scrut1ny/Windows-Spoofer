@@ -631,7 +631,7 @@ echo( && echo   # [35mSpoofing BIOS[0m
 )
 
 rem Enable Windows Signature Enforcement
-bcdedit.exe /set nointegritychecks off
+bcdedit /set nointegritychecks off
 rem Turn on Windows Test Mode
 bcdedit /set TESTSIGNING ON
 
