@@ -572,9 +572,9 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&1C3D25BB&0&0019
 rem Turn off Windows Test Mode
 bcdedit /set TESTSIGNING OFF
 rem Disable Windows Signature Enforcement
-bcdedit.exe /set nointegritychecks on
+bcdedit /set nointegritychecks on
 
-echo(&&echo   # [35mSpoofing BIOS[0m
+echo( && echo   # [35mSpoofing BIOS[0m
 
 
 >nul 2>&1 (
@@ -688,7 +688,7 @@ powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
 :: Networking
 :: ====================================================================================================
 
-echo(&&echo   # [35mRevising Networking[0m
+echo( && echo   # [35mRevising Networking[0m
 
 >nul 2>&1 (
 	rem Delete all Network Data Usage & Disable it.
