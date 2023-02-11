@@ -2,7 +2,7 @@
 ::  Windows Spoofer v12.0
 :: ==================================================
 ::  Dev  - Scut1ny
-::  Help - Mathieu, Sintrode, 
+::	Help - Mathieu, Sintrode, 
 ::  Link - https://github.com/Scrut1ny/Windows-Spoofer
 :: ==================================================
 
@@ -717,23 +717,16 @@ echo( && echo   # [35mRevising Networking[0m
 	netsh winsock set autotuning off
 	netsh interface reset all
 	
-	rem Switching DNS servers to bypass some ISP censorship.
-	
-	rem Ethernet
-	netsh interface ipv4 set dnsservers "Ethernet" static 1.1.1.1 primary
-	netsh interface ipv4 add dnsservers "Ethernet" 1.0.0.1 index=2
-	rem netsh interface ipv6 set dnsservers "Ethernet" static 2606:4700:4700::1111 primary
-	rem netsh interface ipv6 add dnsservers "Ethernet" 2606:4700:4700::1001 index=2
-	
-	rem Wi-Fi
-	netsh interface ipv4 set dnsservers "Wi-Fi" static 1.1.1.1 primary
-	netsh interface ipv4 add dnsservers "Wi-Fi" 1.0.0.1 index=2
-	rem netsh interface ipv6 set dnsservers "Wi-Fi" static 2606:4700:4700::1111 primary
-	rem netsh interface ipv6 add dnsservers "Wi-Fi" 2606:4700:4700::1001 index=2
-	
-	rem Resetting connections
-	ipconfig/flushdns
-	
+	rem Setting DNS servers to: "Quad9" (Bypass ISP censorship and tracking.)
+	for /f "skip=2 tokens=2 delims=," %%A in ('wmic nic get netconnectionid /format:csv') do (
+		for /f "delims=" %%B in ("%%~A") do (
+			netsh interface ipv4 set dnsservers "%%B" static "9.9.9.9" primary
+			netsh interface ipv4 add dnsservers "%%B" "149.112.112.112" index=2
+			netsh interface ipv6 set dnsservers "%%B" static "2620:fe::fe" primary
+			netsh interface ipv6 add dnsservers "%%B" "2620:fe::9" index=2
+			ipconfig /flushdns
+		)
+	)
 	goto :AGAIN
 )
 
