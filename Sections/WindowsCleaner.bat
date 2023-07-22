@@ -1,5 +1,4 @@
 @echo off
-setlocal EnableDelayedExpansion
 
 
 :: ====================================================================================================
@@ -19,30 +18,32 @@ fltmc >nul 2>&1 || (
 
 
 :: ====================================================================================================
-:: Hostname
+:: Windows Cleaner
 :: ====================================================================================================
 
->nul 2>&1 (
-	call :20HEX
-	wmic computersystem where name="%computername%" call rename name="!randomString!"
+rem Delete Old Windows Backup
+if exist "%HOMEDRIVE%\Windows.old" (
+	takeown /f "%HOMEDRIVE%\Windows.old" /a /r /d y
+	icacls "%HOMEDRIVE%\Windows.old" /grant administrators:F /t
+	rd /S /Q "%HOMEDRIVE%\Windows.old"
 )
 
-:: ====================================================================================================
+rem Delete all Temp, Prefetch, and Log Files
+del /f/s/q "%WINDIR%\Prefetch\*"
+del /f/s/q "%SystemDrive%\*.log"
+del /f/s/q "%SystemDrive%\Windows\Temp\*"
+del /f/s/q "%tmp%\*"
 
+rem Clear all Event Logs
+for /f "tokens=*" %%a in ('wevtutil.exe el') do (wevtutil.exe cl "%%a")
 
-:: ====================================================================================================
-:: 20 Digit long "a-z, A-Z, 0-9" random string generator
-:: ====================================================================================================
+rem Clear ARP Cache
+arp -d *
 
-:20HEX
-set "characters=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-set "length=20"
-set "randomString="
+rem Flush DNS
+ipconfig/flushdns
 
-for /L %%i in (1,1,%length%) do (
-    set /A "index=!random! %% 62"
-    for %%j in (!index!) do set "randomString=!randomString!!characters:~%%j,1!"
-)
-exit /b 0
+rem Emptying Recycle Bins & Resetting explorer.exe
+powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
 
 :: ====================================================================================================

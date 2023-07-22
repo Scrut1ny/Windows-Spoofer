@@ -26,7 +26,7 @@ fltmc >nul 2>&1 || (
 
 >nul 2>&1 (
 	for /f "tokens=3" %%A in ('reg query "HKLM\HARDWARE\DEVICEMAP\Scsi" /s /f "Scsi Port" /k') do (
-		for /f "delims=search:" %%B in ("%%A") do (
+		for /f "delims=:" %%B in ("%%A") do (
 			for /l %%C in (0,1,%%B) do (
 				if "%%A"=="%%B" (
 					call :20HEX

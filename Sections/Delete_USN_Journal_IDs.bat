@@ -20,11 +20,10 @@ fltmc >nul 2>&1 || (
 :: ====================================================================================================
 :: Delete all USN Journal IDs
 :: ====================================================================================================
-
 :: Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism.
 
 >nul 2>&1 (
-	for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:" fsutil usn deletejournal /d %%A:
+	for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:" fsutil usn deletejournal /n %%A:
 )
 
 :: ====================================================================================================
