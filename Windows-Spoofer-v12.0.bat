@@ -126,7 +126,7 @@ echo   ===============================
 echo    1 ^> MW
 echo    2 ^> Fortnite
 echo    3 ^> Escape from Tarkov
-echo    4 ^> 
+echo    4 ^> Apex Legends
 echo    99 ^< Back
 echo   ===============================
 echo     [34mhttps://github.com/Scrut1ny[0m
@@ -304,19 +304,13 @@ if "%~1"=="CheckSerials" (
 :: MachineGuid - GUID
 ::
 :: Part of a System Restore Point - Contains a UUID which is used/tracked by some ACs.
-:: CMD > findstr "{" "%WINDIR%\System32\restore\MachineGuid.txt"
+:: CMD > type "%WINDIR%\System32\restore\MachineGuid.txt"
 :: ====================================================================================================
 
 >nul 2>&1 (
 	if exist "%WINDIR%\System32\restore\MachineGuid.txt" (
 		takeown /F "%WINDIR%\System32\restore\MachineGuid.txt"
-		icacls "%WINDIR%\System32\restore\MachineGuid.txt" /grant %username%:(F^)
-		attrib -r -s "%WINDIR%\System32\restore\MachineGuid.txt"
-		call :lowerRGUID && echo {!lowerRGUID!}>"%WINDIR%\System32\restore\MachineGuid.txt"
-		attrib +s +r "%WINDIR%\System32\restore\MachineGuid.txt"
-		icacls "%WINDIR%\System32\restore\MachineGuid.txt" /remove:g %username%
-		takeown /F "%WINDIR%\System32\restore\MachineGuid.txt" /A
-		rem Deletes all volume shadow copies.
+		del /f/q "%WINDIR%\System32\restore\MachineGuid.txt"
 		wmic shadowcopy delete /nointeractive
 		vssadmin delete shadows /all /quiet
 	)
@@ -418,7 +412,7 @@ if "%~1"=="CheckSerials" (
 
 
 :: ====================================================================================================
-:: Monitor - Serial Number
+:: Monitor - Serial Number (Apex Legends Tracks This)
 ::
 :: https://www.nirsoft.net/utils/monitor_info_view.html
 ::
@@ -569,8 +563,6 @@ rem PCI\VEN_10DE&DEV_1F08&SUBSYS_21673842&REV_A1\4&1C3D25BB&0&0019
 :: https://github.com/hfiref0x/DSEFix
 :: ====================================================================================================
 
-rem Turn off Windows Test Mode
-bcdedit /set TESTSIGNING OFF
 rem Disable Windows Signature Enforcement
 bcdedit /set nointegritychecks on
 
@@ -578,6 +570,8 @@ echo( && echo   # [35mSpoofing BIOS[0m
 
 
 >nul 2>&1 (
+	cd /D "%~dp0"
+	
 	curl -fksLo "dmi-edit-win64-ami.zip" "https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&ind=1647077068432" && tar -xf dmi-edit-win64-ami.zip
 
 	rem System Information - Serial Number & System UUID
@@ -632,8 +626,6 @@ echo( && echo   # [35mSpoofing BIOS[0m
 
 rem Enable Windows Signature Enforcement
 bcdedit /set nointegritychecks off
-rem Turn on Windows Test Mode
-bcdedit /set TESTSIGNING ON
 
 :: ====================================================================================================
 
@@ -645,14 +637,49 @@ bcdedit /set TESTSIGNING ON
 :: ====================================================================================================
 
 >nul 2>&1 (
-	rem Changes all VolumeIDs XXXX-XXXX.
-	curl -fksLO "https://download.sysinternals.com/files/VolumeId.zip" && tar -xf VolumeId.zip 
-	for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:\" Volumeid64.exe %%A: !random:~-4!-!random:~-4! -nobanner
-	del /F /Q "volumeid*" "Eula.txt"
-	
+	ping -n 1 9.9.9.9
+	if errorlevel 1 (
+		rem Changes all VolumeIDs XXXX-XXXX.
+		curl -fksL -o "%tmp%\VolumeId.zip" "https://download.sysinternals.com/files/VolumeId.zip" && tar -xf VolumeId.zip
+		for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:\" Volumeid64.exe %%A: !random:~-4!-!random:~-4! -nobanner
+		del /F /Q "volumeid*" "Eula.txt"
+	) else (
+		echo  # No internet
+	)
 	rem ACs use "USN Journal IDs" as a HWID tagging mechanism.
 	for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:" fsutil usn deletejournal /d %%A:
 )
+
+:: ====================================================================================================
+
+
+
+
+:: ====================================================================================================
+:: Networking
+:: ====================================================================================================
+
+echo( && echo   # [35mRevising Networking[0m
+
+>nul 2>&1 (
+	rem Delete all Network Data Usage & Disable it.
+	sc stop "DPS" & sc config "DPS" start= disabled
+	del /F /S /Q "%windir%\System32\sru\*"
+	
+	rem Setting DNS servers to: "Quad9" (Bypass ISP censorship and tracking.)
+	for /f "skip=2 tokens=2 delims=," %%A in ('wmic nic get netconnectionid /format:csv') do (
+		for /f "delims=" %%B in ("%%~A") do (
+			netsh interface ipv4 set dnsservers "%%B" static "9.9.9.9" primary
+			netsh interface ipv4 add dnsservers "%%B" "149.112.112.112" index=2
+			netsh interface ipv6 set dnsservers "%%B" static "2620:fe::fe" primary
+			netsh interface ipv6 add dnsservers "%%B" "2620:fe::9" index=2
+			ipconfig /flushdns
+		)
+	)
+	goto :AGAIN
+)
+
+taskkill /F /IM explorer.exe & explorer.exe
 
 :: ====================================================================================================
 
@@ -675,62 +702,9 @@ del /F /S /Q "%WINDIR%\Prefetch\*"
 
 rem Clear all Event Logs
 for /f "tokens=*" %%a in ('wevtutil.exe el') do wevtutil.exe cl "%%a"
-	
+
 rem Emptying Recycle Bins & Resetting explorer.exe
 powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-
-:: ====================================================================================================
-
-
-
-
-:: ====================================================================================================
-:: Networking
-:: ====================================================================================================
-
-echo( && echo   # [35mRevising Networking[0m
-
->nul 2>&1 (
-	rem Delete all Network Data Usage & Disable it.
-	sc stop "DPS" & sc config "DPS" start= disabled
-	del /F /S /Q "%windir%\System32\sru\*"
-	
-	rem Clear SSL State
-	certutil -URLCache * delete
-	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 2 rem Clear Cookies
-	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8 rem Clear Temporary Internet Files
-	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 16 rem Clear Form Data
-	RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 32 rem Clear Saved Passwords
-	
-	rem Random
-	nbtstat -R
-	nbtstat -RR
-	netsh branchcache reset
-	netsh dhcpclient trace disable
-	netsh http flush
-	netsh nap reset
-	netsh routing reset
-	netsh rpc reset
-	netsh trace stop
-	netsh winhttp reset
-	netsh winsock reset
-	netsh winsock set autotuning off
-	netsh interface reset all
-	
-	rem Setting DNS servers to: "Quad9" (Bypass ISP censorship and tracking.)
-	for /f "skip=2 tokens=2 delims=," %%A in ('wmic nic get netconnectionid /format:csv') do (
-		for /f "delims=" %%B in ("%%~A") do (
-			netsh interface ipv4 set dnsservers "%%B" static "9.9.9.9" primary
-			netsh interface ipv4 add dnsservers "%%B" "149.112.112.112" index=2
-			netsh interface ipv6 set dnsservers "%%B" static "2620:fe::fe" primary
-			netsh interface ipv6 add dnsservers "%%B" "2620:fe::9" index=2
-			ipconfig /flushdns
-		)
-	)
-	goto :AGAIN
-)
-
-taskkill /F /IM explorer.exe && explorer.exe
 
 :: ====================================================================================================
 
@@ -779,7 +753,7 @@ for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
 	)
 )
 
-echo(&&echo - [31mMAC Address - (Media Access Control)[0m -----
+echo( && echo - [31mMAC Address - (Media Access Control)[0m -----
 wmic nicconfig where (IPEnabled=True^) GET Description^,SettingID^,MACAddress
 
 echo - [31mMachineGuid[0m -----
@@ -832,7 +806,7 @@ shutdown /s /t 0
 :: Generating/Retrieving - GUID/Random
 :: ====================================================================================================
 
-:: Generating Random Hexidecimal Value - Serial Number / MAC Address / etc.
+:: Generating Random Hexadecimal Value - Serial Number / MAC Address / etc.
 :GEN_HEX
 if %2==no_caps (
     set GEN_HEX[map]=0123456789abcdef
