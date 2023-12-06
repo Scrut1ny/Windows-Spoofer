@@ -2,8 +2,8 @@
 
 ### Supported
   * Operating System(s)
-    * <img src="https://external-content.duckduckgo.com/ip3/www.microsoft.com.ico"> - Windows 11 
-    * <img src="https://external-content.duckduckgo.com/ip3/www.microsoft.com.ico"> - Windows 10
+    * <img src="https://external-content.duckduckgo.com/ip3/www.microsoft.com.ico" width="16" height="16"> - Windows 11 
+    * <img src="https://external-content.duckduckgo.com/ip3/www.microsoft.com.ico" width="16" height="16"> - Windows 10
   * Motherboard Manufacture(s) ✔️
     * <img src="https://external-content.duckduckgo.com/ip3/www.asus.com.ico" width="16" height="16"> - ASUS
     * <img src="https://external-content.duckduckgo.com/ip3/us.msi.com.ico" width="16" height="16"> - MSI (Micro-Star International)
