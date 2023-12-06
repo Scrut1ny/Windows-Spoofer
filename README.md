@@ -1,7 +1,7 @@
 # FOSS Windows 10/11 Spoofer
 This is a Windows spoofer based on Free and Open Source Software (FOSS), meticulously programmed and comprehensively documented. I have invested considerable time and effort into refining this spoofer, ensuring seamless functionality across all modules. My motivation stemmed from the observation that numerous existing spoofers suffer from poor programming, excessive bloat, and unnecessary system actions. Frustrated with the lack of reliable options, I undertook extensive research and programming to create a genuinely effective, free, and open-source solution.
 
-- ## Supported ✔️
+## Supported ✔️
   * Operating System(s)
     * <img src="https://external-content.duckduckgo.com/ip3/www.microsoft.com.ico" width="16" height="16"> - Windows 11 23H2
     * <img src="https://external-content.duckduckgo.com/ip3/www.microsoft.com.ico" width="16" height="16"> - Windows 10 22H2
@@ -14,7 +14,7 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
     * <img src="https://external-content.duckduckgo.com/ip3/www.supermicro.com.ico" width="16" height="16"> - Supermicro
     * <img src="https://duckduckgo.com/i/c01ed58d.png" width="16" height="16"> - ECS (Elitegroup Computer Systems)
 
-- #### Spoofing Functions ⚙️
+- ## Spoofing Functions ⚙️
  * Device name
  * GUIDs
  * SMBIOS
@@ -32,7 +32,7 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
  * NIC(s)
  * Custom DNS
 
-- #### Flushing/Cleaning/Deletion Functions 🗑️
+- ## Flushing/Cleaning/Deletion Functions 🗑️
  * DNS Flush
  * ARP Cache
  * Prefetch
