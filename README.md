@@ -28,3 +28,6 @@
 - USN Journal ID(s)
 - Ubisoft, Valorant, cache
 - Old Windows Backup
+
+#### Windows Activation
+- [MAS](https://github.com/massgravel/Microsoft-Activation-Scripts) Activation
