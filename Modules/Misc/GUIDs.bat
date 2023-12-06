@@ -105,7 +105,6 @@ exit /b
 
 
 :: 5 character long "A-Z, 0-9" random string generator
-
 :RSG
 set "char=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 set "char_length=36"
