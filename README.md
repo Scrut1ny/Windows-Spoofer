@@ -1,10 +1,11 @@
 # FOSS Windows 10/11 Spoofer
+This is a Windows spoofer based on Free and Open Source Software (FOSS), meticulously programmed and comprehensively documented. I have invested considerable time and effort into refining this spoofer, ensuring seamless functionality across all modules. My motivation stemmed from the observation that numerous existing spoofers suffer from poor programming, excessive bloat, and unnecessary system actions. Frustrated with the lack of reliable options, I undertook extensive research and programming to create a genuinely effective, free, and open-source solution.
 
-### Supported
+### Supported ✔️
   * Operating System(s)
     * <img src="https://external-content.duckduckgo.com/ip3/www.microsoft.com.ico" width="16" height="16"> - Windows 11 23H2
     * <img src="https://external-content.duckduckgo.com/ip3/www.microsoft.com.ico" width="16" height="16"> - Windows 10 22H2
-  * Motherboard Manufacture(s) ✔️
+  * Motherboard Manufacture(s)
     * <img src="https://external-content.duckduckgo.com/ip3/www.asus.com.ico" width="16" height="16"> - ASUS
     * <img src="https://external-content.duckduckgo.com/ip3/us.msi.com.ico" width="16" height="16"> - MSI (Micro-Star International)
     * <img src="https://external-content.duckduckgo.com/ip3/www.asrock.com.ico" width="16" height="16"> - ASRock
