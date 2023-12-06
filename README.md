@@ -1,5 +1,14 @@
 # Windows-Batch-Spoofer [12.0]
 
+### Supported Motherboard Manufactures
+- ASUS
+- MSI (Micro-Star International)
+- ASRock
+- Gigabyte
+- Biostar
+- Supermicro
+- ECS (Elitegroup Computer Systems)
+
 #### Spoofing Functions
 - Device name
 - GUIDs
