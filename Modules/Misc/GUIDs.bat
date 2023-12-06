@@ -75,6 +75,25 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t RE
 
 
 :: ====================================================================================================
+:: MachineGuid - GUID
+::
+:: Part of a System Restore Point - Contains a UUID which is used/tracked by some ACs.
+:: CMD > type "%WINDIR%\System32\restore\MachineGuid.txt"
+:: ====================================================================================================
+
+>nul 2>&1 (
+	if exist "%WINDIR%\System32\restore\MachineGuid.txt" (
+		takeown /F "%WINDIR%\System32\restore\MachineGuid.txt"
+		del /f/q "%WINDIR%\System32\restore\MachineGuid.txt"
+		wmic shadowcopy delete /nointeractive
+		vssadmin delete shadows /all /quiet
+	)
+)
+
+:: ====================================================================================================
+
+
+:: ====================================================================================================
 :: System Information
 :: ====================================================================================================
 
@@ -115,5 +134,4 @@ for /L %%a in (1,1,!length!) do (
     set /A "index=!random! %% !char_length!"
     for %%b in (!index!) do set "string=!string!!char:~%%b,1!"
 )
-
 exit /b 0

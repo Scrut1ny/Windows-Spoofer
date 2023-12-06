@@ -19,9 +19,26 @@ fltmc >nul 2>&1 || (
 
 
 :: ====================================================================================================
-:: Physical Drives (SSD/HDD) - Serial Number(s) | Reset Physical Disk Status(es)
+:: DiskPeripheral - Identifier(s)
 :: ====================================================================================================
 
+>nul 2>&1 (
+	for /f "tokens=10 delims=\" %%A in ('reg query "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral"') do (
+		for /l %%B in (0,1,%%A) do (
+			if "%%A"=="%%B" (
+				call :RSG
+				reg add "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral\%%B" /v "Identifier" /t REG_SZ /d "!string:~0,8!-!string:~-8!-A" /f
+			)
+		)
+	)
+)
+
+:: ====================================================================================================
+
+
+:: ====================================================================================================
+:: Physical Drives (SSD/HDD) - Serial Number(s) | Reset Physical Disk Status(es)
+:: ====================================================================================================
 :: wmic path win32_DiskDrive get SerialNumber /value
 
 >nul 2>&1 (
