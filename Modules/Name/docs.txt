@@ -1,5 +1,0 @@
-Batch Method:
-wmic computersystem where name="%computername%" call rename name="DESKTOP-XXXXXXX"
-
-Powershell Method:
-Rename-Computer -NewName "Computer-Name"
