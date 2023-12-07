@@ -42,7 +42,7 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
  * Custom DNS
 
 ## Flushing/Cleaning/Deletion Functions 🗑️
- * DNS Flush
+ * DNS Cashe
  * ARP Cache
  * Prefetch
  * `%SystemDrive%\Windows\Temp\*`
