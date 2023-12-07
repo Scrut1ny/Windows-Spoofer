@@ -20,15 +20,10 @@ fltmc >nul 2>&1 || (
 
 :: ====================================================================================================
 :: AMIBIOS DMI EDITOR
+::
 :: If you get any errors relating to PNP your motherboard isn't compatible with this version of AMIBIOS DMI EDITOR.
 :: Some motherboards aren't compatible spoofing with this software.
-:: 
-:: https://www.thetechgame.com/Tutorials/id=28615/c=12091/mwhwid-ban-change-uuid-and-serial-of-ami-bios-motherboard.html
-::
-:: https://download.schenker-tech.de/package/dmi-edit-efi-ami/
-:: https://github.com/hfiref0x/DSEFix
 :: ====================================================================================================
-
 
 >nul 2>&1 bcdedit ^| find "nointegritychecks"
 IF %ERRORLEVEL% EQU 0 (
@@ -44,8 +39,13 @@ IF %ERRORLEVEL% EQU 0 (
 
 >nul 2>&1 (
 	pushd "%tmp%"
-	curl -fksLo "dmi-edit-win64-ami.zip" "https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&ind=1647077068432" && powershell Expand-Archive -Force "%tmp%\dmi-edit-win64-ami.zip" "%tmp%"
-
+	
+	if exist "%tmp%\AMIDEWINx64.EXE" (
+		rem File exists.
+	) else (
+		curl -A "Mozilla/5.0" -fksLo "%tmp%\dmi-edit-win64-ami.zip" "https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&ind=1647077068432&filename=dmi-edit-win64-ami.zip" && tar -xf "%tmp%\dmi-edit-win64-ami.zip"
+	)
+	
 	rem System Information - Serial Number
 	for /f "tokens=2 delims==" %%A in ('wmic path win32_computersystemproduct get IdentifyingNumber /value ^| find "="') do (
 		for /f "delims=" %%B in ("%%~A") do (
@@ -107,8 +107,8 @@ IF %ERRORLEVEL% EQU 0 (
 	rem Memory Device - Serial Number
 	
 	
-	rem Deleting remaining files
-	del /F /Q "%tmp%\AMIDEWINx64.EXE" "%tmp%\amifldrv64.sys" "%tmp%\amigendrv64.sys" "%tmp%\example.bat" "%tmp%\readme.txt" "%tmp%\dmi-edit-win64-ami.zip"
+	rem Delete remaining files
+	del /F /Q "%tmp%\*"
 )
 
 rem Enable Windows Signature Enforcement
@@ -118,12 +118,12 @@ bcdedit /set nointegritychecks off
 
 
 :: ====================================================================================================
-:: 20 Digit long "a-z, A-Z, 0-9" random string generator
+:: 20 Digit long "A-Z, 0-9" random string generator
 :: ====================================================================================================
 
 :RSG
-set "char=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-set "char_length=62"
+set "char=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+set "char_length=36"
 set "length=20"
 set "string="
 

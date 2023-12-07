@@ -1,0 +1,34 @@
+Supported Motherboard Brands:
+    ASUS
+    MSI (Micro-Star International)
+    ASRock
+    Gigabyte
+    Biostar
+    Supermicro
+    ECS (Elitegroup Computer Systems)
+
+
+
+Custom UEFI and BIOS utilities for Aptio and AMIBIOS:
+https://www.ami.com/bios-uefi-utilities/
+
+	Aptio V AMI Firmware Update Utility:
+	https://f.hubspotusercontent10.net/hubfs/9443417/Support/BIOS_Firmware_Update/Aptio_V_AMI_Firmware_Update_Utility.zip
+
+	AMIBIOS8 AMI Firmware Update Utility:
+	https://f.hubspotusercontent10.net/hubfs/9443417/Support/BIOS_Firmware_Update/AMIBIOS8_AMI_Firmware_Update_Utility.zip
+
+
+
+DMI Edit via Windows or EFI for AMI BIOS:
+https://download.schenker-tech.de/package/dmi-edit-efi-ami/
+
+	dmi-edit-win64-ami
+	https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&ind=1647077068432&filename=dmi-edit-win64-ami.zip
+	
+	dmi-edit-efi-ami
+	https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&ind=1637063374897&filename=dmi-edit-efi-ami.zip
+
+
+https://www.thetechgame.com/Tutorials/id=28615/c=12091/mwhwid-ban-change-uuid-and-serial-of-ami-bios-motherboard.html
+https://github.com/hfiref0x/DSEFix

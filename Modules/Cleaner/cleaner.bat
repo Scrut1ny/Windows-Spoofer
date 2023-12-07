@@ -18,6 +18,103 @@ fltmc >nul 2>&1 || (
 
 
 :: ====================================================================================================
+:: Terminate all Conflicting Processes
+:: ====================================================================================================
+
+>nul 2>&1 (
+	:Ubisoft_Tasks
+	rem Ubisoft
+	tasklist | find /i "UbisoftGameLauncher.exe" && taskkill /T /F /IM "UbisoftGameLauncher.exe"
+	tasklist | find /i "upc.exe" && taskkill /T /F /IM "upc.exe"
+	tasklist | find /i "RainbowSix" && taskkill /T /F /IM "RainbowSix*"
+	goto :menu
+	exit /b
+	
+	
+	
+	:Valorant_Tasks
+	rem Valorant
+	tasklist | find /i "" && taskkill /T /F /IM ""
+	tasklist | find /i "" && taskkill /T /F /IM ""
+	tasklist | find /i "" && taskkill /T /F /IM ""
+	exit /b
+	
+	
+	
+	:Fortnite_Tasks
+	rem Epic Games: Fortnite
+	tasklist | find /i "EpicGamesLauncher.exe" && taskkill /T /F /IM "EpicGamesLauncher.exe"
+	tasklist | find /i "Fortnite" && taskkill /T /F /IM "Fortnite*"
+	exit /b
+
+
+
+	:COD_Tasks
+	rem Activision: Call of Duty
+	tasklist | find /i "battle.net.exe" && taskkill /T /F /IM "battle.net.exe"
+	tasklist | find /i "" && taskkill /T /F /IM ""
+	tasklist | find /i "" && taskkill /T /F /IM ""
+	exit /b
+)
+
+:: ====================================================================================================
+
+
+:: ====================================================================================================
+:: Clean / Remove cashe, logs, and tracers
+:: ====================================================================================================
+
+>nul 2>&1 (
+	:Ubisoft_Files
+	rem Ubisoft
+	del /f/s/q "%ProgramFiles(x86)%\Ubisoft\Ubisoft Game Launcher\cache\*"
+	del /f/s/q "%ProgramFiles(x86)%\Ubisoft\Ubisoft Game Launcher\crashes\*"
+	del /f/s/q "%ProgramFiles(x86)%\Ubisoft\Ubisoft Game Launcher\logs\*"
+	del /f/s/q "%ProgramFiles(x86)%\Ubisoft\Ubisoft Game Launcher\savegames\*"
+	exit /b
+
+
+
+	:Valorant_Files
+	rem Valorant
+	del /f/s/q "%LOCALAPPDATA%\VALORANT\saved\*"
+	exit /b
+
+
+
+	:Fortnite_Files
+	rem Epic Games: Fortnite
+	exit /b
+	
+
+
+	:COD_Files
+	rem Activision: Call of Duty
+	del /F /S /Q %HOMEDRIVE%\*.log && del /F /S /Q %tmp%\*
+	reg delete "HKCU\SOFTWARE\Activision" /f
+	reg delete "HKCU\SOFTWARE\Blizzard Entertainment" /f
+	reg delete "HKLM\SOFTWARE\WOW6432Node\Blizzard Entertainment" /f
+	del /F /Q "%CODFOLDER%\Data\data\shmem"
+	del /F /Q "%CODFOLDER%\main\data0.dcache"
+	del /F /Q "%CODFOLDER%\main\data1.dcache"
+	del /F /Q "%CODFOLDER%\main\toc0.dcache"
+	del /F /Q "%CODFOLDER%\main\toc1.dcache"
+	REM del /F /Q "%CODFOLDER%\main\recipes\cmr_hist"
+	rmdir /S /Q "%appdata%\Battle.net"
+	rmdir /S /Q "%DOCSFOLDER%\Call of Duty Modern Warfare"
+	rmdir /S /Q "%LOCALAPPDATA%\Activision"
+	rmdir /S /Q "%LOCALAPPDATA%\Battle.net"
+	rmdir /S /Q "%LOCALAPPDATA%\Blizzard Entertainment"
+	rmdir /S /Q "%LOCALAPPDATA%\CrashDumps"
+	rmdir /S /Q "%programdata%\Battle.net"
+	rmdir /S /Q "%programdata%\Blizzard Entertainment"
+	exit /b
+)
+
+:: ====================================================================================================
+
+
+:: ====================================================================================================
 :: Windows Cleaner
 :: ====================================================================================================
 
