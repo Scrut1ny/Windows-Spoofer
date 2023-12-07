@@ -86,3 +86,7 @@ shutdown /r /fw /f /t 0
 | Sony | F1, F2, or F3 |
 | Toshiba | F2 or ESC |
 | Intel NUC | F2 |
+
+## Guides
+[Evasion Techniques](https://evasions.checkpoint.com/)
+[UC - All methods of retrieving unique identifiers(HWIDs) on your PC](https://www.unknowncheats.me/forum/anti-cheat-bypass/333662-methods-retrieving-unique-identifiers-hwids-pc.html)
