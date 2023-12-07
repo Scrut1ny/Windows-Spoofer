@@ -23,6 +23,12 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
       * <img src="https://external-content.duckduckgo.com/ip3/www.hp.com.ico" width="16" height="16"> - HP
       * <img src="https://external-content.duckduckgo.com/ip3/www.lenovo.com.ico" width="16" height="16"> - Lenovo
 
+## Spoofing Options 📑
+ * Permanent
+ * Temporary
+ * Null
+ * "To be filled by O.E.M."
+
 ## Spoofing Functions ⚙️
  * Device name
  * GUIDs
