@@ -54,6 +54,9 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
 
 ## Windows Activation
  * <img src="https://external-content.duckduckgo.com/ip3/massgrave.dev.ico" width="16" height="16"> - [MAS](https://github.com/massgravel/Microsoft-Activation-Scripts) Activation
+```
+irm https://massgrave.dev/get | iex
+```
 
 ## BIOS Keys by Manufacturer
 ```
