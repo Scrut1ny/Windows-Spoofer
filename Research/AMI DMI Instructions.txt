@@ -1,0 +1,130 @@
++---------------------------------------------------------------------------+
+|        AMI Desktop Management Interface Edit Utility v5.27.00.0003        |
+|      Copyright (c) 1985-2020, American Megatrends International LLC.      |
+|         All rights reserved. Subject to AMI licensing agreement.          |
++---------------------------------------------------------------------------+
+| Commands:                                                                 |
+|       /ALL  [FileName]  Output SMBIOS string to screen/file.              |
+|       /DMS  [FileName]  Create configuration file.                        |
+|   /DUMPALL  [FileName]  Output all SMBIOS data to screen/file.            |
+|      /DUMP  # [#] ...   Read Type # data.                                 |
+| Options:                                                                  |
+|       /IVN  ["String"]  Read/Write BIOS vendor name in Type 0.            |
+|        /IV  ["String"]  Read/Write BIOS version in Type 0.                |
+|        /ID  ["String"]  Read/Write BIOS release date in Type 0.           |
+|        /SM  ["String"]  Read/Write System manufacture in Type 1.          |
+|        /SP  ["String"]  Read/Write System product in Type 1.              |
+|        /SV  ["String"]  Read/Write System version in Type 1.              |
+|        /SS  ["String"]  Read/Write System Serial number in Type 1.        |
+|        /SU  [16 Bytes]  Read/Write System UUID in Type 1.                 |
+|        /SU  AUTO Generates system UUID automatically and update Type 1.   |
+|        /SK  ["String"]  Read/Write System SKU number in Type 1.           |
+|        /SF  ["String"]  Read/Write System family in Type 1.               |
+|        /BM  ["String"]  Read/Write Baseboard manufacture in Type 2.       |
+|        /BP  ["String"]  Read/Write Baseboard product in Type 2.           |
+|        /BV  ["String"]  Read/Write Baseboard version in Type 2.           |
+|        /BS  ["String"]  Read/Write Baseboard Serial number in Type 2.     |
+|        /BT  ["String"]  Read/Write Baseboard Asset Tag  in Type 2.        |
+|       /BLC  ["String"]  Read/Write Baseboard Loc. in Chassis  in Type 2.  |
+|       /BMH  <handle #>  ["String"]                                        |
+|             Read/Write Baseboard manufacture in Type 2.                   |
+|       /BPH  <handle #>  ["String"]                                        |
+|             Read/Write Baseboard product in Type 2.                       |
+|       /BVH  <handle #>  ["String"]                                        |
+|             Read/Write Baseboard version in Type 2.                       |
+|       /BSH  <handle #>  ["String"]                                        |
+|             Read/Write Baseboard Serial number in Type 2.                 |
+|       /BTH  <handle #>  ["String"]                                        |
+|             Read/Write Baseboard Asset Tag  in Type 2.                    |
+|      /BLCH  <handle #>  ["String"]                                        |
+|             Read/Write Baseboard Loc. in Chassis  in Type 2.              |
+|        /CM  ["String"]  Read/Write Chassis manufacture in Type 3.         |
+|        /CT  [8 Bits]    Read/Write Chassis type in Type 3.                |
+|        /CV  ["String"]  Read/Write Chassis version in Type 3.             |
+|        /CS  ["String"]  Read/Write Chassis Serial number in Type 3.       |
+|        /CA  ["String"]  Read/Write Chassis Tag number in Type 3.          |
+|        /CO  [32 Bits]   Read/Write Chassis OEM-defined value in Type 3.   |
+|        /CH  [8 Bits]    Read/Write Chassis Height in Type 3.              |
+|       /CPC  [8 Bits]    Read/Write Chassis Power Cords number in Type 3.  |
+|       /CSK  ["String"]  Read/Write Chassis SKU number in Type 3.          |
+|       /CMH  <handle #>  ["String"]                                        |
+|             Read/Write Chassis manufacture in Type 3.                     |
+|       /CTH  <handle #>  [8 bits]                                          |
+|             Read/Write Chassis type in Type 3.                            |
+|       /CVH  <handle #>  ["String"]                                        |
+|             Read/Write Chassis version in Type 3.                         |
+|       /CSH  <handle #>  ["String"]                                        |
+|             Read/Write Chassis Serial number in Type 3.                   |
+|       /CAH  <handle #>  ["String"]                                        |
+|             Read/Write Chassis Tag number in Type 3.                      |
+|       /COH  <handle #>  [32 bits]                                         |
+|             Read/Write Chassis OEM-defined value in Type 3.               |
+|       /CHH  <handle #>  [8 bits]                                          |
+|             Read/Write Chassis Height in Type 3.                          |
+|      /CPCH  <handle #>  [8 bits]                                          |
+|             Read/Write Chassis Power Cords number in Type 3.              |
+|      /CSKH  <handle #>  ["String"]                                        |
+|             Read/Write Chassis SKU number in Type 3.                      |
+|       /PSN  ["String"]  Read/Write Processor serial number in Type 4.     |
+|       /PAT  ["String"]  Read/Write Processor asset tag in Type 4.         |
+|       /PPN  ["String"]  Read/Write Processor part number in Type 4.       |
+|      /PSNH  <handle #>  ["String"]                                        |
+|             Read/Write Processor serial number in Type 4.                 |
+|      /PATH  <handle #>  ["String"]                                        |
+|             Read/Write Processor asset tag in Type 4.                     |
+|      /PPNH  <handle #>  ["String"]                                        |
+|             Read/Write Processor part number in Type 4.                   |
+|        /OS  [<Number> <"String">]                                         |
+|             Read/Write OEM string in Type 11.                             |
+|       /SCO  [<Number> <"String">]                                         |
+|             Read/Write Sys. Configuration Op. in Type 12.                 |
+|       /PBL  <handle #>  ["String"]                                        |
+|             Read/Write Port. Battery Location in Type 22.                 |
+|       /PBM  <handle #>  ["String"]                                        |
+|             Read/Write Port. Battery Manufacturer in Type 22.             |
+|       /PBD  <handle #>  ["String"]                                        |
+|             Read/Write Port. Battery ManuDate in Type 22.                 |
+|       /PBS  <handle #>  ["String"]                                        |
+|             Read/Write Port. Battery Serial Number in Type 22.            |
+|       /PBN  <handle #>  ["String"]                                        |
+|             Read/Write Port. Battery Device Name in Type 22.              |
+|      /PBCH  <handle #>  [8 Bits]                                          |
+|             Read/Write Port. Battery Device Chemistry in Type 22.         |
+|      /PBCA  <handle #>  [16 Bits]                                         |
+|             Read/Write Port. Battery Design Capacity in Type 22.          |
+|       /PBV  <handle #>  [16 Bits]                                         |
+|             Read/Write Port. Battery Design Voltage in Type 22.           |
+|      /PBSV  <handle #>  ["String"]                                        |
+|             Read/Write Port. Battery SBDS Ver. Num. in Type 22.           |
+|       /PBE  <handle #>  [8 Bits]                                          |
+|             Read/Write Port. Battery Maxmum Error in Type 22.             |
+|      /PBSN  <handle #>  [16 Bits]                                         |
+|             Read/Write Port. Battery in SBDS Ser. Num. in Type 22.        |
+|      /PBSD  <handle #>  [16 Bits]                                         |
+|             Read/Write Port. Battery in SBDS Manu. Date. in Type 22.      |
+|      /PBSC  <handle #>  ["String"]                                        |
+|             Read/Write Port. Battery in SBDS Dev. Chem. in Type 22.       |
+|      /PBCM  <handle #>  [8 Bits]                                          |
+|             Read/Write Port. Battery in Design Cap Multi in Type 22.      |
+|       /PBO  <handle #>  [32 Bits]                                         |
+|             Read/Write Por. Bat. in OEM-Specific Type 22.                 |
+|        /PU  <handle #>  [8 Bits]                                          |
+|             Read/Write Power supply unit group in Type 39.                |
+|        /PL  <handle #>  ["String"]                                        |
+|             Read/Write Power supply location in Type 39.                  |
+|        /PD  <handle #>  ["String"]                                        |
+|             Read/Write Power supply device name in Type 39.               |
+|        /PM  <handle #>  ["String"]                                        |
+|             Read/Write Power supply manufacturer in Type 39.              |
+|        /PS  <handle #>  ["String"]                                        |
+|             Read/Write Power supply serial number in Type 39.             |
+|        /PT  <handle #>  ["String"]                                        |
+|             Read/Write Power supply asset tag number in Type 39.          |
+|        /PN  <handle #>  ["String"]                                        |
+|             Read/Write Power supply model part number in Type 39.         |
+|        /PR  <handle #>  ["String"]                                        |
+|             Read/Write Power supply revision level in Type 39.            |
+|        /PP  <handle #>  [16 Bits]                                         |
+|             Read/Write Power supply max power capacity in Type 39.        |
+|        /PC  <handle #> [16 Bits]                                          |
+|             Read/Write Power supply characteristics in Type 39.           |
