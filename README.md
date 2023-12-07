@@ -54,3 +54,20 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
 
 ## Windows Activation
  * <img src="https://external-content.duckduckgo.com/ip3/massgrave.dev.ico" width="16" height="16"> - [MAS](https://github.com/massgravel/Microsoft-Activation-Scripts) Activation
+
+## BIOS Keys by Manufacturer
+ * `shutdown /r /fw /f /t 0`
+|Manufacturer|Key/Sequence|
+|-|-|
+| Acer | F2 |
+| ASRock | F2 or DEL |
+| Asus | DEL or F2 |
+| Dell | F2 or F12 |
+| Gigabyte | DEL or F2 |
+| HP | ESC or F10 |
+| Lenovo | F1 or F2 |
+| MSI | DEL or F2 |
+| Samsung | F2 |
+| Sony | F1, F2, or F3 |
+| Toshiba | F2 or ESC |
+| Intel NUC | F2 |
