@@ -22,33 +22,31 @@ fltmc >nul 2>&1 || (
 :: VolumeID
 :: ====================================================================================================
 
-call :RSG
-set "Instance1=!string!"
-call :RSG
-set "Instance2=!string!"
-
-ping -n 1 9.9.9.9 >nul
-if %errorlevel% 0 (
-	rem Changes all Volume Serial Numbers: XXXX-XXXX.
-	>nul 2>&1 curl -fksL -o "%tmp%\VolumeId.zip" "https://download.sysinternals.com/files/VolumeId.zip" && powershell Expand-Archive -Force "%tmp%\VolumeId.zip" "%tmp%"
-	for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:\" "%tmp%\Volumeid64.exe" %%A: !Instance1!-!Instance2! -nobanner >nul 2>&1
-	del /F /Q "%tmp%\volumeid*" >nul 2>&1
-	del /F /Q "%tmp%\Eula.txt" >nul 2>&1
-) else (
-	echo  # No internet
+>nul 2>&1 (
+	if not exist "%tmp%\Volumeid64.exe" (
+		ping 9.9.9.9 -n 1 > nul
+		if not !errorlevel! equ 0 (
+			echo No internet connection
+			exit /b 1
+		)
+		pushd "%tmp%"
+		curl -A "Mozilla/5.0" -fksLo "%tmp%\VolumeId.zip" "https://download.sysinternals.com/files/VolumeId.zip" && tar -xf "%tmp%\VolumeId.zip"
+		call :RSG
+		for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:\" "%tmp%\Volumeid64.exe" %%A: !string:~0,4!-!string:~-4! -nobanner
+	)
 )
 
 :: ====================================================================================================
 
 
 :: ====================================================================================================
-:: 4 character long "A-F, 0-9" random string generator
+:: 8 character long "A-F, 0-9" random string generator
 :: ====================================================================================================
 
 :RSG
 set "char=ABCDEF0123456789"
 set "char_length=16"
-set "length=4"
+set "length=8"
 set "string="
 
 for /L %%a in (1,1,!length!) do (

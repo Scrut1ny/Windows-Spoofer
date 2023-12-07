@@ -177,7 +177,7 @@ cls && echo( && echo   [] Cleaning all traces - Epic Games: Fortnite && echo(
 	tasklist | find /i "FortniteClient-Win64-Shipping.exe" && taskkill /F /IM FortniteClient-Win64-Shipping.exe
 	tasklist | find /i "FortniteClient-Win64-Shipping_BE.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_BE.exe
 	tasklist | find /i "FortniteClient-Win64-Shipping_EAC.exe" && taskkill /F /IM FortniteClient-Win64-Shipping_EAC.exe
-	tasklist | find /i "taskkill /F /IM FortniteLauncher.exe" && taskkill /F /IM taskkill /F /IM FortniteLauncher.exe
+	tasklist | find /i "FortniteLauncher.exe" && taskkill /F /IM FortniteLauncher.exe
 	del /F /S /Q %HOMEDRIVE%\*.log && del /F /S /Q %tmp%\*
 )
 goto :MENU1
@@ -256,7 +256,7 @@ if "%~1"=="CheckSerials" (
 >nul 2>&1 (
 	rem WSUS change	
 	net stop wuauserv
-	reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientId" /t REG_SZ /d "!lowerRGUID!" /f  
+	reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientId" /t REG_SZ /d "!lowerRGUID!" /f
 	reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientIDValidation" /t REG_BINARY /d "%random:~-5%%random:~-5%%random:~-5%%random:~-5%%random:~-5%" /f 
 	net start wuauserv
 
@@ -571,8 +571,7 @@ echo( && echo   # [35mSpoofing BIOS[0m
 
 >nul 2>&1 (
 	cd /D "%~dp0"
-	
-	curl -fksLo "dmi-edit-win64-ami.zip" "https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&ind=1647077068432" && tar -xf dmi-edit-win64-ami.zip
+	curl -A "Mozilla/5.0" -fksLo "%tmp%\dmi-edit-win64-ami.zip" "https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&ind=1647077068432&filename=dmi-edit-win64-ami.zip" && tar -xf "%tmp%\dmi-edit-win64-ami.zip"
 
 	rem System Information - Serial Number & System UUID
 	for /f "tokens=2 delims==" %%A in ('wmic csproduct get IdentifyingNumber /value ^| find "="') do (
