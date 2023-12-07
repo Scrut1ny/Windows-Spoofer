@@ -51,9 +51,8 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
  * DNS Cashe
  * ARP Cache
  * Prefetch
- * `%SystemDrive%\Windows\Temp\*`
- * `%tmp%\*`
- * All `*.log` files
+ * Temp Files
+ * `*.log` Files
  * USN Journal ID(s)
  * Ubisoft, Valorant, cache
  * Old Windows Backup
