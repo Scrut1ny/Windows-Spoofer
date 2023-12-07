@@ -26,12 +26,12 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
 ## Spoofing Functions ⚙️
  * Device name
  * GUIDs
-  * HwProfileGuid
-  * Cryptography (MachineGuid)
-  * SQMClient (Device ID)
-  * ProductId (Product ID)
-  * System Information (ComputerHardwareId(s))
-  * MachineGuid.txt
+   * HwProfileGuid
+   * Cryptography (MachineGuid)
+   * SQMClient (Device ID)
+   * ProductId (Product ID)
+   * System Information (ComputerHardwareId(s))
+   * MachineGuid.txt
  * SMBIOS
  * ProductId
  * VolumeID(s)
