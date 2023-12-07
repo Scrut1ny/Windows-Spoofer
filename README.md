@@ -25,6 +25,7 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
 
 ## Spoofing Functions ⚙️
  * Device name
+ * ProductId
  * GUIDs
    * HwProfileGuid
    * Cryptography (MachineGuid)
@@ -33,7 +34,6 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
    * System Information (ComputerHardwareId(s))
    * MachineGuid.txt
  * SMBIOS
- * ProductId
  * VolumeID(s)
  * Disk(s) / Drive(s)
    * DiskPeripheral - Identifier(s)
