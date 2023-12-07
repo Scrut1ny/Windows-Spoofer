@@ -88,5 +88,5 @@ shutdown /r /fw /f /t 0
 | Intel NUC | F2 |
 
 ## Guides
-[Evasion Techniques](https://evasions.checkpoint.com/)
-[UC - All methods of retrieving unique identifiers(HWIDs) on your PC](https://www.unknowncheats.me/forum/anti-cheat-bypass/333662-methods-retrieving-unique-identifiers-hwids-pc.html)
+ * [Evasion Techniques](https://evasions.checkpoint.com/)
+ * [UC - All methods of retrieving unique identifiers(HWIDs) on your PC](https://www.unknowncheats.me/forum/anti-cheat-bypass/333662-methods-retrieving-unique-identifiers-hwids-pc.html)
