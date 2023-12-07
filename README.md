@@ -56,7 +56,9 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
  * <img src="https://external-content.duckduckgo.com/ip3/massgrave.dev.ico" width="16" height="16"> - [MAS](https://github.com/massgravel/Microsoft-Activation-Scripts) Activation
 
 ## BIOS Keys by Manufacturer
-``shutdown /r /fw /f /t 0``
+`
+shutdown /r /fw /f /t 0
+`
 |Manufacturer|Key/Sequence|
 |-|-|
 | Acer | F2 |
