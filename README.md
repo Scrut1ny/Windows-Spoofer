@@ -26,6 +26,7 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
 ## Spoofing Options 📑
  * Permanent
    * SerialNumber
+     * `Randomly Generated`
      * `To be filled by O.E.M.`
      * `Unknown`
      * `Null`
