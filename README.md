@@ -30,7 +30,7 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
      * `To be filled by O.E.M.`
      * `Unknown`
      * `Null`
-   * Temporary
+ * Temporary
 
 ## Spoofing Functions ⚙️
  * Device name
