@@ -25,9 +25,11 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
 
 ## Spoofing Options 📑
  * Permanent
+  * SerialNumber
+   * `To be filled by O.E.M.`
+   * `Unknown`
+   * `Null`
  * Temporary
- * Null
- * "To be filled by O.E.M."
 
 ## Spoofing Functions ⚙️
  * Device name
