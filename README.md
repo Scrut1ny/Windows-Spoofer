@@ -34,6 +34,7 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
 
 ## Spoofing Functions ⚙️
  * Device name
+ * Custom DNS
  * GUIDs
    * HwProfileGuid
    * Cryptography (MachineGuid)
@@ -41,19 +42,17 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
    * ProductId (Product ID)
    * System Information (ComputerHardwareId(s))
    * MachineGuid.txt
- * SMBIOS
+ * NIC(s)
  * VolumeID(s)
  * Disk(s) / Drive(s)
    * DiskPeripheral - Identifier(s)
    * SCSI Ports - SerialNumber(s)
- * DMI (AMI BIOS)
+ * SMBIOS DMI
    * System Information - Serial Number
    * System Information - UUID
-   * Base Board/Module Information - Baseboard Serial Number
+   * Base Board/Module Information - Serial Number
    * System Enclosure or Chassis - Serial Number
    * Processor Information - Serial Number
- * NIC(s)
- * Custom DNS
 
 ## Flushing/Cleaning/Deletion Functions 🗑️
  * DNS Cashe
