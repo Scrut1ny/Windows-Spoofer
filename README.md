@@ -90,7 +90,7 @@ shutdown /r /fw /f /t 0
 | Toshiba | F2 or ESC |
 | Intel NUC | F2 |
 
-## UEFI & BIOS Differences
+## UEFI & BIOS Key Differences
  * UEFI (Unified Extensible Firmware Interface):
    * Modern firmware standard.
    * Supports both MBR and GPT (GUID Partition Table).
