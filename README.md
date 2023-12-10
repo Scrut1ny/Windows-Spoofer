@@ -71,7 +71,7 @@ This is a Windows spoofer based on Free and Open Source Software (FOSS), meticul
 irm https://massgrave.dev/get | iex
 ```
 
-## BIOS Keys by Manufacturer
+## UEFI/BIOS Keys by Manufacturer
 ```
 shutdown /r /fw /f /t 0
 ```
@@ -90,7 +90,7 @@ shutdown /r /fw /f /t 0
 | Toshiba | F2 or ESC |
 | Intel NUC | F2 |
 
-## UEFI and BIOS
+## UEFI & BIOS Differences
  * UEFI (Unified Extensible Firmware Interface):
    * Modern firmware standard.
    * Supports both MBR and GPT (GUID Partition Table).
