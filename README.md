@@ -90,6 +90,21 @@ shutdown /r /fw /f /t 0
 | Toshiba | F2 or ESC |
 | Intel NUC | F2 |
 
+## UEFI and BIOS
+ * BIOS (Basic Input/Output System):
+  * Legacy technology.
+  * Typically uses MBR (Master Boot Record) for booting.
+  * Limited to 16-bit processor mode.
+  * Has a text-based user interface.
+  * Generally slower boot times.
+
+ * UEFI (Unified Extensible Firmware Interface):
+  * Modern firmware standard.
+  * Supports both MBR and GPT (GUID Partition Table).
+  * Operates in 32-bit or 64-bit processor modes.
+  * Can have a graphical user interface.
+  * Generally faster boot times.
+
 ## Guides
  * [Evasion Techniques](https://evasions.checkpoint.com/)
  * [UC - All methods of retrieving unique identifiers(HWIDs) on your PC](https://www.unknowncheats.me/forum/anti-cheat-bypass/333662-methods-retrieving-unique-identifiers-hwids-pc.html)
