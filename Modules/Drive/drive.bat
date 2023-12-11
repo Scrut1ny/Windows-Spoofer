@@ -22,7 +22,7 @@ fltmc >nul 2>&1 || (
 :: DiskPeripheral - Identifier(s)
 :: ====================================================================================================
 
->nul 2>&1 (
+(
 	for /f "tokens=10 delims=\" %%A in ('reg query "HKLM\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral"') do (
 		for /l %%B in (0,1,%%A) do (
 			if "%%A"=="%%B" (
@@ -31,7 +31,7 @@ fltmc >nul 2>&1 || (
 			)
 		)
 	)
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -41,7 +41,7 @@ fltmc >nul 2>&1 || (
 :: ====================================================================================================
 :: wmic path win32_DiskDrive get SerialNumber /value
 
->nul 2>&1 (
+(
 	for /f "tokens=3" %%A in ('reg query "HKLM\HARDWARE\DEVICEMAP\Scsi" /s /f "Scsi Port" /k') do (
 		for /f "delims=:" %%B in ("%%A") do (
 			for /l %%C in (0,1,%%B) do (
@@ -53,7 +53,7 @@ fltmc >nul 2>&1 || (
 		)
 	)
 	powershell Reset-PhysicalDisk *
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -63,14 +63,14 @@ fltmc >nul 2>&1 || (
 :: ====================================================================================================
 
 :RSG
-set "char=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-set "char_length=62"
-set "length=20"
-set "string="
+set char=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+set char_length=62
+set length=20
+set string=
 
 for /L %%a in (1,1,!length!) do (
     set /A "index=!random! %% !char_length!"
-    for %%b in (!index!) do set "string=!string!!char:~%%b,1!"
+    for %%b in (!index!) do set string=!string!!char:~%%b,1!
 )
 
 exit /b 0

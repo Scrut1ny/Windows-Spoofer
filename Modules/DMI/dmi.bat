@@ -25,7 +25,7 @@ fltmc >nul 2>&1 || (
 :: Some motherboards aren't compatible spoofing with this software.
 :: ====================================================================================================
 
->nul 2>&1 (
+(
 	bcdedit ^| find "nointegritychecks" >nul
 	if %errorlevel% neq 0 (
 		echo   # "[32mnointegritychecks[0m" is already turned on. No action needed.
@@ -109,7 +109,7 @@ fltmc >nul 2>&1 || (
 	
 	rem Delete remaining files
 	del /F /Q "%tmp%\*"
-)
+) >nul 2>&1
 
 rem Enable Windows Signature Enforcement
 bcdedit /set nointegritychecks off
@@ -122,14 +122,14 @@ bcdedit /set nointegritychecks off
 :: ====================================================================================================
 
 :RSG
-set "char=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-set "char_length=36"
-set "length=20"
-set "string="
+set char=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+set char_length=36
+set length=20
+set string=
 
 for /L %%a in (1,1,!length!) do (
     set /A "index=!random! %% !char_length!"
-    for %%b in (!index!) do set "string=!string!!char:~%%b,1!"
+    for %%b in (!index!) do set string=!string!!char:~%%b,1!
 )
 
 exit /b 0

@@ -22,7 +22,7 @@ fltmc >nul 2>&1 || (
 :: VolumeID
 :: ====================================================================================================
 
->nul 2>&1 (
+(
 	if not exist "%tmp%\Volumeid64.exe" (
 		ping 9.9.9.9 -n 1 > nul
 		if not !errorlevel! equ 0 (
@@ -34,7 +34,7 @@ fltmc >nul 2>&1 || (
 		call :RSG
 		for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:\" "%tmp%\Volumeid64.exe" %%A: !string:~0,4!-!string:~-4! -nobanner
 	)
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -44,14 +44,14 @@ fltmc >nul 2>&1 || (
 :: ====================================================================================================
 
 :RSG
-set "char=ABCDEF0123456789"
-set "char_length=16"
-set "length=8"
-set "string="
+set char=ABCDEF0123456789
+set char_length=16
+set length=8
+set string=
 
 for /L %%a in (1,1,!length!) do (
     set /A "index=!random! %% !char_length!"
-    for %%b in (!index!) do set "string=!string!!char:~%%b,1!"
+    for %%b in (!index!) do set string=!string!!char:~%%b,1!
 )
 exit /b 0
 

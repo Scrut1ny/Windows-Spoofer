@@ -23,7 +23,7 @@ fltmc >nul 2>&1 || (
 
 :: Setting DNS servers to: "Quad9" (Bypass ISP censorship and tracking.)
 
->nul 2>&1 (
+(
 	for /f "skip=2 tokens=2 delims=," %%A in ('wmic nic where NetEnabled^=True get NetConnectionID /format:csv') do (
 		for /f "delims=" %%B in ("%%A") do (
 			netsh interface ipv4 set dnsservers "%%B" static "9.9.9.9" primary
@@ -33,6 +33,6 @@ fltmc >nul 2>&1 || (
 		)
 	)
 	ipconfig /flushdns
-)
+) >nul 2>&1
 
 :: ====================================================================================================

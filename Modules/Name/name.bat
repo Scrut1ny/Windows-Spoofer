@@ -22,10 +22,10 @@ fltmc >nul 2>&1 || (
 :: Hostname
 :: ====================================================================================================
 
->nul 2>&1 (
+(
 	call :RSG
 	wmic computersystem where name="%computername%" call rename name="DESKTOP-!string!"
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -35,14 +35,14 @@ fltmc >nul 2>&1 || (
 :: ====================================================================================================
 
 :RSG
-set "char=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-set "char_length=36"
-set "length=7"
-set "string="
+set char=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+set char_length=36
+set length=7
+set string=
 
 for /L %%a in (1,1,!length!) do (
     set /A "index=!random! %% !char_length!"
-    for %%b in (!index!) do set "string=!string!!char:~%%b,1!"
+    for %%b in (!index!) do set string=!string!!char:~%%b,1!
 )
 
 exit /b 0

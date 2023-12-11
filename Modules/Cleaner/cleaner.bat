@@ -21,7 +21,7 @@ fltmc >nul 2>&1 || (
 :: Terminate all Conflicting Processes
 :: ====================================================================================================
 
->nul 2>&1 (
+(
 	:Ubisoft_Tasks
 	rem Ubisoft
 	tasklist | find /i "UbisoftGameLauncher.exe" && taskkill /T /F /IM "UbisoftGameLauncher.exe"
@@ -55,7 +55,7 @@ fltmc >nul 2>&1 || (
 	tasklist | find /i "" && taskkill /T /F /IM ""
 	tasklist | find /i "" && taskkill /T /F /IM ""
 	exit /b
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -64,7 +64,7 @@ fltmc >nul 2>&1 || (
 :: Clean / Remove cashe, logs, and tracers
 :: ====================================================================================================
 
->nul 2>&1 (
+(
 	:Ubisoft_Files
 	rem Ubisoft
 	del /f/s/q "%ProgramFiles(x86)%\Ubisoft\Ubisoft Game Launcher\cache\*"
@@ -109,7 +109,7 @@ fltmc >nul 2>&1 || (
 	rmdir /S /Q "%programdata%\Battle.net"
 	rmdir /S /Q "%programdata%\Blizzard Entertainment"
 	exit /b
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -119,9 +119,9 @@ fltmc >nul 2>&1 || (
 :: ====================================================================================================
 :: Anti-Cheats use "USN Journal IDs" as a HWID tagging mechanism.
 
->nul 2>&1 (
+(
 	for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do if exist "%%A:" fsutil usn deletejournal /n %%A:
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -130,29 +130,31 @@ fltmc >nul 2>&1 || (
 :: Windows Cleaner
 :: ====================================================================================================
 
-rem Delete Old Windows Backup
-if exist "%HOMEDRIVE%\Windows.old" (
-	takeown /f "%HOMEDRIVE%\Windows.old" /a /r /d y
-	icacls "%HOMEDRIVE%\Windows.old" /grant administrators:F /t
-	rd /S /Q "%HOMEDRIVE%\Windows.old"
-)
+(
+	rem Delete Old Windows Backup
+	if exist "%HOMEDRIVE%\Windows.old" (
+		takeown /f "%HOMEDRIVE%\Windows.old" /a /r /d y
+		icacls "%HOMEDRIVE%\Windows.old" /grant administrators:F /t
+		rd /S /Q "%HOMEDRIVE%\Windows.old"
+	)
 
-rem Delete all Temp, Prefetch, and Log Files
-del /f/s/q "%WINDIR%\Prefetch\*"
-del /f/s/q "%SystemDrive%\*.log"
-del /f/s/q "%SystemDrive%\Windows\Temp\*"
-del /f/s/q "%tmp%\*"
+	rem Delete all Temp, Prefetch, and Log Files
+	del /f/s/q "%WINDIR%\Prefetch\*"
+	del /f/s/q "%SystemDrive%\*.log"
+	del /f/s/q "%SystemDrive%\Windows\Temp\*"
+	del /f/s/q "%tmp%\*"
 
-rem Clear all Event Logs
-for /f "tokens=*" %%a in ('wevtutil.exe el') do (wevtutil.exe cl "%%a")
+	rem Clear all Event Logs
+	for /f "tokens=*" %%a in ('wevtutil.exe el') do (wevtutil.exe cl "%%a")
 
-rem Clear ARP Cache
-arp -d *
+	rem Clear ARP Cache
+	arp -d *
 
-rem Flush DNS
-ipconfig/flushdns
+	rem Flush DNS
+	ipconfig/flushdns
 
-rem Emptying Recycle Bins & Resetting explorer.exe
-powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+	rem Emptying Recycle Bins & Resetting explorer.exe
+	powershell Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+) >nul 2>&1
 
 :: ====================================================================================================

@@ -22,10 +22,10 @@ fltmc >nul 2>&1 || (
 :: HwProfileGuid
 :: ====================================================================================================
 
->nul 2>&1 (
+(
 	call :lowerRGUID
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardware Profiles\0001" /v "HwProfileGuid" /t REG_SZ /d "{!lowerRGUID!}" /f
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -34,10 +34,10 @@ fltmc >nul 2>&1 || (
 :: Cryptography
 :: ====================================================================================================
 
->nul 2>&1 (
+(
 	call :lowerRGUID
 	reg add "HKLM\SOFTWARE\Microsoft\Cryptography" /v "MachineGuid" /t REG_SZ /d "!lowerRGUID!" /f
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -46,10 +46,10 @@ fltmc >nul 2>&1 || (
 :: SQMClient (Device ID)
 :: ====================================================================================================
 
->nul 2>&1 (
+(
 	call :upperRGUID
 	reg add "HKLM\SOFTWARE\Microsoft\SQMClient" /v "MachineId" /t REG_SZ /d "{!upperRGUID!}" /f
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -59,14 +59,14 @@ fltmc >nul 2>&1 || (
 :: ====================================================================================================
 :: wmic os get SerialNumber
 
-set "numInstances=4"
-set "ProductID="
+set numInstances=4
+set ProductID=
 
 for /L %%i in (1,1,!numInstances!) do (
     call :RSG
-    set "Instance[%%i]=!string!"
-    if %%i neq 1 set "ProductID=!ProductID!-"
-    set "ProductID=!ProductID!!Instance[%%i]!"
+    set Instance[%%i]=!string!
+    if %%i neq 1 set ProductID=!ProductID!-
+    set ProductID=!ProductID!!Instance[%%i]!
 )
 
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t REG_SZ /d "!ProductID!" /f >nul
@@ -81,14 +81,14 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t RE
 :: CMD > type "%WINDIR%\System32\restore\MachineGuid.txt"
 :: ====================================================================================================
 
->nul 2>&1 (
+(
 	if exist "%WINDIR%\System32\restore\MachineGuid.txt" (
 		takeown /F "%WINDIR%\System32\restore\MachineGuid.txt"
 		del /f/q "%WINDIR%\System32\restore\MachineGuid.txt"
 		wmic shadowcopy delete /nointeractive
 		vssadmin delete shadows /all /quiet
 	)
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -97,12 +97,12 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t RE
 :: System Information
 :: ====================================================================================================
 
->nul 2>&1 (
+(
 	call :lowerRGUID
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareId" /t REG_SZ /d "{!lowerRGUID!}" /f
 	call :lowerRGUID
 	reg add "HKLM\SYSTEM\CurrentControlSet\Control\SystemInformation" /v "ComputerHardwareIds" /t REG_MULTI_SZ /d "{!lowerRGUID!}\0{!lowerRGUID!}\0{!lowerRGUID!}\0{!lowerRGUID!}\0{!lowerRGUID!}\0{!lowerRGUID!}\0{!lowerRGUID!}\0{!lowerRGUID!}\0{!lowerRGUID!}\0{!lowerRGUID!}\0" /f
-)
+) >nul 2>&1
 
 :: ====================================================================================================
 
@@ -110,7 +110,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "ProductId" /t RE
 :: Generating lowercase GUID
 :lowerRGUID
 for /f "usebackq" %%A in (`powershell [guid]::NewGuid(^).ToString(^)`) do (
-	set "lowerRGUID=%%A"
+	set lowerRGUID=%%A
 )
 exit /b
 
@@ -118,20 +118,20 @@ exit /b
 :: Generating uppercase GUID
 :upperRGUID
 for /f "usebackq" %%A in (`powershell [guid]::NewGuid(^).ToString(^).ToUpper(^)`) do (
-	set "upperRGUID=%%A"
+	set upperRGUID=%%A
 )
 exit /b
 
 
 :: 5 character long "A-Z, 0-9" random string generator
 :RSG
-set "char=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-set "char_length=36"
-set "length=5"
-set "string="
+set char=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+set char_length=36
+set length=5
+set string=
 
 for /L %%a in (1,1,!length!) do (
     set /A "index=!random! %% !char_length!"
-    for %%b in (!index!) do set "string=!string!!char:~%%b,1!"
+    for %%b in (!index!) do set string=!string!!char:~%%b,1!
 )
 exit /b 0
