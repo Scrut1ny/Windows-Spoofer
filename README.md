@@ -55,7 +55,7 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
    * Processor Information - Serial Number
 
 ## Flushing/Cleaning/Deletion Functions 🗑️
- * DNS Cashe
+ * DNS Cache
  * ARP Cache
  * Prefetch
  * Temp Files
