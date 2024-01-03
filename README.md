@@ -76,8 +76,8 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
 |-|-|
 | DNS Cache | ✔️ |
 | ARP Cache | ✔️ |
-| Prefetch | ✔️ |
-| Temp Files | ✔️ |
+| Prefetch Files | ✔️ |
+| `%TMP%` Files | ✔️ |
 | `*.log` Files | ✔️ |
 | USN Journal ID(s) | ✔️ |
 | Ubisoft, Valorant, cache | ✔️ |
