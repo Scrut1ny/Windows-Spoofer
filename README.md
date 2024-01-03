@@ -33,7 +33,7 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
  * Temporary
 ❌✔️
 ## Spoofing Functions ⚙️
-| Function | Supported |
+| Function | Support |
 |-|-|
 | Local Windows User Account | ✔️ |
 | Local Computer Name (Device Name) | ✔️ |
