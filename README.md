@@ -40,6 +40,7 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
 | Network Computer Name (NetBIOS Name) | ✔️ |
 | Custom DNS | ✔️ |
 | GUID  | ✔️ |
+|-|-|
 |  |  |
 |  |  |
 |  |  |
