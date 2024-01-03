@@ -33,7 +33,7 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
  * Temporary
 
 ## Spoofing Functions ⚙️
-| Function | Support |
+| Spoof Function | Support |
 |-|-|
 | Local Windows User Account | ✔️ |
 | Local Computer Name (Device Name) | ✔️ |
@@ -72,7 +72,7 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
    * Processor Information - Serial Number
 
 ## Flushing/Cleaning/Deletion Functions 🗑️
-| Function | Support |
+| Cleaning Function | Support |
 |-|-|
 | DNS Cache | ✔️ |
 | ARP Cache | ✔️ |
