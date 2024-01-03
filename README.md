@@ -72,14 +72,16 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
    * Processor Information - Serial Number
 
 ## Flushing/Cleaning/Deletion Functions 🗑️
- * DNS Cache
- * ARP Cache
- * Prefetch
- * Temp Files
- * `*.log` Files
- * USN Journal ID(s)
- * Ubisoft, Valorant, cache
- * Old Windows Backup
+| Function | Support |
+|-|-|
+| DNS Cache | ✔️ |
+| ARP Cache | ✔️ |
+| Prefetch | ✔️ |
+| Temp Files | ✔️ |
+| `*.log` Files | ✔️ |
+| USN Journal ID(s) | ✔️ |
+| Ubisoft, Valorant, cache | ✔️ |
+| Old Windows Backup | ✔️ |
 
 ## Windows Activation
 <img src="https://external-content.duckduckgo.com/ip3/massgrave.dev.ico" width="16" height="16"> - [MAS](https://github.com/massgravel/Microsoft-Activation-Scripts) Activation
