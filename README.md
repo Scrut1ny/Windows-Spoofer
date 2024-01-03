@@ -86,7 +86,7 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
 ## Windows Activation
 | Tool | Website Link |
 |-|-|
-| Microsoft-Activation-Scripts | [Link](https://github.com/massgravel/Microsoft-Activation-Scripts) |
+| Microsoft Activation Scripts (MAS) | [Link](https://github.com/massgravel/Microsoft-Activation-Scripts) |
 | Windows ISO Downloader | [Link](https://github.com/massgravel/Microsoft-Activation-Scripts) |
 ```
 irm https://massgrave.dev/get | iex
