@@ -31,7 +31,7 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
      * `Unknown`
      * `Null`
  * Temporary
-❌✔️
+
 ## Spoofing Functions ⚙️
 | Function | Support |
 |-|-|
@@ -39,27 +39,17 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
 | Local Computer Name (Device Name) | ✔️ |
 | Network Computer Name (NetBIOS Name) | ✔️ |
 | Custom DNS | ✔️ |
-| GUID  | ✔️ |
-|-|-|
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+| GUID(s) | ✔️ |
+| Registry | ✔️ |
+| NIC(s) | ✔️ |
+| VolumeID(s) | ✔️ |
+| SMBIOS DMI | ✔️ |
+| Disk (HDD/SSD/NVMe) Serials | ❌ |
+| RAM Serials | ❌ |
+| GPU Serials | ❌ |
+| Monitor Serials | ❌ |
+| PnP Device Serials | ❌ |
+| ARP | ❌ |
 
  * GUIDs
    * HwProfileGuid
