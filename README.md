@@ -94,10 +94,10 @@ irm https://massgrave.dev/get | iex
 
 ## Spoofing Software
 * [VolumeID](https://learn.microsoft.com/en-us/sysinternals/downloads/volumeid)
-  * [Download Link ⬇️](https://download.sysinternals.com/files/VolumeId.zip)
+  * [⬇️ Download Link](https://download.sysinternals.com/files/VolumeId.zip)
 * [DMI Edit](https://download.schenker-tech.de/package/dmi-edit-efi-ami/)
-  * [DMI Edit](https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&refresh=6596c76501be81704380261&ind=1647077068432&filename=dmi-edit-win64-ami.zip)
-  * [DMI EFI Edit](https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&refresh=6596c76501be81704380261&ind=1637063374897&filename=dmi-edit-efi-ami.zip)
+  * [⬇️ DMI Edit](https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&refresh=6596c76501be81704380261&ind=1647077068432&filename=dmi-edit-win64-ami.zip)
+  * [⬇️ DMI EFI Edit](https://download.schenker-tech.de/package/dmi-edit-efi-ami/?wpdmdl=3997&refresh=6596c76501be81704380261&ind=1637063374897&filename=dmi-edit-efi-ami.zip)
 
 ## UEFI/BIOS Keys by Manufacturer
 ```
