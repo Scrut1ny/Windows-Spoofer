@@ -134,6 +134,8 @@ shutdown /r /fw /f /t 0
    * Generally slower boot times.
 
 ## Guides
- * [Evasion Techniques](https://evasions.checkpoint.com/)
- * [UC - All methods of retrieving unique identifiers(HWIDs) on your PC](https://www.unknowncheats.me/forum/anti-cheat-bypass/333662-methods-retrieving-unique-identifiers-hwids-pc.html)
- * [HWID Ban: Change UUID and Serial of AMI BIOS Motherboard](https://www.se7ensins.com/forums/threads/hwid-ban-change-uuid-and-serial-of-ami-bios-motherboard.1802379/)
+* [Evasion Techniques](https://evasions.checkpoint.com/)
+* [UC - All methods of retrieving unique identifiers(HWIDs) on your PC](https://www.unknowncheats.me/forum/anti-cheat-bypass/333662-methods-retrieving-unique-identifiers-hwids-pc.html)
+* [HWID Ban: Change UUID and Serial of AMI BIOS Motherboard](https://www.se7ensins.com/forums/threads/hwid-ban-change-uuid-and-serial-of-ami-bios-motherboard.1802379/)
+## Video Guides
+* [hdd serial number bypass (cheat engine)](https://www.youtube.com/watch?v=6BIpRNnUm5w)
