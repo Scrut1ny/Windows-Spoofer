@@ -47,6 +47,7 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
 | Disk (HDD/SSD/NVMe) Serials | ❌ |
 | RAM Serials | ❌ |
 | GPU Serials | ❌ |
+| NVIDIA UUID | ✔️ |
 | Monitor Serials | ❌ |
 | PnP Device Serials | ❌ |
 | ARP | ❌ |
