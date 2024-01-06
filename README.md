@@ -41,7 +41,7 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
 | Custom DNS | ✔️ |
 | GUID(s) | ✔️ |
 | Registry | ✔️ |
-| NIC(s) | ✔️ |
+| MAC Address(s) | ✔️ |
 | VolumeID(s) | ✔️ |
 | SMBIOS DMI | ✔️ |
 | Disk (HDD/SSD/NVMe) Serials | ❌ |
