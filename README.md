@@ -141,6 +141,7 @@ shutdown /r /fw /f /t 0
 * [mutante](https://github.com/SamuelTulach/mutante)
 * [hwid](https://github.com/btbd/hwid)
 * [rainbow](https://github.com/SamuelTulach/rainbow)
+* [Nvidia GPU UUID Randomizer](https://gist.github.com/Xyrem/4b6ea950e26565581ccd851be09ace00)
 ## Video Guides
 * [hdd serial number bypass (cheat engine)](https://www.youtube.com/watch?v=6BIpRNnUm5w)
   * Make sure to unload `dbk64.sys` driver with `Kernelmoduleunloader.exe` because anti-cheats detect the `dbk64.sys` driver.
