@@ -137,6 +137,10 @@ shutdown /r /fw /f /t 0
 * [Evasion Techniques](https://evasions.checkpoint.com/)
 * [UC - All methods of retrieving unique identifiers(HWIDs) on your PC](https://www.unknowncheats.me/forum/anti-cheat-bypass/333662-methods-retrieving-unique-identifiers-hwids-pc.html)
 * [HWID Ban: Change UUID and Serial of AMI BIOS Motherboard](https://www.se7ensins.com/forums/threads/hwid-ban-change-uuid-and-serial-of-ami-bios-motherboard.1802379/)
+## HWID Spoofer Projects
+* [mutante](https://github.com/SamuelTulach/mutante)
+* [hwid](https://github.com/btbd/hwid)
+* [rainbow](https://github.com/SamuelTulach/rainbow)
 ## Video Guides
 * [hdd serial number bypass (cheat engine)](https://www.youtube.com/watch?v=6BIpRNnUm5w)
   * Make sure to unload `dbk64.sys` driver with `Kernelmoduleunloader.exe` because anti-cheats detect the `dbk64.sys` driver.
