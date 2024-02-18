@@ -124,18 +124,21 @@ shutdown /r /fw /f /t 0
 | Intel NUC | F2 |
 
 ## UEFI/BIOS Key Differences
- * UEFI (Unified Extensible Firmware Interface):
-   * Modern firmware standard.
-   * Supports both MBR and GPT (GUID Partition Table).
-   * Operates in 32-bit or 64-bit processor modes.
-   * Can have a graphical user interface.
-   * Generally faster boot times.
- * BIOS (Basic Input/Output System):
-   * Legacy technology.
-   * Typically uses MBR (Master Boot Record) for booting.
-   * Limited to 16-bit processor mode.
-   * Has a text-based user interface.
-   * Generally slower boot times.
+* If you use UEFI firmware, use GPT for the partitioning scheme.
+* If you use BIOS firmware, use MBR for the partitioning scheme.
+
+* UEFI (Unified Extensible Firmware Interface):
+  * Modern firmware standard.
+  * Supports both MBR and GPT (GUID Partition Table).
+  * Operates in 32-bit or 64-bit processor modes.
+  * Can have a graphical user interface.
+  * Generally faster boot times.
+* BIOS (Basic Input/Output System):
+  * Legacy technology.
+  * Typically uses MBR (Master Boot Record) for booting.
+  * Limited to 16-bit processor mode.
+  * Has a text-based user interface.
+  * Generally slower boot times.
 
 ## Guides
 * [Evasion Techniques](https://evasions.checkpoint.com/)
