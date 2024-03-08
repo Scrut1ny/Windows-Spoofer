@@ -2,7 +2,7 @@
 
 This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed and thoroughly documented. I've dedicated a significant amount of time to refine it, ensuring smooth functionality across all modules. My motivation came from noticing issues with existing spoofers, such as poor programming, excessive bloat, and unnecessary system actions. Frustrated with the lack of reliable options, I conducted extensive research and programming to develop a truly effective, free, and open-source solution. Inspired by [vektort13](https://github.com/vektort13) and his projects [antiOS_batch](https://github.com/vektort13/antiOS_batch) and [AntiOS](https://github.com/vektort13/AntiOS), I aimed to enhance and expand upon his work, making it 10 times better with additional functionality. Join the new project, Antidetect, and remember to stay elusive!
 
-## Support:
+## Support 🔧
   * Supported ✔️
     * Operating System(s)
       * <img src="https://external-content.duckduckgo.com/ip3/www.microsoft.com.ico" width="16" height="16"> - Windows 11
@@ -24,66 +24,36 @@ This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed 
       * <img src="https://external-content.duckduckgo.com/ip3/www.hp.com.ico" width="16" height="16"> - HP
       * <img src="https://external-content.duckduckgo.com/ip3/www.lenovo.com.ico" width="16" height="16"> - Lenovo
 
-## Spoofing Options 📑
- * Permanent
-   * SerialNumber
-     * `Randomly Generated`
-     * `To be filled by O.E.M.`
-     * `Unknown`
-     * `Null`
- * Temporary
-
 ## Spoofing Functions ⚙️
 | Spoof Function | Support |
 |-|-|
-| Local Windows User Account | ✔️ |
-| Local Computer Name (Device Name) | ✔️ |
-| Network Computer Name (NetBIOS Name) | ✔️ |
-| Custom DNS | ✔️ |
-| GUID(s) | ✔️ |
-| Registry | ✔️ |
-| MAC Address(s) | ✔️ |
-| VolumeID(s) | ✔️ |
-| SMBIOS DMI | ✔️ |
+| Local Windows User Account | ✅ |
+| Local Computer Name (Device Name) | ✅ |
+| Network Computer Name (NetBIOS Name) | ✅ |
+| Custom DNS | ✅ |
+| Registry | ✅ |
+| MAC Address | ✅ |
+| VolumeID | ✅ |
+| SMBIOS DMI | ✅ |
 | Disk (HDD/SSD/NVMe) Serials | ❌ |
 | RAM Serials | ❌ |
 | GPU Serials | ❌ |
-| NVIDIA UUID | ✔️ |
+| NVIDIA UUID | ✅ |
 | Monitor Serials | ❌ |
 | PnP Device Serials | ❌ |
 | ARP | ❌ |
 
- * GUIDs
-   * HwProfileGuid
-   * Cryptography (MachineGuid)
-   * SQMClient (Device ID)
-   * ProductId (Product ID)
-   * System Information (ComputerHardwareId(s))
-   * MachineGuid.txt
- * NIC(s)
- * VolumeID(s)
- * Disk(s) / Drive(s)
-   * DiskPeripheral - Identifier(s)
-   * SCSI Ports - SerialNumber(s)
- * Disk (HDD/SSD/NVMe) Serials
- * SMBIOS DMI
-   * System Information - Serial Number
-   * System Information - UUID
-   * Base Board/Module Information - Serial Number
-   * System Enclosure or Chassis - Serial Number
-   * Processor Information - Serial Number
-
 ## Flushing/Cleaning/Deletion Functions 🗑️
 | Cleaning Function | Support |
 |-|-|
-| DNS Cache | ✔️ |
-| ARP Cache | ✔️ |
-| Prefetch Files | ✔️ |
-| `%TMP%\*` Files | ✔️ |
-| `*.log` Files | ✔️ |
-| USN Journal ID(s) | ✔️ |
-| Ubisoft, Valorant, cache | ✔️ |
-| Old Windows Backup | ✔️ |
+| DNS Cache | ✅ |
+| ARP Cache | ✅ |
+| Prefetch Files | ✅ |
+| `%TMP%\*` Files | ✅ |
+| `*.log` Files | ✅ |
+| USN Journal ID(s) | ✅ |
+| Ubisoft, Valorant, cache | ✅ |
+| Old Windows Backup | ✅ |
 
 ## Windows Activation
 | Tool | Website Link |
