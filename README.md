@@ -2,6 +2,9 @@
 
 This is a Free and Open Source Windows 10/11 spoofer. It's carefully programmed and thoroughly documented. I've dedicated a significant amount of time to refine it, ensuring smooth functionality across all modules. My motivation came from noticing issues with existing spoofers, such as poor programming, excessive bloat, and unnecessary system actions. Frustrated with the lack of reliable options, I conducted extensive research and programming to develop a truly effective, free, and open-source solution. Inspired by [vektort13](https://github.com/vektort13) and his projects [antiOS_batch](https://github.com/vektort13/antiOS_batch) and [AntiOS](https://github.com/vektort13/AntiOS), I aimed to enhance and expand upon his work, making it 10 times better with additional functionality. Join the new project, Antidetect, and remember to stay elusive!
 
+> [!CAUTION]
+> By using these scripts, you acknowledge and agree that you are doing so at your own risk. The provider of these scripts makes no warranties, either express or implied, regarding their safety, reliability, or suitability for any purpose. You assume full responsibility for any consequences, damages, or loss that may arise from their use. The provider shall not be liable for any direct, indirect, incidental, consequential, or punitive damages resulting from the use of these scripts.
+
 ## Support 🔧
   * Supported ✅
     * Operating System(s)
