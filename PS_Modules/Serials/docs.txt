@@ -1,0 +1,7 @@
+https://www.monitortests.com/forum/Thread-Custom-Resolution-Utility-CRU
+
+https://en.wikipedia.org/wiki/Extended_Display_Identification_Data#Structure,_version_1.4
+
+Bytes 12-15 = Serial #
+
+HKLM\SYSTEM\CurrentControlSet\Enum\DISPLAY
