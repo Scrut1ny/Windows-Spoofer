@@ -46,6 +46,23 @@ foreach ($driveLetter in ('A'..'Z')) {
     }
 }
 
+# Monitor Name & Serial
+function Get-MonitorSerial {
+    $monitors = Get-CimInstance -Namespace root/wmi -ClassName WmiMonitorID -ErrorAction SilentlyContinue |
+                Where-Object { $_.SerialNumberID -ne $null } |
+                ForEach-Object {
+                    $name = [System.Text.Encoding]::ASCII.GetString($_.UserFriendlyName)
+                    $serial = [System.Text.Encoding]::ASCII.GetString($_.SerialNumberID)
+                    if ($name) {
+                        Write-Host "${name}: $serial"
+                    } else {
+                        Write-Host "Monitor: $serial"
+                    }
+                }
+}
+
+Get-MonitorSerial
+
 # Product ID
 Write-Host " # [31mProduct ID[0m"
 wmic path Win32_OperatingSystem get Caption,SerialNumber
