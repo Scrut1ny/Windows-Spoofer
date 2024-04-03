@@ -9,6 +9,12 @@ $unixTimestamp = [int][double]::Parse(($randomDate.ToUniversalTime() - [datetime
 # Calculating LDAP/FILETIME timestamp directly
 $LDAP_FILETIME_timestamp = ($unixTimestamp + 11644473600) * 10000000
 
-# Setting custom inputted Date & Time in the registry
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "InstallDate" -Value $unixTimestamp -Force
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "InstallTime" -Value $LDAP_FILETIME_timestamp -Force
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "InstallDate" -Value "$unixTimestamp" -Force
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "InstallTime" -Value "$LDAP_FILETIME_timestamp" -Force
+
+if ((Get-Service w32time).Status -eq 'Stopped') {
+	Start-Service -Name w32time
+}
+
+w32tm /config /syncfromflags:manual /manualpeerlist:"0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" /update
+Restart-Service -Name w32time -Force ; w32tm /resync
