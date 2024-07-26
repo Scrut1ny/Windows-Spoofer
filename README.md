@@ -130,3 +130,41 @@ Windows10(Slow Scan)
 FFFF800000000000
 FFFFC00000000000
 ```
+
+```
+# Install the required module if not already installed
+if (-not (Get-Module -ListAvailable -Name NtObjectManager)) {
+    Install-Module -Name NtObjectManager -Force
+}
+
+# Import the NtObjectManager module
+Import-Module NtObjectManager
+
+# Get a handle to the current thread
+$currentThread = Get-NtThread -Current -PseudoHandle
+
+# Get the TrustedInstaller service
+$tiService = Get-CimInstance -ClassName Win32_Service -Filter "Name='TrustedInstaller'"
+$tiProcess = Get-Process -Id $tiService.ProcessId
+
+# Open the process with duplicate handle rights
+$tiProcessHandle = Get-NtProcess -ProcessId $tiProcess.Id -Access DupHandle
+
+# Get the primary token of the TrustedInstaller process
+$tiToken = $tiProcessHandle.OpenToken()
+
+# Duplicate the token as an impersonation token
+$impToken = $tiToken.DuplicateToken([NtApiDotNet.NtTokenDuplication]::Impersonation)
+
+# Impersonate the current thread using the duplicated token
+$imp = $currentThread.ImpersonateThread($impToken)
+
+# Output the impersonated token
+$impToken
+
+# Run a command as TrustedInstaller
+Start-Process -FilePath "cmd.exe" -ArgumentList "/c whoami" -NoNewWindow -Wait
+
+# Revert to self after performing the required actions
+$currentThread.RevertToSelf()
+```
