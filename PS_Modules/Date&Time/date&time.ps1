@@ -1,20 +1,25 @@
-# Generating a random date between Jan 1, 2011, and Dec 31, 2022
-$start = [datetime]::new(2011, 1, 1)
-$end = [datetime]::new(2022, 12, 31)
-$randomDate = $start.AddSeconds((Get-Random -Maximum (($end - $start).TotalSeconds)))
+# Define start and end dates
+$startDate = [datetime]::new(2011, 1, 1)
+$endDate = [datetime]::new(2022, 12, 31)
 
-# Converting the DateTime object to Unix timestamp
-$unixTimestamp = [int][double]::Parse(($randomDate.ToUniversalTime() - [datetime]'1970-01-01T00:00:00').TotalSeconds)
+# Generate a random date within the defined range
+$randomDate = $startDate.AddSeconds((Get-Random -Maximum ($endDate - $startDate).TotalSeconds))
 
-# Calculating LDAP/FILETIME timestamp directly
-$LDAP_FILETIME_timestamp = ($unixTimestamp + 11644473600) * 10000000
+# Convert the random date to Unix timestamp and then to LDAP/FILETIME
+$unixTimestamp = [int][double]::Parse(($randomDate.ToUniversalTime() - [datetime]'1970-01-01').TotalSeconds)
+$ldapFileTime = ($unixTimestamp + 11644473600) * 1e7  # Use scientific notation for clarity
 
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "InstallDate" -Value "$unixTimestamp" -Force
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "InstallTime" -Value "$LDAP_FILETIME_timestamp" -Force
+# Set the InstallDate and InstallTime in the registry
+$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+Set-ItemProperty -Path $registryPath -Name "InstallDate" -Value "$unixTimestamp" -Force
+Set-ItemProperty -Path $registryPath -Name "InstallTime" -Value "$ldapFileTime" -Force
 
+# Ensure the Windows Time service is running
 if ((Get-Service w32time).Status -eq 'Stopped') {
-	Start-Service -Name w32time
+    Start-Service w32time
 }
 
-w32tm /config /syncfromflags:manual /manualpeerlist:"0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" /update
-Restart-Service -Name w32time -Force ; w32tm /resync
+# Configure the NTP settings and resync
+w32tm /config /syncfromflags:manual /manualpeerlist:"0.pool.ntp.org,1.pool.ntp.org,2.pool.ntp.org,3.pool.ntp.org" /update
+Restart-Service w32time -Force
+w32tm /resync
