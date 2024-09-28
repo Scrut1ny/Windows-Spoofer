@@ -6,6 +6,7 @@ $endDate = [datetime]::new(2022, 12, 31)
 $randomDate = $startDate.AddSeconds((Get-Random -Maximum ($endDate - $startDate).TotalSeconds))
 
 # Convert the random date to Unix timestamp and then to LDAP/FILETIME
+# https://www.epochconverter.com/ldap
 $unixTimestamp = [int][double]::Parse(($randomDate.ToUniversalTime() - [datetime]'1970-01-01').TotalSeconds)
 $ldapFileTime = ($unixTimestamp + 11644473600) * 1e7  # Use scientific notation for clarity
 
