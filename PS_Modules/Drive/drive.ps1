@@ -26,8 +26,8 @@ foreach ($PortNumber in 0..9) {
         $registryPath = "HKLM:\HARDWARE\DEVICEMAP\Scsi\Scsi Port $PortNumber\Scsi Bus 0\Target Id 0\Logical Unit Id $LogicalUnitIdNumber"
 
         if (Test-Path -Path $registryPath) {
-			$NewString = Get-UpperRandomString
-            Set-ItemProperty -Path $registryPath -Name 'SerialNumber' -Type String -Value "$NewString" -Force
+		$NewString = Get-UpperRandomString
+  		Set-ItemProperty -Path $registryPath -Name 'SerialNumber' -Type String -Value "$NewString" -Force
         }
     }
 }
