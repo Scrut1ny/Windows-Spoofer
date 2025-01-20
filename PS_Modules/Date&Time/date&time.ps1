@@ -22,5 +22,4 @@ if ((Get-Service w32time).Status -eq 'Stopped') {
 
 # Configure the NTP settings and resync
 w32tm /config /syncfromflags:manual /manualpeerlist:"0.pool.ntp.org,1.pool.ntp.org,2.pool.ntp.org,3.pool.ntp.org" /update
-Restart-Service w32time -Force
-w32tm /resync
+Restart-Service w32time -Force; w32tm /resync
