@@ -7,8 +7,8 @@ $ldapFileTime = ($unixTimestamp + 11644473600) * 1e7
 
 # Update registry values with proper numeric types
 $regPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
-Set-ItemProperty -Path $regPath -Name "InstallDate" -Value $unixTimestamp -Force
-Set-ItemProperty -Path $regPath -Name "InstallTime" -Value $ldapFileTime -Force
+Set-ItemProperty -Path $regPath -Name "InstallDate" -Value "$unixTimestamp" -Force
+Set-ItemProperty -Path $regPath -Name "InstallTime" -Value "$ldapFileTime" -Force
 
 # Ensure time service is running and reconfigure
 Get-Service w32time | Where Status -ne Running | Start-Service
