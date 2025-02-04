@@ -6,39 +6,6 @@ function Get-UpperRandomString {
     return -join ((48..57 + 65..90) | Get-Random -Count 20 | ForEach-Object { [char]$_ })
 }
 
-# Process DiskPeripheral identifiers using pipeline
-Get-ChildItem "HKLM:\HARDWARE\DESCRIPTION\System\MultifunctionAdapter\0\DiskController\0\DiskPeripheral\*" |
-ForEach-Object {
-    Set-ItemProperty -Path $_.PSPath -Name Identifier -Value (Get-LowerRandomIdentifier) -Force
-}
-
-# Process SCSI devices using optimized discovery
-Get-ChildItem -Path 'HKLM:\HARDWARE\DEVICEMAP\Scsi' -Recurse -ErrorAction SilentlyContinue |
-Where-Object { $_.PSPath -match 'Scsi Port \\d+\\Scsi Bus \\d+\\Target Id \\d+\\Logical Unit Id \\d+' } |
-ForEach-Object {
-    Set-ItemProperty -Path $_.PSPath -Name SerialNumber -Value (Get-UpperRandomString) -Force
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-function Get-LowerRandomIdentifier {
-    return -join ((48..57 + 97..122) | Get-Random -Count 16) -replace '(.{8})(.{4})', '$1-$2-A'
-}
-
-function Get-UpperRandomString {
-    return -join ((48..57 + 65..90) | Get-Random -Count 20 | ForEach-Object { [char]$_ })
-}
-
 function Get-VolumeId {
     return -join ((48..57 + 65..71) | Get-Random -Count 8 | ForEach-Object { [char]$_ }) -replace '(.{4})', '$1-'
 }
