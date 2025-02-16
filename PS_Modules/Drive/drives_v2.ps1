@@ -7,7 +7,25 @@ function Get-UpperRandomString {
 }
 
 function Get-RandomVolumeId {
-    return -join ((0..15 | ForEach-Object { '{0:X2}' -f (Get-Random -Minimum 0 -Maximum 16) }) -join '') -replace '(.{4})(.{4})', '$1-$2'
+    return (-join ((48..57 + 65..71) | Get-Random -Count 8 | ForEach-Object { [char]$_ }) -replace '(.{4})', '$1-').TrimEnd('-')
+}
+
+# Volume ID spoofing
+$volumeIdPath = "$env:TEMP\Volumeid64.exe"
+
+if (-not (Test-Path $volumeIdPath)) {
+    $zipPath = "$env:TEMP\VolumeId.zip"
+    Invoke-WebRequest https://download.sysinternals.com/files/VolumeId.zip -OutFile $zipPath -UseBasicParsing
+    Expand-Archive $zipPath -DestinationPath $env:TEMP -Force
+    Remove-Item $zipPath -Force
+}
+
+Get-PSDrive -PSProvider FileSystem | Where-Object Root -ne '' | ForEach-Object {
+    $drive = $_.Root.TrimEnd('\')
+    $id = Get-VolumeId
+    Start-Process $volumeIdPath -Args "$drive", $id, "-nobanner", "-acceptEula" -NoNewWindow -Wait -ErrorAction SilentlyContinue
+}
+
 }
 
 # Update DiskPeripheral identifiers
