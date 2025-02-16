@@ -6,8 +6,8 @@ function Get-UpperRandomString {
     return -join ((48..57 + 65..90) | Get-Random -Count 20 | ForEach-Object { [char]$_ })
 }
 
-function Get-VolumeId {
-    return -join ((48..57 + 65..71) | Get-Random -Count 8 | ForEach-Object { [char]$_ }) -replace '(.{4})', '$1-'
+function Get-RandomVolumeId {
+    return -join ((0..15 | ForEach-Object { '{0:X2}' -f (Get-Random -Minimum 0 -Maximum 16) }) -join '') -replace '(.{4})(.{4})', '$1-$2'
 }
 
 # Update DiskPeripheral identifiers
@@ -35,6 +35,6 @@ if (-not (Test-Path $volumeIdPath)) {
 
 Get-PSDrive -PSProvider FileSystem | Where-Object Root -ne '' | ForEach-Object {
     $drive = $_.Root.TrimEnd('\')
-    $id = (Get-VolumeId).TrimEnd('-')
+    $id = (Get-RandomVolumeId).TrimEnd('-')
     Start-Process $volumeIdPath -Args "$drive", $id, "-nobanner", "-acceptEula" -NoNewWindow -Wait -ErrorAction SilentlyContinue
 }
