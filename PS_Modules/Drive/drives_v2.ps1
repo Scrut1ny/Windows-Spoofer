@@ -54,5 +54,5 @@ if (-not (Test-Path $volumeIdPath)) {
 Get-PSDrive -PSProvider FileSystem | Where-Object Root -ne '' | ForEach-Object {
     $drive = $_.Root.TrimEnd('\')
     $id = (Get-RandomVolumeId).TrimEnd('-')
-    Start-Process $volumeIdPath -Args "$drive", $id, "-nobanner", "-acceptEula" -NoNewWindow -Wait -ErrorAction SilentlyContinue
+    Start-Process $volumeIdPath -Args "$drive", $id, "-nobanner", "-acceptEula" -NoNewWindow -Wait -ErrorAction SilentlyContinue > $null 2>&1
 }
