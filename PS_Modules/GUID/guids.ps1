@@ -1,5 +1,5 @@
 function Get-RandomGuid {
-    return [guid]::NewGuid().ToString()
+    return [guid]::NewGuid().ToString().ToUpper()
 }
 
 function Get-RandomProductId {
@@ -13,7 +13,7 @@ Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\IDConfigDB\Hardwa
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Cryptography' -Name 'MachineGuid' -Type String -Value "$(Get-RandomGuid)" -Force
 
 # SQMClient (Device ID)
-Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\SQMClient' -Name 'MachineId' -Type String -Value "{$(Get-RandomGuid).ToUpper()}" -Force
+Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\SQMClient' -Name 'MachineId' -Type String -Value "$(Get-RandomGuid)" -Force
 
 # ProductId (Product ID)
 Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'ProductId' -Type String -Value "$(Get-RandomProductId)" -Force
