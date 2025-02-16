@@ -41,7 +41,7 @@ ForEach-Object {
     Set-ItemProperty -Path $_.PSPath -Name SerialNumber -Value (Get-UpperRandomString) -Force
 }
 
-# Volume ID spoofing
+# Volume ID spoofing - https://learn.microsoft.com/en-us/sysinternals/downloads/volumeid
 $volumeIdPath = "$env:TEMP\Volumeid64.exe"
 
 if (-not (Test-Path $volumeIdPath)) {
